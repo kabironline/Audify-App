@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import router from '@/router'
+
 export default {
   name: 'LoginForm',
   components: {},
@@ -57,6 +59,10 @@ export default {
     async onSubmit() {
       console.log('Form submitted')
       console.log(this.form)
+
+      setTimeout(() => {
+        router.push('/home')
+      }, 300)
     }
   }
 }
