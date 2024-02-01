@@ -16,7 +16,7 @@ export default {
 </script>
 
 <!-- TODO: Add CSS transition -->
-<style>
+<!-- <style>
 .fade-enter-from {
 }
 
@@ -25,4 +25,4 @@ export default {
 
 .fade-leave-to {
 }
-</style>
+</style> -->

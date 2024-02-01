@@ -1,7 +1,7 @@
 <template>
   <div class="form__container">
     <form class="form__box" @submit.prevent="onSubmit">
-      <h2 class="form__heading">Sign In</h2>
+      <h2 class="form__heading heading-2">Sign In</h2>
       <div class="form__group">
         <input
           type="text"
@@ -35,7 +35,7 @@
         <a href="/register" class="form__alternative--link">Register!</a>
       </h3>
       <p class="form__error">{{ error }}</p>
-      <button class="form__button" type="type">Submit</button>
+      <button class="form__button" type="type" :disabled="isDisabled">Submit</button>
     </form>
   </div>
 </template>
