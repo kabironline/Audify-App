@@ -1,16 +1,29 @@
 <template>
-  <RouterView v-slot="{ Component }">
-    <!-- <Transition name="fade" mode="out-in"> -->
-    <component :is="Component" />
-    <!-- </Transition> -->
-  </RouterView>
+  <v-app>
+    <RouterView v-slot="{ Component }">
+      <Navbar v-if="headerFooterShown" />
+      <v-main>
+        <!-- <Transition name="fade" mode="out-in"> -->
+        <component :is="Component" />
+        <!-- </Transition> -->
+      </v-main>
+    </RouterView>
+  </v-app>
 </template>
 
 <script>
 import { RouterView } from 'vue-router'
+import Navbar from './components/Navbar.vue'
 export default {
   components: {
-    RouterView
+    RouterView,
+    Navbar
+  },
+  computed: {
+    headerFooterShown() {
+      console.log(this.$route.name)
+      return this.$route.name !== 'login' && this.$route.name !== 'register'
+    }
   }
 }
 </script>

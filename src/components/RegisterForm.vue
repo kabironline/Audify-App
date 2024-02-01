@@ -93,7 +93,7 @@ export default {
       this.isDisabled = true
 
       setTimeout(() => {
-        router.push('/home')
+        router.push('/login')
       }, 300)
     }
   }

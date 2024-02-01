@@ -52,16 +52,17 @@ export default {
       form: {
         username: '',
         password: ''
-      }
+      },
+      isDisabled: false
     }
   },
   methods: {
     async onSubmit() {
       console.log('Form submitted')
       console.log(this.form)
-
+      this.isDisabled = true
       setTimeout(() => {
-        router.push('/home')
+        router.push('/')
       }, 300)
     }
   }
