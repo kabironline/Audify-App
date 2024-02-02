@@ -10,7 +10,7 @@
   gap: 1rem;
   border: none;
   font: inherit;
-  font-size: 1.4rem !important;
+  font-size: 1.4rem;
   &:hover {
     background-color: var(--color-hover);
   }

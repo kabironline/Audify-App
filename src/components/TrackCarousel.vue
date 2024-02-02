@@ -1,6 +1,6 @@
 <template>
   <div class="track-carousel">
-    <div v-for="track in tracks" :key="track" class="track-carousel__item">
+    <!-- <div v-for="track in tracks" :key="track" class="track-carousel__item">
       <div class="track-carousel__item--cover">
         <a href="" class="">
           <div>
@@ -19,37 +19,6 @@
           <a href="/" class="track-carousel__item--title">
             <p>Name of track {{ track }}</p>
           </a>
-          <!-- <div class="track-menu-container">
-            <input
-              type="checkbox"
-              :id="`track-carousel-${track}`"
-              name="asdfasdf"
-              class="checkbox-disable track-menu__checkbox"
-            />
-            <div class="track-dropdown-container">
-              <ul class="dropdown-list">
-                <li class="dropdown-item">
-                  <a href="?q={{q}}&id={{track.id}}#playlist-add-modal" class="dropdown-item--link">
-                    Add to Playlist
-                  </a>
-                </li>
-
-                <li class="dropdown-item">
-                  <a href="?q={{q}}&id={{track.id}}#delete-track-modal" class="dropdown-item--link">
-                    Delete Track
-                  </a>
-                </li>
-                <li class="dropdown-item">
-                  <a href="?q={{q}}&id={{track.id}}#flag-track-modal" class="dropdown-item--link">
-                    Flag Track
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <label :for="`track-carousel-${track}`" class="track-menu-label">
-              <span class="material-symbols-rounded"> more_vert </span>
-            </label>
-          </div> -->
           <v-menu location="start">
             <template v-slot:activator="{ props }">
               <v-btn
@@ -77,7 +46,44 @@
         </div>
         <a href="" class="track-carousel__item--artist">Channel Name</a>
       </div>
-    </div>
+    </div> -->
+    <v-card v-for="track in tracks" :key="track" color="background" link>
+      <v-img
+        :src="`https://picsum.photos/640/360?random=${track}`"
+        class="track-carousel__item--cover"
+      />
+      <div>
+        <v-card-title class="d-flex flex-no-wrap justify-space-between align-center pa-0">
+          <div>Name of track {{ track }}</div>
+          <v-menu location="start">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                size="x-small"
+                :elevation="0"
+                color="transparent"
+                icon="mdi-dots-vertical"
+                v-bind="props"
+              >
+                <span class="material-symbols-rounded"> more_vert </span>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item link>
+                <v-list-item-title> Add To Playlist </v-list-item-title>
+              </v-list-item>
+              <v-list-item link>
+                <v-list-item-title> Delete Track </v-list-item-title>
+              </v-list-item>
+              <v-list-item link>
+                <v-list-item-title> Flag Track </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-card-title>
+      </div>
+      <v-card-subtitle class="pa-0">Channel Name</v-card-subtitle>
+      <div class="mb-small"></div>
+    </v-card>
   </div>
 </template>
 
@@ -91,7 +97,7 @@ export default {
     },
     tracks: {
       type: Array,
-      default: () => [1, 2, 3, 4, 5]
+      default: () => [1, 2, 3, 4, 5, 6]
     }
   },
   methods: {
@@ -115,6 +121,7 @@ export default {
 .v-menu > .v-overlay__content > .v-list {
   background: transparent;
   backdrop-filter: blur(20px) brightness(0.5);
+  border: 1px solid var(--color-border-light);
 }
 
 /* track Carousel */

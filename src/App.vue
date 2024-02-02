@@ -1,25 +1,29 @@
 <template>
   <v-app>
-    <RouterView v-slot="{ Component }">
-      <Navbar v-if="headerFooterShown" />
-      <v-main>
-        <!-- <Transition name="fade" mode="out-in"> -->
-        <div :style="{ padding: '0rem 4rem' }">
-          <component :is="Component" />
-        </div>
-        <!-- </Transition> -->
-      </v-main>
-    </RouterView>
+    <div class="page-container">
+      <Sidebar v-if="headerFooterShown" />
+      <div class="page-content">
+        <!-- Insert Navbar here -->
+        <RouterView v-slot="{ Component }">
+          <!-- <Transition name="fade" mode="out-in"> -->
+
+          <div class="container">
+            <component :is="Component" />
+          </div>
+          <!-- </Transition> -->
+        </RouterView>
+      </div>
+    </div>
   </v-app>
 </template>
 
 <script>
 import { RouterView } from 'vue-router'
-import Navbar from './components/Navbar.vue'
+import Sidebar from './components/Sidebar.vue'
 export default {
   components: {
     RouterView,
-    Navbar
+    Sidebar
   },
   computed: {
     headerFooterShown() {
@@ -29,6 +33,25 @@ export default {
   }
 }
 </script>
+
+<style>
+.page-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.page-content {
+  width: 100%;
+  overflow-y: auto;
+}
+
+.container {
+  padding: 3rem 7rem;
+}
+</style>
+
 <!-- TODO: Add CSS transition -->
 <!-- <style>
 .fade-enter-from {
