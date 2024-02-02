@@ -16,7 +16,7 @@
       </div>
     </form>
     <div class="profile-icon-container">
-      <input type="checkbox" name="profile" id="profile" class="profile-icon__checkbox" />
+      <!-- <input type="checkbox" name="profile" id="profile" class="profile-icon__checkbox" />
       <div class="profile-dropdown-container">
         <ul class="dropdown-list">
           <li class="dropdown-item">
@@ -45,10 +45,50 @@
             <a class="dropdown-item--link" href="#logout-modal">Logout</a>
           </li>
         </ul>
-      </div>
-      <label for="profile" class="navbar__profile">
-        <img src="" alt="Profile Image" class="navbar__profile--image" />
-      </label>
+      </div> -->
+      <v-menu location="start" activator="#main-menu-activator">
+        <v-list>
+          <v-list-item link class="dropdown-item">
+            <v-list-item-title class="dropdown-item--link">Dashboard</v-list-item-title>
+          </v-list-item>
+          <v-list-item link class="dropdown-item">
+            <v-list-item-title class="dropdown-item--link">Channel Dashboard</v-list-item-title>
+          </v-list-item>
+          <v-list-item link class="dropdown-item">
+            <v-list-item-title class="dropdown-item--link" href="/admin/dashboard"
+              >Admin Dashboard</v-list-item-title
+            >
+          </v-list-item>
+          <v-list-item link class="dropdown-item">
+            <v-list-item-title class="dropdown-item--link" href="/edit_profile"
+              >Edit Profile</v-list-item-title
+            >
+          </v-list-item>
+          <v-list-item link class="dropdown-item">
+            <v-list-item-title class="dropdown-item--link" href="/register_creator"
+              >Register as Creator</v-list-item-title
+            >
+          </v-list-item>
+          <v-list-item link class="dropdown-item">
+            <v-list-item-title class="dropdown-item--link" href="/edit_profile_creator"
+              >Edit Channel</v-list-item-title
+            >
+          </v-list-item>
+          <v-list-item link class="dropdown-item">
+            <v-list-item-title class="dropdown-item--link" href="#logout-modal"
+              >Logout</v-list-item-title
+            >
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-btn icon transparent id="main-menu-activator" for="profile" class="navbar__profile">
+        <v-img
+          src="https://via.placeholder.com/100
+        "
+          alt="Profile Image"
+          class="navbar__profile--image"
+        />
+      </v-btn>
     </div>
     <a class="navbar__profile" href="/dashboard"> </a>
   </nav>
@@ -191,9 +231,8 @@ export default {
 .navbar__profile--image {
   width: 4rem;
   height: 4rem;
-  margin-right: 1rem;
+  margin: 0;
   border-radius: 50%;
-
   outline-offset: 0px;
   outline: 3px solid transparent;
   transition: all 0.2s ease-out;

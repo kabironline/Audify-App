@@ -3,7 +3,7 @@
     <div class="page-container">
       <Sidebar v-if="headerFooterShown" />
       <div class="page-content">
-        <Navbar v-if="headerFooterShown" />
+        <!-- Insert Navbar here -->
         <RouterView v-slot="{ Component }">
           <!-- <Transition name="fade" mode="out-in"> -->
 
