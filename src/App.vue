@@ -4,7 +4,9 @@
       <Navbar v-if="headerFooterShown" />
       <v-main>
         <!-- <Transition name="fade" mode="out-in"> -->
-        <component :is="Component" />
+        <div :style="{ padding: '0rem 4rem' }">
+          <component :is="Component" />
+        </div>
         <!-- </Transition> -->
       </v-main>
     </RouterView>
@@ -27,7 +29,6 @@ export default {
   }
 }
 </script>
-
 <!-- TODO: Add CSS transition -->
 <!-- <style>
 .fade-enter-from {

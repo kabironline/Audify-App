@@ -1,7 +1,7 @@
 <template>
   <!-- <v-system-bar color="deep-purple darken-3"></v-system-bar> -->
 
-  <v-app-bar color="background" prominent>
+  <v-app-bar color="background" prominent :elevation="0">
     <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" :elevation="0"
       ><span class="material-symbols-rounded"> menu </span>
     </v-app-bar-nav-icon>
@@ -21,22 +21,26 @@
       </v-avatar>
     </v-btn>
   </v-app-bar>
-  <v-navigation-drawer v-model="drawer" temporary class="sidebar">
-    <ul class="side-nav">
-      <v-list-item
-        link
-        class="sidebar__item"
-        v-for="item in items"
-        :key="item"
-        @click.stop="navigateTo(item.link)"
-      >
-        <a href="/" class="sidebar__link">
-          <span class="material-symbols-rounded"> {{ item.icon }} </span>
-          <span class="sidebar__item--text">{{ item.title }}</span>
-        </a>
-      </v-list-item>
-    </ul>
-    <v-divider></v-divider>
+  <v-navigation-drawer v-model="drawer" :elevation="10" temporary class="side-nav">
+    <div class="mb-small"></div>
+    <v-list-item
+      link
+      class="sidebar__item"
+      v-for="item in items"
+      :key="item"
+      @click.stop="navigateTo(item.link)"
+    >
+      <a href="/" class="sidebar__link">
+        <span class="material-symbols-rounded"> {{ item.icon }} </span>
+        <span class="sidebar__item--text">{{ item.title }}</span>
+      </a>
+    </v-list-item>
+    <v-divider />
+    <div class="pa-4">
+      <v-btn block size="large" rounded="xl" href="#playlist-modal" class="btn mb-small">
+        <span class="material-symbols-rounded"> add </span> Create Playlist
+      </v-btn>
+    </div>
   </v-navigation-drawer>
 </template>
 
@@ -67,10 +71,11 @@ export default {
 .sidebar {
   overflow-y: auto;
   overflow-x: hidden;
-  width: 30rem;
+  /* width: 100%; */
   /* padding: 2rem; */
   display: flex;
   flex-direction: column;
+  /* align-items: center; */
   border-right: 1px solid var(--color-border-light);
 }
 
