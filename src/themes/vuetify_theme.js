@@ -20,7 +20,7 @@ const theme = {
     placeholderText: '#6b6b6b',
     labelText: '#9b9b9b',
     subtitleText: '#c4c4c4',
-    hover: '#353535'
+    hover: '#4a4a4a'
   }
 }
 

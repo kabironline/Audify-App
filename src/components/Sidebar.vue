@@ -114,15 +114,17 @@ export default {
 }
 
 .sidebar__item--text {
-  /* font-weight: 500; */
+  font-weight: 500;
 }
 
 .sidebar__link {
+  cursor: pointer;
   text-decoration: none;
   display: grid;
   grid-template-columns: 5rem 1fr;
   color: var(--text-color);
   width: 100%;
+  padding-left: 1rem;
   align-items: center;
 }
 </style>

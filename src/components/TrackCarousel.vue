@@ -47,14 +47,23 @@
         <a href="" class="track-carousel__item--artist">Channel Name</a>
       </div>
     </div> -->
-    <v-card v-for="track in tracks" :key="track" color="background" link>
-      <v-img
-        :src="`https://picsum.photos/640/360?random=${track}`"
-        class="track-carousel__item--cover"
-      />
+    <v-card
+      v-for="track in tracks"
+      :key="track"
+      color="background"
+      link
+      class="track-carousel__item"
+    >
+      <div class="track-carousel__item--cover">
+        <v-img
+          :src="`https://picsum.photos/640/360?random=${track}`"
+          class="track-carousel__item--img"
+        />
+        <span class="material-symbols-rounded track-carousel__item--play"> play_arrow </span>
+      </div>
       <div>
         <v-card-title class="d-flex flex-no-wrap justify-space-between align-center pa-0">
-          <div>Name of track {{ track }}</div>
+          <div class="track-carousel__item--title">Name of track {{ track }}</div>
           <v-menu location="start">
             <template v-slot:activator="{ props }">
               <v-btn
@@ -68,21 +77,21 @@
               </v-btn>
             </template>
             <v-list>
-              <v-list-item link>
-                <v-list-item-title> Add To Playlist </v-list-item-title>
+              <v-list-item link class="dropdown-item">
+                <v-list-item-title class="dropdown-item--link"> Add To Playlist </v-list-item-title>
               </v-list-item>
-              <v-list-item link>
-                <v-list-item-title> Delete Track </v-list-item-title>
+              <v-list-item link class="dropdown-item">
+                <v-list-item-title class="dropdown-item--link"> Delete Track </v-list-item-title>
               </v-list-item>
-              <v-list-item link>
-                <v-list-item-title> Flag Track </v-list-item-title>
+              <v-list-item link class="dropdown-item">
+                <v-list-item-title class="dropdown-item--link"> Flag Track </v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
         </v-card-title>
       </div>
-      <v-card-subtitle class="pa-0">Channel Name</v-card-subtitle>
-      <div class="mb-small"></div>
+      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1">Channel Name</v-card-subtitle>
+      <div class="mb-3"></div>
     </v-card>
   </div>
 </template>
@@ -124,13 +133,24 @@ export default {
   border: 1px solid var(--color-border-light);
 }
 
+.v-card-title {
+  font-size: 2rem;
+}
+
+.v-card-subtitle {
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+}
+
 /* track Carousel */
 .track-carousel {
-  display: grid;
+  /* display: grid; */
   /* Autofit rows according to size */
-  grid-template-columns: repeat(auto-fit, minmax(25rem, max-content));
+  /* grid-template-columns: repeat(auto-fit, minmax(20rem, max-content)); */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1rem;
   margin: 3rem 0;
 }
 
@@ -203,7 +223,7 @@ export default {
   text-decoration: none;
   color: white;
   display: block;
-
+  padding-left: 0.5rem;
   &:hover {
     text-decoration: underline;
   }

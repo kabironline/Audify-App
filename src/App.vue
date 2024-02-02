@@ -3,7 +3,7 @@
     <div class="page-container">
       <Sidebar v-if="headerFooterShown" />
       <div class="page-content">
-        <!-- Insert Navbar here -->
+        <Navbar v-if="headerFooterShown" />
         <RouterView v-slot="{ Component }">
           <!-- <Transition name="fade" mode="out-in"> -->
 
@@ -20,10 +20,12 @@
 <script>
 import { RouterView } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
+import Navbar from './components/Navbar.vue'
 export default {
   components: {
     RouterView,
-    Sidebar
+    Sidebar,
+    Navbar
   },
   computed: {
     headerFooterShown() {
