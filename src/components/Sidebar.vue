@@ -7,7 +7,12 @@
     </a>
     <hr class="sidebar__hr" />
     <ul class="side-nav">
-      <li v-for="item in items" :key="item" class="sidebar__item">
+      <li
+        v-for="item in items"
+        :key="item"
+        class="sidebar__item"
+        :class="{ 'sidebar__item--active': item.route_name === activeItem }"
+      >
         <div @click.prevent="navigateTo(item.link)" href="/" class="sidebar__link">
           <span class="material-symbols-rounded"> {{ item.icon }}</span>
           <span class="sidebar__item--text">{{ item.title }}</span>
@@ -30,13 +35,18 @@ export default {
   data: () => ({
     drawer: false,
     items: [
-      { title: 'Home', icon: 'home', link: '/' },
-      { title: 'Explore', icon: 'explore', link: '/explore' },
-      { title: 'Dashboard', icon: 'dashboard', link: '/dashboard' },
-      { title: 'Upload Track', icon: 'upload', link: '/upload' },
-      { title: 'Create Album', icon: 'album', link: '/album/add' }
+      { title: 'Home', icon: 'home', link: '/', route_name: 'home' },
+      { title: 'Explore', icon: 'explore', link: '/explore', route_name: 'explore' },
+      { title: 'Dashboard', icon: 'dashboard', link: '/dashboard', route_name: 'dashboard' },
+      { title: 'Upload Track', icon: 'upload', link: '/upload', route_name: 'upload' },
+      { title: 'Create Album', icon: 'album', link: '/album/add', route_name: 'album-add' }
     ]
   }),
+  computed: {
+    activeItem() {
+      return this.$route.name
+    }
+  },
   methods: {
     navigateTo(link) {
       this.$router.push(link)
@@ -100,7 +110,12 @@ export default {
 
   &:hover {
     background-color: var(--color-hover);
+    border: 1px solid var(--color-border-light);
   }
+}
+
+.sidebar__item--active {
+  background-color: var(--color-hover);
 }
 
 .side-nav {
