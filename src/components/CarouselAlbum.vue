@@ -30,7 +30,7 @@ export default {
   props: {
     tracks: {
       type: Array,
-      default: () => [1, 2, 3, 4, 5, 6]
+      default: () => [1, 2, 3, 4, 5]
     }
   },
   methods: {
