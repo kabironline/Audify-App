@@ -1,21 +1,10 @@
 <template>
   <div class="genre-tiles">
-    <!-- <a
-      v-for="genre in 25"
-      :key="genre"
-      href="/genre/{{genre}}/tracks"
-      class="genre-tile genre__link"
-    >
-      <div :style="{ backgroundColor: randomColor() }" class="genre-tile__cover"></div>
-      <p class="genre-tile__text">Genre {{ genre }}</p>
-    </a>
-  </div> -->
     <v-chip
       v-for="genre in 20"
       :key="genre"
-      variant=""
       class="genre-tile genre__link"
-      color="white"
+      color="background"
       href="/genre/{{genre}}/tracks"
     >
       <div :style="{ backgroundColor: randomColor() }" class="genre-tile__cover"></div>
