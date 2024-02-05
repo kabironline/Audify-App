@@ -1,5 +1,6 @@
 <template>
-  <div class="track-tiles" link>
+  <div class="track-tiles">
+    <!-- TODO: navigate to player when clicked -->
     <div class="track-tile" v-for="n in 16" :key="n">
       <div class="track-tile__position">
         <p class="track-tile__position--text">{{ n }}</p>
@@ -12,7 +13,7 @@
               alt="track Image"
               class="track-tile__cover--img"
             />
-            <i class="fas fa-play track-tile__cover--playbutton"></i>
+            <span class="track-tile__cover--playbutton material-symbols-rounded">play_arrow</span>
           </div>
         </a>
       </div>
@@ -56,7 +57,7 @@ export default {
   &:hover {
     .track-tile__cover--playbutton {
       opacity: 1;
-      font-size: 3rem;
+      font-size: 5rem;
     }
 
     .track-tile__cover--img {
