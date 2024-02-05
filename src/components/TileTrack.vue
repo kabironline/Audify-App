@@ -1,27 +1,31 @@
 <template>
   <div class="track-tiles">
-    <!-- TODO: navigate to player when clicked -->
-    <div class="track-tile" v-for="n in 16" :key="n">
-      <div class="track-tile__position">
+    <v-card
+      v-for="n in 16"
+      :key="n"
+      color="transparent"
+      class="track-tile"
+      :href="`/player/${n}`"
+      :to="`/player/${n}`"
+    >
+      <v-card-title class="track-tile__position">
         <p class="track-tile__position--text">{{ n }}</p>
-      </div>
-      <div class="track-tile__cover">
-        <a href="/player" class="">
-          <div>
-            <img
-              :src="`https://picsum.photos/300/200?random=${n}`"
-              alt="track Image"
-              class="track-tile__cover--img"
-            />
-            <span class="track-tile__cover--playbutton material-symbols-rounded">play_arrow</span>
-          </div>
-        </a>
-      </div>
-      <div class="track-tile__text">
-        <a href="" class="track-tile__text--title">Name of track {{ n }}</a>
-        <a href="" class="track-tile__text--artist">Channel Name {{ n }}</a>
-      </div>
-    </div>
+      </v-card-title>
+      <v-card-media class="track-tile__cover">
+        <div>
+          <v-img
+            :src="`https://picsum.photos/300/200?random=${n}`"
+            alt="track Image"
+            class="track-tile__cover--img"
+          />
+          <span class="track-tile__cover--playbutton material-symbols-rounded">play_arrow</span>
+        </div>
+      </v-card-media>
+      <v-card-title class="track-tile__text">
+        <a href="/player" class="track-tile__text--title">Name of track {{ n }}</a>
+        <a href="/player" class="track-tile__text--artist">Channel Name {{ n }}</a>
+      </v-card-title>
+    </v-card>
   </div>
 </template>
 
@@ -41,7 +45,7 @@ export default {
 .track-tile {
   display: grid;
   grid-template-columns: min-content min-content 1fr;
-  grid-gap: 1rem;
+  grid-gap: 0 1rem;
   align-items: center;
   text-decoration: none;
   color: white;

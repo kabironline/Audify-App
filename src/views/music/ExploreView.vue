@@ -12,7 +12,7 @@
     <TileTrack />
   </section>
   <section class="section section-top-channel">
-    <h2 class="heading-2">Top Channes</h2>
+    <h2 class="heading-2">Top Channels</h2>
     <TileChannel />
   </section>
 </template>

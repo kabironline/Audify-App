@@ -5,7 +5,6 @@
       :key="n"
       color="transparent"
       class="creator-tile ma-1"
-      :href="`/dashboard/channel/${n}`"
       :to="`/dashboard/channel/${n}`"
     >
       <v-card-title class="creator-tile__position">
@@ -19,7 +18,7 @@
         />
       </v-card-media>
       <v-card-title class="creator-tile__text">
-        <a href="/dashboard/channel" class="creator-tile__text--title">Channel name {{ n }}</a>
+        <p class="creator-tile__text--title">Channel name {{ n }}</p>
       </v-card-title>
     </v-card>
   </div>
