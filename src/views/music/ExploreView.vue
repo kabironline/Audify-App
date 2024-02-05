@@ -4,7 +4,7 @@
     <TileGenre />
   </section>
   <section class="section section-latest-track">
-    <h2 class="heading-2">New Releases</h2>
+    <h2 class="heading-2 heading-link" @click.prevent="goToNewReleases">New Releases</h2>
     <CarouselTrack />
   </section>
   <section class="section section-top-track">
@@ -35,6 +35,9 @@ export default {
   methods: {
     goToTopTracks() {
       router.push('/top')
+    },
+    goToNewReleases() {
+      router.push('/new-releases')
     }
   }
 }

@@ -30,6 +30,12 @@ const router = createRouter({
       component: () => import('../views/music/AllTracksView.vue')
     },
     {
+      path: '/new-releases',
+      name: 'new-releases',
+      component: () => import('../views/music/AllTracksView.vue'),
+      props: { tracks: [], heading: 'New Releases' }
+    },
+    {
       path: '/top',
       name: 'top',
       component: () => import('../views/music/TopChartsView.vue')
@@ -38,7 +44,7 @@ const router = createRouter({
       path: '/top/tracks',
       name: 'top-tracks',
       component: () => import('../views/music/AllTracksView.vue'),
-      props: { tracks: [] }
+      props: { tracks: [], heading: 'Top Tracks' }
     },
     {
       path: '/top/albums',
