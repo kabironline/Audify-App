@@ -8,7 +8,7 @@
     <CarouselTrack />
   </section>
   <section class="section section-top-track">
-    <h2 class="heading-2">Top Tracks</h2>
+    <h2 class="heading-2 heading-link" @click.prevent="goToTopTracks">Top Tracks</h2>
     <TileTrack />
   </section>
   <section class="section section-top-channel">
@@ -22,6 +22,8 @@ import TileGenre from '@/components/TileGenre.vue'
 import TileTrack from '@/components/TileTrack.vue'
 import CarouselTrack from '@/components/CarouselTrack.vue'
 import TileChannel from '@/components/TileChannel.vue'
+
+import router from '@/router'
 export default {
   name: 'ExploreView',
   components: {
@@ -29,6 +31,11 @@ export default {
     TileTrack,
     TileChannel,
     CarouselTrack
+  },
+  methods: {
+    goToTopTracks() {
+      router.push('/top')
+    }
   }
 }
 </script>

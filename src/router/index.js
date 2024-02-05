@@ -28,6 +28,11 @@ const router = createRouter({
       name: 'genre-tracks',
       props: { tracks: [], heading: 'Rock Tracks' },
       component: () => import('../views/music/AllTracksView.vue')
+    },
+    {
+      path: '/top',
+      name: 'top',
+      component: () => import('../views/music/TopChartsView.vue')
     }
   ]
 })
