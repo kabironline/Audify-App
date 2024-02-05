@@ -1,10 +1,10 @@
 <template>
   <section class="section">
-    <h2 class="heading-2">Top Tracks</h2>
+    <h2 class="heading-2 heading-link" @click.prevent="navigateTo('/top/tracks')">Top Tracks</h2>
     <CarouselTrack />
   </section>
   <section class="section">
-    <h2 class="heading-2">Top Albums</h2>
+    <h2 class="heading-2 heading-link" @click.prevent="navigateTo('/top/albums')">Top Albums</h2>
     <CarouselAlbum />
   </section>
 </template>
@@ -17,6 +17,11 @@ export default {
   components: {
     CarouselTrack,
     CarouselAlbum
+  },
+  methods: {
+    navigateTo(path) {
+      this.$router.push(path)
+    }
   }
 }
 </script>
