@@ -13,6 +13,7 @@
           </div>
           <!-- </Transition> -->
         </RouterView>
+        <PlayerBar v-if="headerFooterShown" />
       </div>
     </div>
   </v-app>
@@ -22,11 +23,13 @@
 import { RouterView } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import Navbar from './components/Navbar.vue'
+import PlayerBar from './views/music/PlayerBar.vue'
 export default {
   components: {
     RouterView,
     Sidebar,
-    Navbar
+    Navbar,
+    PlayerBar
   },
   computed: {
     headerFooterShown() {
