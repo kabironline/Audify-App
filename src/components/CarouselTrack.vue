@@ -1,22 +1,17 @@
 <template>
   <div class="track-carousel">
-    <v-card
-      v-for="album in albums"
-      :key="album"
-      color="background"
-      link
-      class="track-carousel__item"
-    >
+    <v-card v-for="track in 5" :key="track" color="background" link class="track-carousel__item">
       <div class="track-carousel__item--cover">
         <v-img
-          :src="`https://picsum.photos/640/360?random=${album}`"
+          lazy
+          :src="`https://picsum.photos/640/360?random=${track}`"
           class="track-carousel__item--img"
         />
         <span class="material-symbols-rounded track-carousel__item--play"> play_arrow </span>
       </div>
       <div>
         <v-card-title class="d-flex flex-no-wrap justify-space-between align-center pa-0">
-          <div class="track-carousel__item--title">Name of track {{ album }}</div>
+          <div class="track-carousel__item--title">Name of track {{ track }}</div>
           <v-menu location="start">
             <template v-slot:activator="{ props }">
               <v-btn
@@ -51,15 +46,15 @@
 
 <script>
 export default {
-  name: 'CarouselAlbum',
+  name: 'CarouselTrack',
   props: {
-    albums: {
+    tracks: {
       type: Array,
       default: () => [1, 2, 3, 4, 5]
     }
   },
   methods: {
-    getAlbumCoverUrl(trackId) {
+    getTrackCoverUrl(trackId) {
       // Replace this with the logic to generate track cover URLs
       return `/api/tracks/${trackId}/cover`
     },

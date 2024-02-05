@@ -5,7 +5,7 @@
       :key="genre"
       class="genre-tile genre__link"
       color="background"
-      href="/genre/{{genre}}/tracks"
+      :href="`/genre/${genre}/tracks`"
     >
       <div :style="{ backgroundColor: randomColor() }" class="genre-tile__cover"></div>
       <p class="genre-tile__text">Genre {{ genre }}</p>

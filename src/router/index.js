@@ -22,6 +22,12 @@ const router = createRouter({
       path: '/explore',
       name: 'explore',
       component: () => import('../views/music/ExploreView.vue')
+    },
+    {
+      path: '/genre/:genre/tracks',
+      name: 'genre-tracks',
+      props: { tracks: [], heading: 'Rock Tracks' },
+      component: () => import('../views/music/AllTracksView.vue')
     }
   ]
 })
