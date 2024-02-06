@@ -1,90 +1,96 @@
 <template>
-  <v-bottom-sheet hide-overlay>
-    <template v-slot:activator="{ props }">
-      <div class="frame-body">
-        <input type="range" min="1" max="100" value="20" class="player__progress-bar" />
-        <div class="player-container">
-          <audio src="{{ media }}" class="player__controls--audio" autoplay></audio>
-          <div class="player__controls">
-            <button class="player__controls--btn">
-              <i class="fas fa-step-backward"></i>
-            </button>
-            <button class="player__controls--btn play-pause">
-              <i class="fas fa-circle-play" id="player__controls--btn-ico"></i>
-            </button>
-            <button class="player__controls--btn">
-              <i class="fas fa-step-forward"></i>
-            </button>
-            <div class="player__control--time">0:00 / 0:00</div>
-          </div>
-          <div class="player__info">
-            <img
-              src="https://www.picsum.photos/200/200"
-              alt="album art"
-              class="player__info--img"
-            />
-            <div class="player__info--text">
-              <div class="player__info--title">Song Title</div>
-              <div class="player__info--artist">
-                <a href="#" class="player__info--artist-link">Artist</a> • 17-01-2020
-              </div>
-            </div>
-            <a href="/" class="player__info--like-btn">
-              <i class="fa-regular fa-thumbs-up"></i>
-            </a>
-          </div>
-          <div class="player__volume">
-            <button class="player__controls--btn">
-              <i class="fas fa-volume-up"></i>
-            </button>
-            <input type="range" min="0" max="1" value="100" class="player__volume--bar" />
-            <v-btn v-bind="props"> Expand</v-btn>
+  <div class="frame-body" :class="{ 'frame-body--open': playerPageOpen }">
+    <input type="range" min="1" max="100" value="20" class="player__progress-bar" />
+    <div class="player-container">
+      <audio src="{{ media }}" class="player__controls--audio" autoplay></audio>
+      <div class="player__controls">
+        <button class="player__controls--btn">
+          <i class="fas fa-step-backward"></i>
+        </button>
+        <button class="player__controls--btn play-pause">
+          <i class="fas fa-circle-play" id="player__controls--btn-ico"></i>
+        </button>
+        <button class="player__controls--btn">
+          <i class="fas fa-step-forward"></i>
+        </button>
+        <div class="player__control--time">0:00 / 0:00</div>
+      </div>
+      <div class="player__info">
+        <img src="https://www.picsum.photos/200/200" alt="album art" class="player__info--img" />
+        <div class="player__info--text">
+          <div class="player__info--title">Song Title</div>
+          <div class="player__info--artist">
+            <a href="#" class="player__info--artist-link">Artist</a> • 17-01-2020
           </div>
         </div>
+        <a href="/" class="player__info--like-btn">
+          <i class="fa-regular fa-thumbs-up"></i>
+        </a>
+        <a href="/" class="player__info--like-btn">
+          <i class="fa-regular fa-thumbs-down"></i>
+        </a>
       </div>
-    </template>
-    <v-sheet linear class="player-page">
-      <v-card>
-        <v-card-title>Player</v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-card>
-                <v-card-title>Card 1</v-card-title>
-                <v-card-text>
-                  <v-img src="https://www.picsum.photos/200/200" />
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-card>
-                <v-card-title>Card 2</v-card-title>
-                <v-card-text>
-                  <v-img src="https://www.picsum.photos/200/200" />
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-    </v-sheet>
-  </v-bottom-sheet>
+      <div class="player__volume">
+        <button class="player__controls--btn">
+          <i class="fas fa-volume-up"></i>
+        </button>
+        <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
+        <v-btn icon @click.prevent="togglePlayerPage" color="transparent">
+          <span class="material-symbols-rounded">
+            {{ playerPageOpen ? 'expand_more' : 'expand_less' }}
+          </span>
+        </v-btn>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'PlayerBar',
+  components: {},
+  data() {
+    return {
+      playerPageOpen: false
+    }
+  },
   props: {
     media: {
       type: String,
       default: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+    }
+  },
+  methods: {
+    togglePlayerPage() {
+      this.playerPageOpen = !this.playerPageOpen
     }
   }
 }
 </script>
 
 <style>
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  transform: translateY(100vh);
+}
+
+.rotate-enter-active,
+.rotate-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.rotate-enter-from,
+.rotate-leave-to {
+  transform: rotate(180deg);
+}
+
 .player-frame-container {
+  z-index: 100000;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -108,6 +114,8 @@ export default {
   bottom: 0;
   left: 27rem;
   right: 0;
+  /* compute page height - 7rem */
+  top: calc(100vh - 7rem);
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -117,6 +125,12 @@ export default {
   padding: 0 20px;
   background-color: transparent;
   backdrop-filter: blur(20px) brightness(0.5);
+  padding-bottom: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.frame-body--open {
+  top: 7rem;
 }
 
 .player__progress-bar {

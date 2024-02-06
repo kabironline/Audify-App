@@ -23,7 +23,7 @@
 import { RouterView } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import Navbar from './components/Navbar.vue'
-import PlayerBar from './views/music/PlayerBar.vue'
+import PlayerBar from './components/PlayerBar.vue'
 export default {
   components: {
     RouterView,
