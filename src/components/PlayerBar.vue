@@ -4,38 +4,38 @@
     <div class="player-container">
       <audio src="{{ media }}" class="player__controls--audio" autoplay></audio>
       <div class="player__controls">
-        <button class="player__controls--btn">
-          <i class="fas fa-step-backward"></i>
-        </button>
-        <button class="player__controls--btn play-pause">
-          <i class="fas fa-circle-play" id="player__controls--btn-ico"></i>
-        </button>
-        <button class="player__controls--btn">
-          <i class="fas fa-step-forward"></i>
-        </button>
+        <v-btn icon color="transparent" elevation="0" class="player__controls--btn">
+          <span class="material-symbols-rounded">fast_rewind</span>
+        </v-btn>
+        <v-btn icon color="transparent" elevation="0" class="player__controls--btn">
+          <span class="material-symbols-rounded">play_circle</span>
+        </v-btn>
+        <v-btn icon color="transparent" elevation="0" class="player__controls--btn">
+          <span class="material-symbols-rounded">fast_forward</span>
+        </v-btn>
         <div class="player__control--time">0:00 / 0:00</div>
       </div>
       <div class="player__info">
-        <img src="https://www.picsum.photos/200/200" alt="album art" class="player__info--img" />
+        <img src="https://www.picsum.photos/320/640" alt="album art" class="player__info--img" />
         <div class="player__info--text">
           <div class="player__info--title">Song Title</div>
           <div class="player__info--artist">
             <a href="#" class="player__info--artist-link">Artist</a> • 17-01-2020
           </div>
         </div>
-        <a href="/" class="player__info--like-btn">
-          <i class="fa-regular fa-thumbs-up"></i>
-        </a>
-        <a href="/" class="player__info--like-btn">
-          <i class="fa-regular fa-thumbs-down"></i>
-        </a>
+        <v-btn icon color="transparent" elevation="0" class="player__info--like-btn">
+          <span class="material-symbols-outlined">thumb_up</span>
+        </v-btn>
+        <v-btn icon color="transparent" elevation="0" class="player__info--like-btn">
+          <span class="material-symbols-outlined">thumb_down</span>
+        </v-btn>
       </div>
       <div class="player__volume">
-        <button class="player__controls--btn">
-          <i class="fas fa-volume-up"></i>
-        </button>
+        <v-btn icon color="transparent" elevation="0" class="player__controls--btn">
+          <span class="material-symbols-rounded">volume_up</span>
+        </v-btn>
         <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
-        <v-btn icon @click.prevent="togglePlayerPage" color="transparent">
+        <v-btn icon @click.prevent="togglePlayerPage" color="transparent" elevation="0">
           <span class="material-symbols-rounded">
             {{ playerPageOpen ? 'expand_more' : 'expand_less' }}
           </span>
@@ -101,9 +101,11 @@ export default {
 }
 
 .player-container {
-  display: flex;
+  /* display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-between; */
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
   height: 100%;
   gap: 2rem;
   width: 100%;
@@ -117,11 +119,9 @@ export default {
   /* compute page height - 7rem */
   top: calc(100vh - 7rem);
   z-index: 100;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   color: white;
   align-items: start;
-  gap: 1rem;
   padding: 0 20px;
   background-color: transparent;
   backdrop-filter: blur(20px) brightness(0.5);
@@ -131,16 +131,22 @@ export default {
 
 .frame-body--open {
   top: 7rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .player__progress-bar {
   width: 100%;
 }
 
+.player__progress-bar--open {
+  display: none;
+}
+
 .player__controls {
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: 1rem;
 }
 
 .player__controls--btn {
@@ -165,10 +171,11 @@ export default {
   gap: 2rem;
   color: white;
   text-decoration: none;
+  justify-content: center;
 }
 
 .player__info--img {
-  width: 4rem;
+  aspect-ratio: 16/9;
   height: 4rem;
 }
 
