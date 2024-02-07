@@ -51,6 +51,11 @@ const router = createRouter({
       name: 'top-albums',
       component: () => import('../views/music/AllAlbumsView.vue'),
       props: { albums: [] }
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/music/DashboardUserView.vue')
     }
   ]
 })
