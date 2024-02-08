@@ -52,4 +52,61 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.hero {
+  display: grid;
+  grid-template-columns: 20rem 1fr max-content;
+  grid-template-rows: 1fr;
+  grid-gap: 2rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+.hero__avatar {
+  height: 20rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: capitalize;
+  font-size: 12rem;
+}
+
+.hero__avatar--img {
+  height: 100%;
+  border-radius: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.hero__details {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content min-content min-content;
+  grid-gap: 1rem;
+}
+
+.hero__details--header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.hero__details--title {
+  font-size: 5rem;
+  font-weight: bold;
+}
+
+.hero__details--subtitle {
+  font-size: 1.8rem;
+  font-weight: lighter;
+  color: var(--text-subtitle-color);
+}
+
+.hero__cta {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+}
+</style>
