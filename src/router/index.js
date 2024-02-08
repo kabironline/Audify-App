@@ -56,6 +56,11 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/music/DashboardUserView.vue')
+    },
+    {
+      path: '/channel/dashboard',
+      name: 'channel-dashboard',
+      component: () => import('../views/music/DashboardChannelView.vue')
     }
   ]
 })

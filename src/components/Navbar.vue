@@ -16,68 +16,16 @@
       </div>
     </form>
     <div class="profile-icon-container">
-      <!-- <input type="checkbox" name="profile" id="profile" class="profile-icon__checkbox" />
-      <div class="profile-dropdown-container">
-        <ul class="dropdown-list">
-          <li class="dropdown-item">
-            <a class="dropdown-item--link" href="/dashboard">Dashboard</a>
-          </li>
-          <li class="dropdown-item">
-            <a
-              class="dropdown-item--link"
-              href="/dashboard/channel/{{current_user.channels[0]['id']}}"
-              >Channel Dashboard</a
-            >
-          </li>
-          <li class="dropdown-item">
-            <a class="dropdown-item--link" href="/admin/dashboard">Admin Dashboard</a>
-          </li>
-          <li class="dropdown-item">
-            <a class="dropdown-item--link" href="/edit_profile">Edit Profile</a>
-          </li>
-          <li class="dropdown-item">
-            <a class="dropdown-item--link" href="/register_creator">Register as Creator</a>
-          </li>
-          <li class="dropdown-item">
-            <a class="dropdown-item--link" href="/edit_profile_creator">Edit Channel</a>
-          </li>
-          <li class="dropdown-item">
-            <a class="dropdown-item--link" href="#logout-modal">Logout</a>
-          </li>
-        </ul>
-      </div> -->
       <v-menu location="start" activator="#main-menu-activator">
         <v-list>
-          <v-list-item link class="dropdown-item">
-            <v-list-item-title class="dropdown-item--link">Dashboard</v-list-item-title>
-          </v-list-item>
-          <v-list-item link class="dropdown-item">
-            <v-list-item-title class="dropdown-item--link">Channel Dashboard</v-list-item-title>
-          </v-list-item>
-          <v-list-item link class="dropdown-item">
-            <v-list-item-title class="dropdown-item--link" href="/admin/dashboard"
-              >Admin Dashboard</v-list-item-title
-            >
-          </v-list-item>
-          <v-list-item link class="dropdown-item">
-            <v-list-item-title class="dropdown-item--link" href="/edit_profile"
-              >Edit Profile</v-list-item-title
-            >
-          </v-list-item>
-          <v-list-item link class="dropdown-item">
-            <v-list-item-title class="dropdown-item--link" href="/register_creator"
-              >Register as Creator</v-list-item-title
-            >
-          </v-list-item>
-          <v-list-item link class="dropdown-item">
-            <v-list-item-title class="dropdown-item--link" href="/edit_profile_creator"
-              >Edit Channel</v-list-item-title
-            >
-          </v-list-item>
-          <v-list-item link class="dropdown-item">
-            <v-list-item-title class="dropdown-item--link" href="#logout-modal"
-              >Logout</v-list-item-title
-            >
+          <v-list-item
+            link
+            v-for="item in menuItems"
+            :key="item.title"
+            class="dropdown-item"
+            @click.prevent="navigateTo(item.link)"
+          >
+            <v-list-item-title class="dropdown-item--link">{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -96,7 +44,27 @@
 
 <script>
 export default {
-  name: 'AppNavbar'
+  name: 'AppNavbar',
+  data: () => ({
+    menuItems: [
+      { title: 'Dashboard', link: '/dashboard' },
+      { title: 'Channel Dashboard', link: '/channel/dashboard' },
+      { title: 'Admin Dashboard', link: '/admin/dashboard' },
+      { title: 'Edit Profile', link: '/edit_profile' },
+      { title: 'Register as Creator', link: '/register_creator' },
+      { title: 'Edit Channel', link: '/edit_profile_creator' },
+      { title: 'Logout', link: '#logout-modal' }
+    ]
+  }),
+  methods: {
+    logout() {
+      this.$router.push('/login')
+      console.log('Logging out')
+    },
+    navigateTo(route) {
+      this.$router.push(route)
+    }
+  }
 }
 </script>
 

@@ -117,6 +117,12 @@ body {
   }
 }
 
+.hr {
+  border: none;
+  border-bottom: 1px solid var(--color-border-light);
+  margin: 2rem 0;
+}
+
 /* Google SANS FONT FACES */
 
 @font-face {

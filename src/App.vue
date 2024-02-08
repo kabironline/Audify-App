@@ -5,14 +5,13 @@
       <div class="page-content">
         <!-- Insert Navbar here -->
         <Navbar v-if="headerFooterShown" />
-        <RouterView v-slot="{ Component }">
-          <!-- <Transition name="fade" mode="out-in"> -->
-
-          <div class="container">
+        <div class="container">
+          <RouterView v-slot="{ Component }">
+            <!-- <Transition name="fade" mode="out-in"> -->
             <component :is="Component" />
-          </div>
-          <!-- </Transition> -->
-        </RouterView>
+            <!-- </Transition> -->
+          </RouterView>
+        </div>
         <PlayerBar v-if="headerFooterShown" />
       </div>
     </div>
@@ -55,17 +54,21 @@ export default {
 
 .container {
   padding: 3rem 7rem;
+  padding-bottom: 7rem;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s ease;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
-
-<!-- TODO: Add CSS transition -->
-<!-- <style>
-.fade-enter-from {
-}
-
-.fade-enter-active {
-}
-
-.fade-leave-to {
-}
-</style> -->
