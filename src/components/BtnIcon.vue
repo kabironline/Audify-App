@@ -1,5 +1,13 @@
 <template>
-  <v-btn icon @click.prevent="action" :color="color" rounded="xl" elevation="0" class="btn d-flex">
+  <v-btn
+    icon
+    @click.prevent="action"
+    :color="color"
+    rounded="xl"
+    size="small"
+    elevation="0"
+    class="btn d-flex justify-center align-center"
+  >
     <span class="material-symbols-rounded" v-if="icon != ''">{{ icon }}</span>
   </v-btn>
 </template>

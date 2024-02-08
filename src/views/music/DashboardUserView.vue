@@ -25,12 +25,19 @@
     <hr class="hr" />
   </section>
   <section class="section section-recents">
-    <h2 class="heading-2">Recently Played</h2>
+    <h2 class="heading-2 mb-medium">Recently Played</h2>
+    <ListTracks />
+  </section>
+  <section class="section section-playlists">
+    <h2 class="heading-2 mb-medium">User Playlists</h2>
+    <TilePlaylist />
   </section>
 </template>
 
 <script>
 import BtnNavigation from '@/components/BtnNavigation.vue'
+import ListTracks from '@/components/ListTracks.vue'
+import TilePlaylist from '@/components/TilePlaylist.vue'
 
 export default {
   name: 'DashboardUser',
@@ -48,7 +55,7 @@ export default {
       }
     }
   },
-  components: { BtnNavigation }
+  components: { BtnNavigation, ListTracks, TilePlaylist }
 }
 </script>
 
