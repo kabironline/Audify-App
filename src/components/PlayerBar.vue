@@ -1,34 +1,61 @@
 <template>
-  <div class="player-frame-container">
-    <div class="player-track-info">
-      <v-img src="https://www.picsum.photos/640/320" class="player-track-img"></v-img>
-      <div class="player-track-details">
-        <div class="player-track-title">Low Quality Shape of You!</div>
-        <div class="player-track-artist">Adi Shreeman</div>
+  <div class="player-frame-container" :class="{ 'player-page-open': playerPageOpen }">
+    <div class="player-main">
+      <div>
+        <div class="player-track-info">
+          <v-img src="https://www.picsum.photos/640/360" class="player-track-img" />
+          <div class="player-track-details">
+            <div class="player-track-title">Low Quality Shape of You!</div>
+            <div class="player-track-artist">Adi Shreeman</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="player-controls">
+          <div class="player-control-container">
+            <BtnIcon icon="fast_rewind" :iconSize="3" />
+            <BtnIcon icon="play_circle" :iconSize="3" />
+            <BtnIcon icon="fast_forward" :iconSize="3" />
+          </div>
+          <!-- Create a Progress Bar -->
+          <div class="player-progress-bar">
+            <div class="player-progress-bar--knob"></div>
+            <div class="player-progress-bar--track"></div>
+          </div>
+          <div class="player-control--time">0:00 / 0:00</div>
+        </div>
+      </div>
+      <div>
+        <div class="player-controls-extra">
+          <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
+          <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
+          <BtnIcon
+            :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
+            @click.prevent="togglePlayerPage"
+          />
+        </div>
       </div>
     </div>
-    <div class="player-controls">
-      <BtnIcon icon="fast_rewind" :iconSize="3" />
-      <BtnIcon icon="play_circle" :iconSize="3" />
-      <BtnIcon icon="fast_forward" :iconSize="3" />
-      <!-- Create a Progress Bar -->
-      <div class="player-progress-bar">
-        <div class="player-progress-bar--knob"></div>
-        <div class="player-progress-bar--track"></div>
+    <Transition>
+      <div v-if="playerPageOpen" class="player-page-sidebar">
+        <div class="player-page__content">
+          <div class="player-page__content--lyrics">
+            <h2>Lyrics</h2>
+            <p>
+              The club isn't the best place to find a lover So the bar is where I go Me and my
+              friends at the table doing shots Drinking fast and then we talk slow And you come over
+              and start up a conversation with just me And trust me I'll give it a chance now Take
+              my hand, stop,
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="player-control--time">0:00 / 0:00</div>
-    </div>
-    <div class="player-controls-extra">
-      <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
-      <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
-      <BtnIcon icon="expand_more" @click.prevent="togglePlayerPage" />
-    </div>
+    </Transition>
   </div>
 </template>
 
 <script>
 import BtnIcon from './BtnIcon.vue'
-
 export default {
   name: 'PlayerBar',
   components: { BtnIcon },
@@ -84,22 +111,76 @@ export default {
   backdrop-filter: blur(20px) brightness(0.5);
   border-top: 1px solid #fff;
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: 1fr 0fr;
   align-items: center;
   align-content: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.player-main {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: max-content min-content min-content;
+  height: 100%;
+}
+
+.player-page-open {
+  /* padding: 3rem; */
+  height: calc(100% - 7rem);
+  border-top: none;
+  grid-template-columns: 1fr 1fr;
+  padding: 2rem;
+
+  .player-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content min-content max-content;
+  }
+  .player-track-info {
+    flex-direction: column;
+    align-items: start;
+
+    .player-track-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .player-track-title {
+      font-size: 3.4rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow-x: hidden;
+    }
+    .player-track-artist {
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--text-subtitle-color);
+    }
+  }
+
+  .player-controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
 }
 
 .player-track-info {
   display: flex;
   align-items: center;
   padding: 1rem;
+  transition: all 0.3s ease-in-out;
 }
 
 .player-track-img {
-  height: 7rem;
+  width: 11rem;
   aspect-ratio: 16/9;
   border-radius: 1rem;
   margin-right: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease-in-out;
 }
 
 .player-track-details {
@@ -113,12 +194,14 @@ export default {
     font-weight: 600;
     white-space: nowrap;
     overflow-x: hidden;
+    transition: all 0.3s ease-in-out;
   }
 
   .player-track-artist {
     font-size: 1.5rem;
     font-weight: 400;
     color: var(--text-subtitle-color);
+    transition: all 0.3s ease-in-out;
   }
 }
 
@@ -127,6 +210,11 @@ export default {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
+
+  .player-control-container {
+    display: flex;
+    flex-direction: row;
+  }
 
   .player-progress-bar {
     flex: 1;
@@ -163,5 +251,14 @@ export default {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
+}
+
+.player-controls-extra--open {
+  grid-column: 1;
+  grid-row: 3;
+}
+.player-page-sidebar {
+  grid-column: 2;
+  grid-row: 1 / -1;
 }
 </style>
