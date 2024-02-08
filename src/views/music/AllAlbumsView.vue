@@ -15,7 +15,7 @@ export default {
     CarouselAlbum
   },
   props: {
-    tracks: {
+    albums: {
       type: Array
     },
     heading: {

@@ -31,13 +31,14 @@
   </section>
   <section class="section section-albums">
     <h2 class="heading-2 mb-medium">Channel Albums</h2>
-    <CarouselTrack />
+    <CarouselAlbum />
     <BtnNavigation to="/channel/dashboard/albums" text="View More" />
   </section>
 </template>
 
 <script>
 import BtnNavigation from '@/components/BtnNavigation.vue'
+import CarouselAlbum from '@/components/CarouselAlbum.vue'
 import CarouselTrack from '@/components/CarouselTrack.vue'
 
 export default {
@@ -48,7 +49,7 @@ export default {
       userBio: 'This is the official account of jhon denver'
     }
   },
-  components: { CarouselTrack, BtnNavigation }
+  components: { CarouselTrack, BtnNavigation, CarouselAlbum }
 }
 </script>
 
