@@ -8,7 +8,14 @@
     elevation="0"
     class="btn d-flex justify-center align-center"
   >
-    <span class="material-symbols-rounded" v-if="icon != ''">{{ icon }}</span>
+    <span
+      class="material-symbols-rounded"
+      v-if="icon != ''"
+      :style="{
+        fontSize: `${iconSize}rem`
+      }"
+      >{{ icon }}</span
+    >
   </v-btn>
 </template>
 
@@ -31,9 +38,11 @@ export default {
     color: {
       type: String,
       default: 'transparent'
+    },
+    iconSize: {
+      type: Number,
+      default: 2
     }
   }
 }
 </script>
-
-<style></style>

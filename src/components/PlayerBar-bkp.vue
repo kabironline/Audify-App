@@ -1,0 +1,306 @@
+<template>
+  <div class="frame-body" :class="{ 'frame-body--open': playerPageOpen }">
+    <input type="range" min="1" max="100" value="20" class="player__progress-bar" />
+    <div class="player-container">
+      <audio src="{{ media }}" class="player__controls--audio" autoplay></audio>
+      <div class="player__controls">
+        <v-btn icon color="transparent" elevation="0" class="player__controls--btn">
+          <span class="material-symbols-rounded">fast_rewind</span>
+        </v-btn>
+        <v-btn icon color="transparent" elevation="0" class="player__controls--btn">
+          <span class="material-symbols-rounded">play_circle</span>
+        </v-btn>
+        <v-btn icon color="transparent" elevation="0" class="player__controls--btn">
+          <span class="material-symbols-rounded">fast_forward</span>
+        </v-btn>
+        <div class="player__control--time">0:00 / 0:00</div>
+      </div>
+      <div class="player__info">
+        <img src="https://www.picsum.photos/320/640" alt="album art" class="player__info--img" />
+        <div class="player__info--text">
+          <div class="player__info--title">Song Title</div>
+          <div class="player__info--artist">
+            <a href="#" class="player__info--artist-link">Artist</a> • 17-01-2020
+          </div>
+        </div>
+        <v-btn icon color="transparent" elevation="0" class="player__info--like-btn">
+          <span class="material-symbols-outlined">thumb_up</span>
+        </v-btn>
+        <v-btn icon color="transparent" elevation="0" class="player__info--like-btn">
+          <span class="material-symbols-outlined">thumb_down</span>
+        </v-btn>
+      </div>
+      <div class="player__volume">
+        <v-btn icon color="transparent" elevation="0" class="player__controls--btn">
+          <span class="material-symbols-rounded">volume_up</span>
+        </v-btn>
+        <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
+        <v-btn icon @click.prevent="togglePlayerPage" color="transparent" elevation="0">
+          <span class="material-symbols-rounded">
+            {{ playerPageOpen ? 'expand_more' : 'expand_less' }}
+          </span>
+        </v-btn>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'PlayerBar',
+  components: {},
+  data() {
+    return {
+      playerPageOpen: false
+    }
+  },
+  props: {
+    media: {
+      type: String,
+      default: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+    }
+  },
+  methods: {
+    togglePlayerPage() {
+      this.playerPageOpen = !this.playerPageOpen
+    }
+  }
+}
+</script>
+
+<style>
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  transform: translateY(100vh);
+}
+
+.rotate-enter-active,
+.rotate-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.rotate-enter-from,
+.rotate-leave-to {
+  transform: rotate(180deg);
+}
+
+.player-frame-container {
+  z-index: 100000;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 8rem;
+  background: transparent;
+  backdrop-filter: blur(20px) brightness(0.5);
+}
+
+.player-container {
+  /* display: flex;
+  flex-direction: row;
+  justify-content: space-between; */
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  height: 100%;
+  gap: 2rem;
+  width: 100%;
+}
+
+.frame-body {
+  position: fixed;
+  bottom: 0;
+  left: 27rem;
+  right: 0;
+  /* compute page height - 7rem */
+  top: calc(100vh - 7rem);
+  z-index: 100;
+  display: grid;
+  color: white;
+  align-items: start;
+  padding: 0 20px;
+  background-color: transparent;
+  backdrop-filter: blur(20px) brightness(0.5);
+  padding-bottom: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.frame-body--open {
+  top: 7rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.player__progress-bar {
+  width: 100%;
+}
+
+.player__progress-bar--open {
+  display: none;
+}
+
+.player__controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player__controls--btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-light);
+  font-size: 3rem;
+  /* padding: 1rem; */
+  transition: all 0.2s;
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-text-dark);
+  }
+}
+
+.player__info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  color: white;
+  text-decoration: none;
+  justify-content: center;
+}
+
+.player__info--img {
+  aspect-ratio: 16/9;
+  height: 4rem;
+}
+
+.player__info--title {
+  font-size: 2rem;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.player__info--artist {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: white;
+}
+
+.player__info--artist-link {
+  text-decoration: none;
+  color: white;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.player__info--like-btn {
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    color: var(--color-text-dark);
+  }
+}
+
+.player__volume {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Style the range input */
+
+input[type='range'] {
+  font-size: 1.5rem;
+  /* width: 100%; */
+}
+
+input[type='range'] {
+  color: var(--color-primary);
+  --thumb-height: 1.125em;
+  --track-height: 0.125em;
+  --track-color: var(--color-background-light);
+  --brightness-hover: 180%;
+  --brightness-down: 80%;
+  --clip-edges: 0.125em;
+}
+
+input[type='range'] {
+  position: relative;
+  background: #fff0;
+  overflow: hidden;
+}
+
+input[type='range']:active {
+  cursor: grabbing;
+}
+
+input[type='range'],
+input[type='range']::-webkit-slider-runnable-track,
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  transition: all ease 100ms;
+  height: var(--thumb-height);
+}
+
+input[type='range']::-webkit-slider-runnable-track,
+input[type='range']::-webkit-slider-thumb {
+  position: relative;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  --thumb-radius: calc((var(--thumb-height) * 0.5) - 1px);
+  --clip-top: calc((var(--thumb-height) - var(--track-height)) * 0.5 - 0.5px);
+  --clip-bottom: calc(var(--thumb-height) - var(--clip-top));
+  --clip-further: calc(100% + 1px);
+  --box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0 100vmax currentColor;
+  width: var(--thumb-width, var(--thumb-height));
+  background: linear-gradient(currentColor 0 0) scroll no-repeat left center / 50%
+    calc(var(--track-height) + 1px);
+  box-shadow: var(--box-fill);
+  border-radius: var(--thumb-width, var(--thumb-height));
+  background-color: transparent;
+
+  filter: brightness(100%);
+  clip-path: polygon(
+    100% -1px,
+    var(--clip-edges) -1px,
+    0 var(--clip-top),
+    -100vmax var(--clip-top),
+    -100vmax var(--clip-bottom),
+    0 var(--clip-bottom),
+    var(--clip-edges) 100%,
+    var(--clip-further) var(--clip-further)
+  );
+}
+
+input[type='range']:hover::-webkit-slider-thumb {
+  background-color: currentColor;
+  filter: brightness(var(--brightness-hover));
+  cursor: grab;
+}
+
+input[type='range']:active::-webkit-slider-thumb {
+  filter: brightness(var(--brightness-down));
+  cursor: grabbing;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  background: linear-gradient(var(--track-color) 0 0) scroll no-repeat center / 100%
+    calc(var(--track-height) + 1px);
+}
+
+input[type='range']:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+</style>
