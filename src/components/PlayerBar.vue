@@ -1,6 +1,6 @@
 <template>
   <div class="player-frame-container" :class="{ 'player-page-open': playerPageOpen }">
-    <div class="player-main">
+    <div class="player-main" :class="{ 'player-main-open': playerPageOpened }">
       <img src="https://www.picsum.photos/640/360" class="player-track-img" />
       <div class="player-track-details">
         <div class="player-track-title">Low Quality Shape of You!</div>
@@ -18,12 +18,12 @@
       <div class="player-control--time">0:00 / 0:00</div>
       <!-- <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
       <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" /> -->
-      <div class="player-controls-extra">
-        <BtnIcon
-          :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
-          @click.prevent="togglePlayerPage"
-        />
-      </div>
+    </div>
+    <div class="player-controls-extra">
+      <BtnIcon
+        :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
+        @click.prevent="togglePlayerPage"
+      />
     </div>
   </div>
 </template>
@@ -35,7 +35,8 @@ export default {
   components: { BtnIcon },
   data() {
     return {
-      playerPageOpen: false
+      playerPageOpen: false,
+      playerPageOpened: false
     }
   },
   props: {
@@ -46,7 +47,17 @@ export default {
   },
   methods: {
     togglePlayerPage() {
-      this.playerPageOpen = !this.playerPageOpen
+      if (!this.playerPageOpen) {
+        this.playerPageOpen = true
+        setTimeout(() => {
+          this.playerPageOpened = true
+        }, 3000)
+      } else {
+        this.playerPageOpened = false
+        setTimeout(() => {
+          this.playerPageOpen = false
+        }, 3000)
+      }
     },
     handleMouseDown(event) {
       const { clientX, target } = event
@@ -101,7 +112,7 @@ export default {
   aspect-ratio: 16/9;
   position: absolute !important;
   left: 1rem;
-  top: 0;
+  top: 50%;
   transform: translateY(-50%);
   border-radius: 0.5rem;
   transition: all 3s ease-in;
@@ -203,17 +214,16 @@ export default {
 
 .player-page-open {
   height: calc(100vh - 7rem);
-  backdrop-filter: blur(20px) brightness(0.5);
+  backdrop-filter: blur(20px) brightness(0);
   border-top: none;
   display: grid;
   grid-template-columns: 50% 50%;
   align-items: center;
   align-content: center;
-
-  .player-main {
-    height: 100%;
-    position: relative;
-  }
+}
+.player-main-open {
+  height: 100%;
+  position: relative;
 
   .player-track-img {
     width: 97%;
@@ -230,7 +240,7 @@ export default {
   .player-controls {
     position: absolute;
     left: 1rem;
-    top: 80%;
+    top: 70%;
     left: 50%;
     transform: translateX(-50%);
   }
@@ -240,13 +250,13 @@ export default {
     position: absolute;
     height: 0.5rem;
     left: 1rem;
-    top: 90%;
+    top: 80%;
   }
 
   .player-control--time {
     position: absolute;
     left: 1rem;
-    top: 100%;
+    top: 90%;
   }
 
   .player-controls-extra {
