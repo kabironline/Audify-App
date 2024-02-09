@@ -4,7 +4,7 @@
       <a href="/" class="track-item__link">
         <div class="track-item__cover">
           <v-img
-            :src="`https://picsum.photos/200/300?random=${track}`"
+            :src="`https://picsum.photos/640/360?random=${track}`"
             alt=""
             class="track-item__cover--img"
           />
@@ -16,7 +16,7 @@
       <div class="track-item__cta">
         <BtnIcon icon="thumb_up" class="track-item__cta" />
         <BtnIcon icon="thumb_down" class="track-item__cta" />
-        <!-- <BtnIcon icon="remove" href="" class="track-item__cta-link track-item__cta--remove" /> -->
+        <BtnIcon icon="remove" href="" class="track-item__cta-link track-item__cta--remove" />
         <BtnIcon icon="add" class="track-item__cta-link track-item__cta--remove" />
       </div>
       <p class="track-item__timer">{{ track.duration }}</p>
@@ -81,7 +81,7 @@ export default {
 
 .track-item__link {
   display: grid;
-  grid-template-columns: 3rem 2fr max-content;
+  grid-template-columns: 5rem 2fr max-content;
   grid-gap: 2.5rem;
   align-items: center;
   height: 5rem;
@@ -101,7 +101,6 @@ export default {
 }
 
 .track-item__cover {
-  width: 3rem;
   height: 3rem;
   position: relative;
 }
@@ -126,9 +125,11 @@ export default {
 }
 
 .track-item__cover--img {
-  width: 3rem;
-  height: 3rem;
+  /* width: 3rem; */
+  aspect-ratio: 16/9;
+  height: 5rem;
   object-fit: cover;
+  border-radius: 0.5rem;
 }
 
 .track-item__title {

@@ -1,76 +1,30 @@
 <template>
   <div class="player-frame-container" :class="{ 'player-page-open': playerPageOpen }">
     <div class="player-main">
-      <div class="player-track-info">
-        <div class="player-track-info">
-          <v-img src="https://www.picsum.photos/640/360" class="player-track-img" />
-          <div class="player-track-details">
-            <div class="player-track-title">Low Quality Shape of You!</div>
-            <div class="player-track-artist">Adi Shreeman</div>
-          </div>
-        </div>
+      <img src="https://www.picsum.photos/640/360" class="player-track-img" />
+      <div class="player-track-details">
+        <div class="player-track-title">Low Quality Shape of You!</div>
+        <div class="player-track-artist">Adi Shreeman</div>
       </div>
       <div class="player-controls">
-        <div class="player-control-container">
-          <BtnIcon icon="fast_rewind" :iconSize="3" />
-          <BtnIcon icon="play_circle" :iconSize="3" />
-          <BtnIcon icon="fast_forward" :iconSize="3" />
-        </div>
-        <div class="player-progress-bar">
-          <div class="player-progress-bar--knob"></div>
-          <div class="player-progress-bar--track"></div>
-        </div>
-        <div class="player-control--time">0:00 / 0:00</div>
+        <BtnIcon icon="fast_rewind" :iconSize="3" />
+        <BtnIcon icon="play_circle" :iconSize="3" />
+        <BtnIcon icon="fast_forward" :iconSize="3" />
       </div>
+      <div class="player-progress-bar">
+        <div class="player-progress-bar--knob"></div>
+        <div class="player-progress-bar--track"></div>
+      </div>
+      <div class="player-control--time">0:00 / 0:00</div>
+      <!-- <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
+      <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" /> -->
       <div class="player-controls-extra">
-        <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
-        <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
         <BtnIcon
           :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
           @click.prevent="togglePlayerPage"
         />
       </div>
-      <!-- <BtnIcon
-        :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
-        @click.prevent="togglePlayerPage"
-      />
-      <div>
-        <v-img src="https://www.picsum.photos/640/360" class="player-track-img" />
-      </div>
-      <div class="player-track-title">Low Quality Shape of You!</div>
-      <div class="player-track-artist">Adi Shreeman</div>
-      <div>
-        <BtnIcon icon="fast_rewind" :iconSize="3" />
-      </div>
-      <div>
-        <BtnIcon icon="play_circle" :iconSize="3" />
-      </div>
-      <div>
-        <BtnIcon icon="fast_forward" :iconSize="3" />
-      </div>
-      <div>
-        <div class="player-progress-bar" @mousedown="handleMouseDown">
-          <div class="player-progress-bar--knob"></div>
-          <div class="player-progress-bar--track"></div>
-        </div>
-      </div>
-      <div class="player-control--time">0:00 / 0:00</div> -->
     </div>
-    <!-- <Transition>
-      <div v-if="playerPageOpen" class="player-page-sidebar">
-        <div class="player-page__content">
-          <div class="player-page__content--lyrics">
-            <h2>Lyrics</h2>
-            <p>
-              The club isn't the best place to find a lover So the bar is where I go Me and my
-              friends at the table doing shots Drinking fast and then we talk slow And you come over
-              and start up a conversation with just me And trust me I'll give it a chance now Take
-              my hand, stop,
-            </p>
-          </div>
-        </div>
-      </div>
-    </Transition> -->
   </div>
 </template>
 
@@ -131,153 +85,175 @@ export default {
   backdrop-filter: blur(20px) brightness(0.5);
   border-top: 1px solid #fff;
   display: grid;
-  grid-template-columns: 1fr 0fr;
+  grid-template-columns: 100% 0%;
+  grid-template-rows: 1fr;
   align-items: center;
   align-content: center;
-  transition: all 0.3s ease-in;
+  transition: all 3s ease-in;
 }
 
 .player-main {
-  display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
-  grid-template-rows: 1fr;
-  height: 100%;
-}
-.player-page-open {
-  height: calc(100% - 7rem);
-  border-top: none;
-  grid-template-columns: 1fr 1fr;
-  padding: 2rem;
-
-  /* .player-main {
-    grid-template-columns: 1fr 0fr 0fr;
-    grid-template-rows: max-content min-content max-content;
-  }
-  .player-track-info {
-    flex-direction: column;
-    align-items: start;
-
-    .player-track-img {
-      width: 100%;
-      aspect-ratio: 16/9;
-      border-radius: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .player-track-title {
-      font-size: 3.4rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow-x: hidden;
-    }
-    .player-track-artist {
-      font-size: 2rem;
-      font-weight: 400;
-      color: var(--text-subtitle-color);
-    }
-  }
-
-  .player-controls {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-  } */
-}
-
-.player-track-info {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  /* transition: all 0.3s ease-in-out; */
+  position: relative;
 }
 
 .player-track-img {
-  width: 11rem;
+  width: 12rem;
   aspect-ratio: 16/9;
-  border-radius: 1rem;
-  margin-right: 1rem;
+  position: absolute !important;
+  left: 1rem;
+  top: 0;
+  transform: translateY(-50%);
   border-radius: 0.5rem;
-  /* transition: all 0.3s ease-in-out; */
+  transition: all 3s ease-in;
 }
 
 .player-track-details {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow-x: hidden;
+  align-items: flex-start;
+  gap: 0.5rem;
+  width: 30rem;
+  position: absolute;
+  left: 14rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 3s ease-in;
 
   .player-track-title {
     font-size: 2rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow-x: hidden;
-    /* transition: all 0.3s ease-in-out; */
+    font-weight: 500;
+    transition: all 3s ease-in;
   }
 
   .player-track-artist {
     font-size: 1.5rem;
     font-weight: 400;
-    color: var(--text-subtitle-color);
-    /* transition: all 0.3s ease-in-out; */
+    color: var(--text-label-color);
+    transition: all 3s ease-in;
   }
 }
 
 .player-controls {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
-  padding: 1rem;
+  position: absolute;
+  left: 45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 3s ease-in;
+}
 
-  .player-control-container {
-    display: flex;
-    flex-direction: row;
+.player-progress-bar {
+  width: 40vw;
+  position: absolute;
+  height: 0.5rem;
+  background-color: var(--color-background-light);
+  border-radius: 1rem;
+  left: 60rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 3s ease-in;
+
+  .player-progress-bar--knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: var(--color-primary-dark);
+    border-radius: 50%;
+    z-index: 12;
+  }
+
+  .player-progress-bar--track {
+    position: absolute;
+    left: 0;
+    width: 50%;
+    height: 0.5rem;
+    background-color: var(--color-primary);
+    border-radius: 1rem;
+    z-index: 11;
+  }
+}
+
+.player-control--time {
+  position: absolute;
+  left: calc(60rem + 40vw + 1rem);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-label-color);
+  font-size: 1.5rem;
+  font-weight: 400;
+  transition: all 3s ease-in;
+}
+
+.player-controls-extra {
+  /* display: flex;
+  align-items: center; */
+  gap: 1rem;
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.player-page-open {
+  height: calc(100vh - 7rem);
+  backdrop-filter: blur(20px) brightness(0.5);
+  border-top: none;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+  align-content: center;
+
+  .player-main {
+    height: 100%;
+    position: relative;
+  }
+
+  .player-track-img {
+    width: 97%;
+    top: 35%;
+  }
+
+  .player-track-details {
+    width: 100%;
+    position: absolute;
+    left: 1rem;
+    top: 67%;
+  }
+
+  .player-controls {
+    position: absolute;
+    left: 1rem;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .player-progress-bar {
-    flex: 1;
-    position: relative;
+    width: calc(100% - 2rem);
+    position: absolute;
     height: 0.5rem;
-    background-color: var(--color-background-light);
-    border-radius: 1rem;
-
-    .player-progress-bar--knob {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 1.5rem;
-      height: 1.5rem;
-      background-color: var(--color-primary-dark);
-      border-radius: 50%;
-      z-index: 12;
-    }
-
-    .player-progress-bar--track {
-      position: absolute;
-      left: 0;
-      width: 50%;
-      height: 0.5rem;
-      background-color: var(--color-primary);
-      border-radius: 1rem;
-      z-index: 11;
-    }
+    left: 1rem;
+    top: 90%;
   }
-}
-.player-controls-extra {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  justify-content: flex-end;
-}
 
-.player-controls-extra--open {
-  grid-column: 1;
-  grid-row: 3;
-}
-.player-page-sidebar {
-  grid-column: 2;
-  grid-row: 1 / -1;
+  .player-control--time {
+    position: absolute;
+    left: 1rem;
+    top: 100%;
+  }
+
+  .player-controls-extra {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 </style>

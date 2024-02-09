@@ -18,8 +18,7 @@
           <div class="player-progress-bar--knob"></div>
           <div class="player-progress-bar--track"></div>
         </div>
-      </div>
-    -->
+      </div>    -->
       <div class="player-expand-container">
         <BtnIcon
           :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
