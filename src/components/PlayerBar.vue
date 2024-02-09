@@ -1,7 +1,7 @@
 <template>
   <div class="player-frame-container" :class="{ 'player-page-open': playerPageOpen }">
     <div class="player-main">
-      <div>
+      <div class="player-track-info">
         <div class="player-track-info">
           <v-img src="https://www.picsum.photos/640/360" class="player-track-img" />
           <div class="player-track-details">
@@ -10,33 +10,53 @@
           </div>
         </div>
       </div>
-      <div>
-        <div class="player-controls">
-          <div class="player-control-container">
-            <BtnIcon icon="fast_rewind" :iconSize="3" />
-            <BtnIcon icon="play_circle" :iconSize="3" />
-            <BtnIcon icon="fast_forward" :iconSize="3" />
-          </div>
-          <!-- Create a Progress Bar -->
-          <div class="player-progress-bar">
-            <div class="player-progress-bar--knob"></div>
-            <div class="player-progress-bar--track"></div>
-          </div>
-          <div class="player-control--time">0:00 / 0:00</div>
+      <div class="player-controls">
+        <div class="player-control-container">
+          <BtnIcon icon="fast_rewind" :iconSize="3" />
+          <BtnIcon icon="play_circle" :iconSize="3" />
+          <BtnIcon icon="fast_forward" :iconSize="3" />
         </div>
+        <div class="player-progress-bar">
+          <div class="player-progress-bar--knob"></div>
+          <div class="player-progress-bar--track"></div>
+        </div>
+        <div class="player-control--time">0:00 / 0:00</div>
+      </div>
+      <div class="player-controls-extra">
+        <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
+        <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
+        <BtnIcon
+          :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
+          @click.prevent="togglePlayerPage"
+        />
+      </div>
+      <!-- <BtnIcon
+        :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
+        @click.prevent="togglePlayerPage"
+      />
+      <div>
+        <v-img src="https://www.picsum.photos/640/360" class="player-track-img" />
+      </div>
+      <div class="player-track-title">Low Quality Shape of You!</div>
+      <div class="player-track-artist">Adi Shreeman</div>
+      <div>
+        <BtnIcon icon="fast_rewind" :iconSize="3" />
       </div>
       <div>
-        <div class="player-controls-extra">
-          <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
-          <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
-          <BtnIcon
-            :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
-            @click.prevent="togglePlayerPage"
-          />
+        <BtnIcon icon="play_circle" :iconSize="3" />
+      </div>
+      <div>
+        <BtnIcon icon="fast_forward" :iconSize="3" />
+      </div>
+      <div>
+        <div class="player-progress-bar" @mousedown="handleMouseDown">
+          <div class="player-progress-bar--knob"></div>
+          <div class="player-progress-bar--track"></div>
         </div>
       </div>
+      <div class="player-control--time">0:00 / 0:00</div> -->
     </div>
-    <Transition>
+    <!-- <Transition>
       <div v-if="playerPageOpen" class="player-page-sidebar">
         <div class="player-page__content">
           <div class="player-page__content--lyrics">
@@ -50,7 +70,7 @@
           </div>
         </div>
       </div>
-    </Transition>
+    </Transition> -->
   </div>
 </template>
 
@@ -114,25 +134,23 @@ export default {
   grid-template-columns: 1fr 0fr;
   align-items: center;
   align-content: center;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in;
 }
 
 .player-main {
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
-  grid-template-rows: max-content min-content min-content;
+  grid-template-rows: 1fr;
   height: 100%;
 }
-
 .player-page-open {
-  /* padding: 3rem; */
   height: calc(100% - 7rem);
   border-top: none;
   grid-template-columns: 1fr 1fr;
   padding: 2rem;
 
-  .player-main {
-    grid-template-columns: 1fr;
+  /* .player-main {
+    grid-template-columns: 1fr 0fr 0fr;
     grid-template-rows: max-content min-content max-content;
   }
   .player-track-info {
@@ -164,14 +182,14 @@ export default {
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-  }
+  } */
 }
 
 .player-track-info {
   display: flex;
   align-items: center;
   padding: 1rem;
-  transition: all 0.3s ease-in-out;
+  /* transition: all 0.3s ease-in-out; */
 }
 
 .player-track-img {
@@ -180,7 +198,7 @@ export default {
   border-radius: 1rem;
   margin-right: 1rem;
   border-radius: 0.5rem;
-  transition: all 0.3s ease-in-out;
+  /* transition: all 0.3s ease-in-out; */
 }
 
 .player-track-details {
@@ -194,14 +212,14 @@ export default {
     font-weight: 600;
     white-space: nowrap;
     overflow-x: hidden;
-    transition: all 0.3s ease-in-out;
+    /* transition: all 0.3s ease-in-out; */
   }
 
   .player-track-artist {
     font-size: 1.5rem;
     font-weight: 400;
     color: var(--text-subtitle-color);
-    transition: all 0.3s ease-in-out;
+    /* transition: all 0.3s ease-in-out; */
   }
 }
 
@@ -251,6 +269,7 @@ export default {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
+  justify-content: flex-end;
 }
 
 .player-controls-extra--open {

@@ -34,4 +34,4 @@ app.mount('#app')
 import { wrapGrid } from 'animate-css-grid'
 
 const grid = document.querySelector('.player-main')
-wrapGrid(grid, { duration: 300, stagger: 5 })
+// wrapGrid(grid, { duration: 300, stagger: 100 })
