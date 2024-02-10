@@ -117,7 +117,7 @@
           <v-window-item value="Comments" class="page-tab-window">
             <div class="comment-tab-container">
               <div class="comments">
-                <!-- Comment Section -->
+                <CommentComponent v-for="comment in 10" :key="comment" />
               </div>
               <form class="comment-container" onsubmit="sendComment()">
                 <div class="comment-box">
@@ -139,7 +139,7 @@
           </v-window-item>
 
           <v-window-item value="Playlist" class="page-tab-window">
-            <ListTrack :isInPlayer='True'/>
+            <ListTrack :isInPlayer="True" />
           </v-window-item>
         </v-window>
       </div>
@@ -148,12 +148,13 @@
 </template>
 
 <script>
+import CommentComponent from './CommentComponent.vue'
 import BtnIcon from './BtnIcon.vue'
 import ListTrack from './ListTracks.vue'
 
 export default {
   name: 'PlayerBar',
-  components: { BtnIcon, ListTrack },
+  components: { BtnIcon, ListTrack, CommentComponent },
   data() {
     return {
       playerPageOpen: false,
@@ -398,7 +399,8 @@ export default {
 
 .comments {
   flex: 1;
-  padding: 1rem;  
+  padding: 1rem;
+  overflow-y: scroll;
 }
 .comment-box {
   padding: 0.5rem 1rem;
@@ -422,7 +424,8 @@ export default {
   transition: all 0.2s ease-out;
   color: white;
 
-  &:active,  &:focus,
+  &:active,
+  &:focus,
   &:hover:focus {
     outline: none;
   }
