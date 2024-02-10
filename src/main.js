@@ -31,7 +31,7 @@ app.use(vuetify)
 app.mount('#app')
 
 // Running the GridViewer
-// import { wrapGrid } from 'animate-css-grid'
+import { wrapGrid } from 'animate-css-grid'
 
-// const grid = document.querySelector('.player-main')
-// wrapGrid(grid, { duration: 300, stagger: 100 })
+const grid = document.querySelector('.player-main')
+wrapGrid(grid, { duration: 300, stagger: 100 })

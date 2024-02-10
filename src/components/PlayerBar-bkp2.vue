@@ -4,7 +4,7 @@
       <div class="player-track-img--container">
         <v-img src="https://www.picsum.photos/640/360" class="player-track-img" />
       </div>
-      <!-- <div class="player-track-title">Low Quality Shape of You!</div>
+      <div class="player-track-title">Low Quality Shape of You!</div>
       <div class="player-track-artist">Adi Shreeman</div>
       <div class="player-controls-container">
         <div class="player-controls">
@@ -18,7 +18,7 @@
           <div class="player-progress-bar--knob"></div>
           <div class="player-progress-bar--track"></div>
         </div>
-      </div>    -->
+      </div>   
       <div class="player-expand-container">
         <BtnIcon
           :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
