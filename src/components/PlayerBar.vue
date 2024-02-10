@@ -50,8 +50,8 @@
       <div class="player-page-right">
         <v-tabs v-model="tab" bg-color="background">
           <v-tab value="Lryics">Lryics</v-tab>
-          <v-tab value="two">Item Two</v-tab>
-          <v-tab value="three">Item Three</v-tab>
+          <v-tab value="Comments">Comments</v-tab>
+          <v-tab value="Playlist">Playlist</v-tab>
         </v-tabs>
 
         <v-window v-model="tab">
@@ -114,9 +114,31 @@
             </p>
           </v-window-item>
 
-          <v-window-item value="two" class="page-tab-window"> Two </v-window-item>
+          <v-window-item value="Comments" class="page-tab-window">
+            <div class="comment-tab-container">
+              <div class="comments">
+                <!-- Comment Section -->
+              </div>
+              <form class="comment-container" onsubmit="sendComment()">
+                <div class="comment-box">
+                  <input
+                    minlength="1"
+                    required
+                    type="text"
+                    autocomplete="off"
+                    name="comment"
+                    placeholder="Enter comment"
+                    class="comment-box--bar"
+                  />
+                  <button type="submit" value="comment" class="comment-box--btn">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </v-window-item>
 
-          <v-window-item value="three" class="page-tab-window"> Three </v-window-item>
+          <v-window-item value="Playlist" class="page-tab-window"> Playlist </v-window-item>
         </v-window>
       </div>
     </div>
@@ -360,5 +382,49 @@ export default {
   overflow-y: scroll;
   padding: 2rem;
   height: 100%;
+}
+
+.comment-tab-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 100%;
+}
+
+.comments {
+  flex: 1;
+  padding: 1rem;  
+}
+.comment-box {
+  padding: 0.5rem 1rem;
+  border: 1px solid white;
+  border-radius: 3rem;
+  width: 100%;
+  margin-right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.comment-box--bar {
+  height: 3.5rem;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  padding: 0 2rem;
+  margin: 0;
+  font: inherit;
+  transition: all 0.2s ease-out;
+  color: white;
+
+  &:active,  &:focus,
+  &:hover:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: var(--text-placeholder-color);
+  }
 }
 </style>
