@@ -138,7 +138,9 @@
             </div>
           </v-window-item>
 
-          <v-window-item value="Playlist" class="page-tab-window"> Playlist </v-window-item>
+          <v-window-item value="Playlist" class="page-tab-window">
+            <ListTrack :isInPlayer='True'/>
+          </v-window-item>
         </v-window>
       </div>
     </div>
@@ -147,9 +149,11 @@
 
 <script>
 import BtnIcon from './BtnIcon.vue'
+import ListTrack from './ListTracks.vue'
+
 export default {
   name: 'PlayerBar',
-  components: { BtnIcon },
+  components: { BtnIcon, ListTrack },
   data() {
     return {
       playerPageOpen: false,
