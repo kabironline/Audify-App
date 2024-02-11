@@ -1,6 +1,7 @@
 <template>
   <div class="player-frame-container" :class="{ 'player-page-open': playerPageOpen }">
     <div class="player-main">
+      <audio ref="audio" :src="this.media" class="player-audio" />
       <div class="player-track-info">
         <div class="player-track-info">
           <v-img :src="trackImage" class="player-track-img" />
@@ -13,14 +14,25 @@
       <div class="player-controls">
         <div class="player-control-container">
           <BtnIcon icon="fast_rewind" :iconSize="3" />
-          <BtnIcon icon="play_circle" :iconSize="3" />
+          <BtnIcon :icon="playButton" :action="togglePlayPause" class="play-button" :iconSize="3" />
           <BtnIcon icon="fast_forward" :iconSize="3" />
         </div>
-        <div class="player-progress-bar">
-          <div class="player-progress-bar--knob"></div>
-          <div class="player-progress-bar--track"></div>
+        <div ref="playerProgressBar" class="player-progress-bar">
+          <div
+            class="player-progress-bar--knob"
+            :style="{
+              left: `${playerProgress * 100}%`
+            }"
+          ></div>
+          <div class="player-progress-bar--track-background"></div>
+          <div
+            class="player-progress-bar--track-progress"
+            :style="{
+              width: `${playerProgress * 100}%`
+            }"
+          ></div>
         </div>
-        <div class="player-control--time">0:00 / 0:00</div>
+        <div ref="time" class="player-control--time">0:00 / 0:00</div>
       </div>
       <div class="player-controls-extra">
         <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
@@ -53,7 +65,6 @@
           <v-tab value="Comments">Comments</v-tab>
           <v-tab value="Playlist">Playlist</v-tab>
         </v-tabs>
-
         <v-window v-model="tab">
           <v-window-item value="Lryics" class="page-tab-window">
             <p class="lyrics">
@@ -159,7 +170,10 @@ export default {
     return {
       playerPageOpen: false,
       trackImage: 'https://www.picsum.photos/1920/1080',
-      tab: 'lyrics'
+      tab: 'lyrics',
+      playButton: 'play_circle',
+      playerProgress: 0.0,
+      progressSync: true
     }
   },
   props: {
@@ -172,27 +186,64 @@ export default {
     togglePlayerPage() {
       this.playerPageOpen = !this.playerPageOpen
     },
-    handleMouseDown(event) {
-      const { clientX, target } = event
-      this.containerWidth = target.parentElement.clientWidth
-      this.isDragging = true
-      this.initialX = clientX
-      document.addEventListener('mousemove', this.handleMouseMove)
-      document.addEventListener('mouseup', this.handleMouseUp)
-    },
-    handleMouseMove(event) {
-      if (this.isDragging) {
-        const newX = event.clientX
-        const distance = newX - this.initialX
-        const newProgress = Math.min(Math.max(0, (distance / this.containerWidth) * 100), 100)
-        this.progress = newProgress
+    togglePlayPause() {
+      if (this.$refs.audio.paused) {
+        this.$refs.audio.play()
+        this.playButton = 'pause_circle'
+      } else {
+        this.$refs.audio.pause()
+        this.playButton = 'play_circle'
       }
     },
-    handleMouseUp() {
-      this.isDragging = false
-      document.removeEventListener('mousemove', this.handleMouseMove)
-      document.removeEventListener('mouseup', this.handleMouseUp)
+    formatTime(seconds) {
+      let minutes = Math.floor(seconds / 60)
+      let sec = Math.floor(seconds % 60)
+      // Format the time to always have 2 digits
+      return `${('000' + minutes).slice(-2)}:${('00' + sec).slice(-2)}`
+    },
+    initializePlayer() {
+      const audio = this.$refs.audio
+      audio.addEventListener('loadedmetadata', () => {
+        const duration = audio.duration
+        this.$refs.time.textContent = `0:00 / ${this.formatTime(duration)}`
+      })
+    },
+    timeUpdate() {
+      const audio = this.$refs.audio
+      const duration = audio.duration
+      const currentTime = audio.currentTime
+      this.$refs.time.textContent = `${this.formatTime(currentTime)} / ${this.formatTime(duration)}`
+      if (this.progressSync) {
+        this.playerProgress = currentTime / duration
+      }
+    },
+    updateProgress(e, dragOnly = false) {
+      const audio = this.$refs.audio
+      const progress = e.offsetX / this.$refs.playerProgressBar.offsetWidth
+      if (!dragOnly) audio.currentTime = audio.duration * progress
+      this.playerProgress = progress
     }
+  },
+  mounted() {
+    const audio = this.$refs.audio
+    this.initializePlayer()
+
+    audio.addEventListener('timeupdate', this.timeUpdate)
+    audio.addEventListener('ended', () => {
+      this.playButton = 'play_circle'
+    })
+
+    this.$refs.playerProgressBar.addEventListener('click', this.updateProgress)
+    // Add event listener for dragging the progress bar
+    this.$refs.playerProgressBar.addEventListener('mousemove', (e) => {
+      this.progressSync = false
+      if (e.buttons === 1) {
+        this.updateProgress(e, true)
+      }
+    })
+    this.$refs.playerProgressBar.addEventListener('mousedown', () => {
+      this.progressSync = true
+    })
   }
 }
 </script>
@@ -215,9 +266,9 @@ export default {
   left: 26.5rem;
   right: 0;
   height: 8rem;
-  background: transparent;
+  background: #ffffff13;
   backdrop-filter: blur(20px) brightness(0.5);
-  /* border-top: 1px solid #fff; */
+  border-top: 1px solid var(--color-border-light);
   display: grid;
   grid-template-columns: 1fr 0fr;
   align-items: center;
@@ -284,9 +335,10 @@ export default {
   .player-progress-bar {
     flex: 1;
     position: relative;
-    height: 0.5rem;
-    background-color: var(--color-background-light);
+    height: 100%;
+    background-color: transparent;
     border-radius: 1rem;
+    z-index: 13;
 
     .player-progress-bar--knob {
       position: absolute;
@@ -300,11 +352,25 @@ export default {
       z-index: 12;
     }
 
-    .player-progress-bar--track {
+    .player-progress-bar--track-background {
       position: absolute;
       left: 0;
+      top: 50%;
+      width: 100%;
+      height: 0.5rem;
+      transform: translateY(-50%);
+      background-color: var(--color-background-light);
+      border-radius: 1rem;
+      z-index: 10;
+    }
+
+    .player-progress-bar--track-progress {
+      position: absolute;
+      left: 0;
+      top: 50%;
       width: 50%;
       height: 0.5rem;
+      transform: translateY(-50%);
       background-color: var(--color-primary);
       border-radius: 1rem;
       z-index: 11;

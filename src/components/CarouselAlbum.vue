@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .v-card-title {
   font-size: 2rem;
 }
@@ -66,7 +66,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 2rem;
   margin: 3rem 0;
 }
 
