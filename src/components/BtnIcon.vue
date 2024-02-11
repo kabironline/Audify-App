@@ -2,9 +2,9 @@
   <v-btn
     icon
     @click.prevent="action"
-    :color="color"
     rounded="xl"
     size="small"
+    color="transparent"
     elevation="0"
     class="btn d-flex justify-center align-center"
   >
@@ -12,7 +12,8 @@
       class="material-symbols-rounded"
       v-if="icon != ''"
       :style="{
-        fontSize: `${iconSize}rem`
+        fontSize: `${iconSize}rem`,
+        color: color
       }"
       >{{ icon }}</span
     >
@@ -37,7 +38,7 @@ export default {
     },
     color: {
       type: String,
-      default: 'transparent'
+      default: 'white'
     },
     iconSize: {
       type: Number,

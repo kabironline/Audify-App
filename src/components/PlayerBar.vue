@@ -2,20 +2,24 @@
   <div class="player-frame-container" :class="{ 'player-page-open': playerPageOpen }">
     <div class="player-main">
       <audio ref="audio" :src="this.media" class="player-audio" />
-      <div class="player-track-info">
-        <div class="player-track-info">
+      <Transition name="slide">
+        <div class="player-track-info" v-if="!playerPageOpen">
           <v-img :src="trackImage" class="player-track-img" />
           <div class="player-track-details">
             <div class="player-track-title">Low Quality Shape of You!</div>
             <div class="player-track-artist">Adi Shreeman</div>
           </div>
         </div>
-      </div>
+      </Transition>
       <div class="player-controls">
         <div class="player-control-container">
           <BtnIcon icon="fast_rewind" :iconSize="3" />
           <BtnIcon :icon="playButton" :action="togglePlayPause" class="play-button" :iconSize="3" />
           <BtnIcon icon="fast_forward" :iconSize="3" />
+          <BtnIcon icon="repeat" :action="toggleLoop" :color="loopColor" :iconSize="2" />
+          <!-- Like and dislike button -->
+          <BtnIcon icon="thumb_up" :iconSize="2" />
+          <BtnIcon icon="thumb_down" :iconSize="2" />
         </div>
         <div ref="playerProgressBar" class="player-progress-bar">
           <div
@@ -58,6 +62,8 @@
           ), url(${trackImage}) center center / cover no-repeat`
           }"
         ></div>
+        <p class="player-page-track-title">Low Quality Shape of you!</p>
+        <p class="player-page-track-artist">Adi Shreeman</p>
       </div>
       <div class="player-page-right">
         <v-tabs v-model="tab" bg-color="background">
@@ -173,13 +179,19 @@ export default {
       tab: 'lyrics',
       playButton: 'play_circle',
       playerProgress: 0.0,
-      progressSync: true
+      progressSync: true,
+      isLooping: false
     }
   },
   props: {
     media: {
       type: String,
       default: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+    }
+  },
+  computed: {
+    loopColor() {
+      return this.isLooping ? 'white' : 'var(--text-placeholder-color)'
     }
   },
   methods: {
@@ -222,6 +234,12 @@ export default {
       const progress = e.offsetX / this.$refs.playerProgressBar.offsetWidth
       if (!dragOnly) audio.currentTime = audio.duration * progress
       this.playerProgress = progress
+    },
+    toggleLoop() {
+      const audio = this.$refs.audio
+      this.isLooping = !this.isLooping
+      audio.loop = this.isLooping
+      localStorage.setItem('loop', this.isLooping)
     }
   },
   mounted() {
@@ -244,6 +262,14 @@ export default {
     this.$refs.playerProgressBar.addEventListener('mousedown', () => {
       this.progressSync = true
     })
+
+    // Getting the value from localStorage and setting the volume and the loop state
+    const volume = localStorage.getItem('volume')
+    if (volume) {
+      audio.volume = volume
+    }
+    this.isLooping = localStorage.getItem('loop') === 'true'
+    console.log(this.isLooping)
   }
 }
 </script>
@@ -257,6 +283,19 @@ export default {
 .v-enter-from,
 .v-leave-to {
   transform: translateY(100vh);
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  z-index: 10;
+  transition: all 1s ease-in-out;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+  z-index: 10;
 }
 
 .player-frame-container {
@@ -278,9 +317,10 @@ export default {
 
 .player-main {
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: 1fr 3fr min-content;
   grid-template-rows: 1fr;
   height: 100%;
+  transition: all 0.3s ease-in-out;
 }
 
 .player-track-info {
@@ -326,6 +366,7 @@ export default {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
+  grid-column: 2;
 
   .player-control-container {
     display: flex;
@@ -387,6 +428,10 @@ export default {
 
 .player-page-open {
   background-color: black;
+
+  .player-main {
+    grid-template-columns: 0fr 3fr min-content;
+  }
 }
 
 .player-page-open.player-frame-container ~ .navbar > .search-container {
@@ -412,9 +457,10 @@ export default {
 
   .player-page-left {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    gap: 2rem;
+    align-items: start;
+    gap: 1rem;
     position: relative;
 
     .player-page-img {
@@ -428,6 +474,7 @@ export default {
       content: '';
       position: absolute;
       left: 0;
+      top: 0;
       width: 100%;
       aspect-ratio: 16/9;
       filter: blur(20px) brightness(1);
@@ -435,6 +482,19 @@ export default {
       z-index: 11;
       transform-origin: center;
       transform: scaleY(1.2) scaleX(1.1);
+    }
+
+    .player-page-track-title {
+      font-size: 3rem;
+      font-weight: 600;
+      color: white;
+      z-index: 13;
+    }
+
+    .player-page-track-artist {
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--text-subtitle-color);
     }
   }
 
