@@ -83,6 +83,11 @@ const router = createRouter({
       path: '/channel/edit_profile',
       name: 'channel-edit-profile',
       component: () => import('../views/membership/EditChannelProfileView.vue')
+    },
+    {
+      path: '/upload',
+      name: 'track-upload',
+      component: () => import('../views/music/UploadView.vue')
     }
   ]
 })

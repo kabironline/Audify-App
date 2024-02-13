@@ -475,7 +475,7 @@ export default {
       position: absolute;
       left: 0;
       top: 0;
-      width: 100%;
+      width: 95%;
       aspect-ratio: 16/9;
       filter: blur(20px) brightness(1);
       pointer-events: none;
