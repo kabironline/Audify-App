@@ -69,6 +69,14 @@ export default {
 </script>
 
 <style>
+.v-menu > .v-overlay__content > .v-card,
+.v-menu > .v-overlay__content > .v-sheet,
+.v-menu > .v-overlay__content > .v-list {
+  background: transparent !important;
+  backdrop-filter: blur(20px) brightness(0.5) !important;
+  border: 1px solid var(--color-border-light) !important;
+}
+
 .navbar {
   display: grid;
   grid-template-columns: 1fr 7rem;

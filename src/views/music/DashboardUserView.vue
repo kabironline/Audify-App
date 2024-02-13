@@ -19,7 +19,7 @@
         </p>
       </div>
       <div class="hero__cta">
-        <BtnNavigation to="/edit-profile" icon="edit" text="Edit Profile" />
+        <BtnNavigation to="/edit_profile" icon="edit" text="Edit Profile" />
       </div>
     </section>
     <hr class="hr" />

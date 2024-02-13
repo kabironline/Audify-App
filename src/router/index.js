@@ -73,6 +73,16 @@ const router = createRouter({
       name: 'channel-dashboard-albums',
       component: () => import('../views/music/AllAlbumsView.vue'),
       props: { albums: [], heading: 'Channel Albums' }
+    },
+    {
+      path: '/edit_profile',
+      name: 'edit-profile',
+      component: () => import('../views/membership/EditProfileView.vue')
+    },
+    {
+      path: '/channel/edit_profile',
+      name: 'channel-edit-profile',
+      component: () => import('../views/membership/EditChannelProfileView.vue')
     }
   ]
 })
