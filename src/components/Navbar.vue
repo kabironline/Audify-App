@@ -52,7 +52,7 @@ export default {
       { title: 'Admin Dashboard', link: '/admin/dashboard' },
       { title: 'Edit Profile', link: '/edit_profile' },
       { title: 'Register as Creator', link: '/register_creator' },
-      { title: 'Edit Channel', link: '/edit_profile_creator' },
+      { title: 'Edit Channel', link: '/channel/edit_profile' },
       { title: 'Logout', link: '#logout-modal' }
     ]
   }),

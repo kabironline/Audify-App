@@ -123,6 +123,15 @@ body {
   margin: 2rem 0;
 }
 
+.checkbox-disable {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 /* Google SANS FONT FACES */
 
 @font-face {

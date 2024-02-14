@@ -32,7 +32,7 @@ export default {
       { title: 'Explore', icon: 'explore', link: '/explore', route_name: 'explore' },
       { title: 'Dashboard', icon: 'dashboard', link: '/dashboard', route_name: 'dashboard' },
       { title: 'Upload Track', icon: 'upload', link: '/upload', route_name: 'upload' },
-      { title: 'Create Album', icon: 'album', link: '/album/add', route_name: 'album-add' }
+      { title: 'Create Album', icon: 'album', link: '/album/create', route_name: 'album-add' }
     ]
   })
 }

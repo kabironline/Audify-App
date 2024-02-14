@@ -88,6 +88,11 @@ const router = createRouter({
       path: '/upload',
       name: 'track-upload',
       component: () => import('../views/music/UploadView.vue')
+    },
+    {
+      path: '/album/create',
+      name: 'album-create',
+      component: () => import('../views/music/AlbumCreateView.vue')
     }
   ]
 })
