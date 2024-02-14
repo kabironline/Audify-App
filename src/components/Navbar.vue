@@ -51,7 +51,7 @@ export default {
       { title: 'Channel Dashboard', link: '/channel/dashboard' },
       { title: 'Admin Dashboard', link: '/admin/dashboard' },
       { title: 'Edit Profile', link: '/edit_profile' },
-      { title: 'Register as Creator', link: '/register_creator' },
+      { title: 'Register as Creator', link: '/register_channel' },
       { title: 'Edit Channel', link: '/channel/edit_profile' },
       { title: 'Logout', link: '#logout-modal' }
     ]
