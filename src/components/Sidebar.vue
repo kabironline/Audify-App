@@ -11,19 +11,19 @@
     </div>
 
     <hr class="sidebar__hr" />
-    <a href="#playlist-modal" class="btn mb-small">
-      <span class="material-symbols-rounded">add</span> Create Playlist
-    </a>
+    <BtnAction icon="add" text="Create Playlist" color="white" />
     <ul class="side-nav"></ul>
   </div>
 </template>
 
 <script>
+import BtnAction from './BtnAction.vue'
 import SidebarListItem from './SidebarListItem.vue'
 export default {
   name: 'AppSidebar',
   components: {
-    SidebarListItem
+    SidebarListItem,
+    BtnAction
   },
   data: () => ({
     drawer: false,

@@ -11,9 +11,9 @@
   align-items: center;
   gap: 1rem;
   border: none;
-  font: 'Product Sans Regular';
-  font-size: 1.4rem !important;
-  margin: 0;
+  font-family: 'Product Sans Regular' !important;
+  font-size: 1.2rem !important;
+  display: flex !important;
   &:hover {
     background-color: var(--color-hover);
   }

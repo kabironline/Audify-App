@@ -6,10 +6,8 @@
         <!-- Insert Navbar here -->
         <Navbar v-if="headerFooterShown" />
         <div class="container">
-          <RouterView v-slot="{ Component }">
-            <!-- <Transition name="fade" mode="out-in"> -->
-            <component :is="Component" />
-            <!-- </Transition> -->
+          <RouterView v-slot="{ Component, route }">
+              <component :is="Component" :key="route.path" />
           </RouterView>
         </div>
         <PlayerBar v-if="headerFooterShown" />
@@ -32,7 +30,6 @@ export default {
   },
   computed: {
     headerFooterShown() {
-      console.log(this.$route.name)
       return this.$route.name !== 'login' && this.$route.name !== 'register'
     }
   }
@@ -59,16 +56,6 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.2s ease;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+  transition: all 0.5s ease;
 }
 </style>

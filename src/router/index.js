@@ -103,12 +103,12 @@ const router = createRouter({
       path: '/playlist',
       name: 'playlist',
       component: () => import('../views/music/PlaylistView.vue')
+    },
+    {
+      path: '/album',
+      name: 'album',
+      component: () => import('../views/music/AlbumView.vue')
     }
-    // {
-    //   path: '/album',
-    //   name: 'album',
-    //   component: () => import('../views/music/AlbumView.vue')
-    // }
   ]
 })
 

@@ -1,7 +1,7 @@
 <template>
-  <v-btn @click.prevent="action" :color="color" rounded="xl" elevation="0" class="btn d-flex">
+  <v-btn @click.prevent="action" :color="color" rounded="xl" elevation="0" class="btn">
     <span class="material-symbols-rounded" v-if="icon != ''">{{ icon }}</span>
-    {{ text }}
+    <p>{{ text }}</p>
   </v-btn>
 </template>
 
@@ -29,4 +29,16 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-transform: none;
+  border-radius: 2rem;
+  cursor: pointer;
+}
+</style>

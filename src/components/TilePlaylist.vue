@@ -4,7 +4,7 @@
       v-for="playlist in 10"
       :key="playlist.id"
       class="playlist__item pa-2"
-      @click="navigateTo(false)"
+      @click.capture="navigateToPlaylistPage"
     >
       <div class="playlist__details">
         <v-card-title class="playlist__heading"> Playlist Name {{ playlist }} </v-card-title>
@@ -13,12 +13,14 @@
         </v-card-subtitle>
       </div>
       <v-spacer></v-spacer>
+      <!-- <v-card-actions> -->
       <BtnIcon
         icon="play_circle"
         class="playlist__playbutton"
         :iconSize="3"
-        :action="navigateTo(true)"
+        @click="navigateToPlayer"
       />
+      <!-- </v-card-actions> -->
     </v-card>
   </div>
 </template>
@@ -34,11 +36,12 @@ export default {
     }
   },
   methods: {
-    navigateTo(playButtonClicked) {
-      console.log('PlayButtonClicked: ', playButtonClicked)
-      const route = playButtonClicked ? '/' : '/playlist'
-      debugger
-      this.$router.push(route)
+    navigateToPlayer() {
+      //  Opens the playlist in the player
+      this.$router.push('/')
+    },
+    navigateToPlaylistPage() {
+      this.$router.push('/playlist')
     }
   },
   components: { BtnIcon }
@@ -51,9 +54,6 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
   row-gap: 2rem;
   column-gap: 2rem;
-  /* display: inline-flex;
-  flex-wrap: wrap;
-  gap: 2rem; */
 }
 
 .playlist__item {
