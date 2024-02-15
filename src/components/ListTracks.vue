@@ -13,7 +13,7 @@
         <span class="track-item__title">Name of Track {{ track }}</span>
         <span class="track-item__artist">Channel {{ track }}</span>
       </a>
-      <div class="track-item__cta" v-if = "this.isInPlayer">
+      <div class="track-item__cta" v-if="!this.isInPlayer">
         <BtnIcon icon="thumb_up" class="track-item__cta" />
         <BtnIcon icon="thumb_down" class="track-item__cta" />
         <BtnIcon icon="remove" href="" class="track-item__cta-link track-item__cta--remove" />

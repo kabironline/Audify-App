@@ -1,17 +1,11 @@
 <template>
   <div class="playlist-container">
-    <!-- <div class="playlist__item" v-for="playlist in 10" :key="playlist">
-      <a :href="`/playlist/${playlist}`" class="playlist__link">
-        <div class="playlist__details">
-          <p class="playlist__heading">Playlist Name {{ playlist }}</p>
-          <p class="playlist__subheading">Playlist Author {{ playlist }}</p>
-        </div>
-        <a href="`/player/playlist/${playlist}`">
-          <i class="fas fa-circle-play playlist__playbutton"></i>
-        </a>
-      </a>
-    </div> -->
-    <v-card link v-for="playlist in 10" :key="playlist.id" class="playlist__item pa-2">
+    <v-card
+      v-for="playlist in 10"
+      :key="playlist.id"
+      class="playlist__item pa-2"
+      @click="navigateTo(false)"
+    >
       <div class="playlist__details">
         <v-card-title class="playlist__heading"> Playlist Name {{ playlist }} </v-card-title>
         <v-card-subtitle class="playlist__subheading">
@@ -19,21 +13,35 @@
         </v-card-subtitle>
       </div>
       <v-spacer></v-spacer>
-      <v-btn elevation="0" color="transparent" icon>
-        <span class="material-symbols-rounded playlist__playbutton"> play_circle </span>
-      </v-btn>
+      <BtnIcon
+        icon="play_circle"
+        class="playlist__playbutton"
+        :iconSize="3"
+        :action="navigateTo(true)"
+      />
     </v-card>
   </div>
 </template>
 
 <script>
+import BtnIcon from './BtnIcon.vue'
+
 export default {
   name: 'TilePlaylist',
   props: {
     playlists: {
       type: Array
     }
-  }
+  },
+  methods: {
+    navigateTo(playButtonClicked) {
+      console.log('PlayButtonClicked: ', playButtonClicked)
+      const route = playButtonClicked ? '/' : '/playlist'
+      debugger
+      this.$router.push(route)
+    }
+  },
+  components: { BtnIcon }
 }
 </script>
 
@@ -87,10 +95,5 @@ export default {
   font-size: 1.2rem;
   font-weight: light;
   color: var(--text-label-color);
-}
-
-.playlist__playbutton {
-  font-size: 2.5rem;
-  color: var(--color-white);
 }
 </style>

@@ -15,7 +15,10 @@
         <span class="material-symbols-rounded track-carousel__item--play"> play_arrow </span>
       </div>
       <div>
-        <v-card-title class="d-flex flex-no-wrap justify-space-between align-center pa-0">
+        <v-card-title
+          class="d-flex flex-no-wrap justify-space-between align-center pa-0"
+          @click="navigateTo(`/album`)"
+        >
           <div class="track-carousel__item--title">Name of Album {{ track }}</div>
         </v-card-title>
       </div>
@@ -43,6 +46,9 @@ export default {
       // based on user permissions, track properties, etc.
       console.log(itemName)
       return true // Example implementation for now
+    },
+    navigateTo(route) {
+      this.$router.push(route)
     }
   }
 }

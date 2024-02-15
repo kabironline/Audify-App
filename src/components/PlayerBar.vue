@@ -156,7 +156,7 @@
           </v-window-item>
 
           <v-window-item value="Playlist" class="page-tab-window">
-            <ListTrack :isInPlayer="True" />
+            <ListTrack :isInPlayer="true" />
           </v-window-item>
         </v-window>
       </div>

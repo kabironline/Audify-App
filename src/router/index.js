@@ -98,7 +98,17 @@ const router = createRouter({
       path: '/album/create',
       name: 'album-create',
       component: () => import('../views/music/AlbumCreateView.vue')
+    },
+    {
+      path: '/playlist',
+      name: 'playlist',
+      component: () => import('../views/music/PlaylistView.vue')
     }
+    // {
+    //   path: '/album',
+    //   name: 'album',
+    //   component: () => import('../views/music/AlbumView.vue')
+    // }
   ]
 })
 
