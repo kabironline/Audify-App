@@ -19,8 +19,8 @@
 
       <div class="playlist-header__buttons">
         <BtnAction icon="play_arrow" text="Play" />
-        <BtnAction icon="edit" text="Edit Playlist" color="dark" />
-        <BtnAction icon="delete" text="Delete Playlist" color="dark" />
+        <BtnAction text="Edit Playlist" color="dark" />
+        <BtnAction text="Delete Playlist" color="dark" />
       </div>
     </div>
     <hr class="hr" />
@@ -40,6 +40,8 @@ export default {
   name: 'AlbumView',
   components: { ListTracks, BtnAction },
   data: () => ({
+    playlistEditModalVisible: false,
+    deleteModalVisible: false,
     album: {
       id: 1,
       name: 'Playlist Name',
@@ -74,7 +76,7 @@ export default {
 }
 
 .playlist-header__buttons {
-  display: flex;  
+  display: flex;
   gap: 2rem;
 }
 </style>

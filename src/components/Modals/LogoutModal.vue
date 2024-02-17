@@ -52,5 +52,3 @@ export default {
   components: { BtnAction }
 }
 </script>
-
-<style></style>

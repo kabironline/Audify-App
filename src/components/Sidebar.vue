@@ -11,22 +11,31 @@
     </div>
 
     <hr class="sidebar__hr" />
-    <BtnAction icon="add" text="Create Playlist" color="white" />
+    <BtnAction
+      icon="add"
+      text="Create Playlist"
+      color="white"
+      @click="playlistModalVisible = true"
+    />
+    <PlaylistModal :visible="playlistModalVisible" @toggleVisible="playlistModalVisible = false" />
     <ul class="side-nav"></ul>
   </div>
 </template>
 
 <script>
 import BtnAction from './BtnAction.vue'
+import PlaylistModal from './Modals/PlaylistModal.vue'
 import SidebarListItem from './SidebarListItem.vue'
 export default {
   name: 'AppSidebar',
   components: {
     SidebarListItem,
-    BtnAction
+    BtnAction,
+    PlaylistModal
   },
   data: () => ({
     drawer: false,
+    playlistModalVisible: false,
     items: [
       { title: 'Home', icon: 'home', link: '/', route_name: 'home' },
       { title: 'Explore', icon: 'explore', link: '/explore', route_name: 'explore' },

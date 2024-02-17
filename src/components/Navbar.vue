@@ -1,8 +1,5 @@
 <template>
-  <LogoutModal
-    :visible="logoutModalVisible"
-    @toggleVisible="updateVisible(false)"
-  />
+  <LogoutModal :visible="logoutModalVisible" @toggleVisible="logoutModalVisible = false" />
   <nav class="navbar">
     <form action="/search" method="get" class="search-container">
       <div class="search">
@@ -77,9 +74,6 @@ export default {
     },
     navigateTo(route) {
       this.$router.push(route)
-    },
-    updateVisible(value) {
-      this.logoutModalVisible = value
     }
   },
   components: { LogoutModal }
