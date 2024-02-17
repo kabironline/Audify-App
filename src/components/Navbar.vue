@@ -1,4 +1,8 @@
 <template>
+  <LogoutModal
+    :visible="logoutModalVisible"
+    @toggleVisible="updateVisible(false)"
+  />
   <nav class="navbar">
     <form action="/search" method="get" class="search-container">
       <div class="search">
@@ -27,6 +31,14 @@
           >
             <v-list-item-title class="dropdown-item--link">{{ item.title }}</v-list-item-title>
           </v-list-item>
+          <v-list-item
+            link
+            class="dropdown-item"
+            id="logout-activator"
+            @click.prevent="logoutModalVisible = true"
+          >
+            <v-list-item-title class="dropdown-item--link">Logout</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-btn icon transparent id="main-menu-activator" for="profile" class="navbar__profile">
@@ -43,17 +55,19 @@
 </template>
 
 <script>
+import LogoutModal from './Modals/LogoutModal.vue'
+
 export default {
   name: 'AppNavbar',
   data: () => ({
+    logoutModalVisible: false,
     menuItems: [
       { title: 'Dashboard', link: '/dashboard' },
       { title: 'Channel Dashboard', link: '/channel/dashboard' },
       { title: 'Admin Dashboard', link: '/admin/dashboard' },
       { title: 'Edit Profile', link: '/edit_profile' },
       { title: 'Register as Creator', link: '/register_channel' },
-      { title: 'Edit Channel', link: '/channel/edit_profile' },
-      { title: 'Logout', link: '#logout-modal' }
+      { title: 'Edit Channel', link: '/channel/edit_profile' }
     ]
   }),
   methods: {
@@ -63,8 +77,12 @@ export default {
     },
     navigateTo(route) {
       this.$router.push(route)
+    },
+    updateVisible(value) {
+      this.logoutModalVisible = value
     }
-  }
+  },
+  components: { LogoutModal }
 }
 </script>
 

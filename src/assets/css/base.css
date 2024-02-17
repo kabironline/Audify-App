@@ -71,50 +71,12 @@ body {
   scrollbar-color: var(--color-background) var(--color-background-light);
 }
 
-.mb-small {
-  margin-bottom: 2rem !important;
-}
-
-.mb-medium {
-  margin-bottom: 3rem !important;
-}
-
-.mb-large {
-  margin-bottom: 5rem !important;
-}
-
-.mb-xlarge {
-  margin-bottom: 7rem !important;
-}
-
-.section {
-  margin-bottom: 3rem;
-}
-
-.heading-1 {
-  font-size: 5rem;
-  font-weight: bold;
-}
-
-.heading-2 {
-  font-size: 3.5rem;
-  font-weight: bold;
-}
-
-.heading-3 {
-  font-size: 3rem;
-  font-weight: bold;
-}
-
-.heading-link {
-  text-decoration: none;
-  color: white;
-  transition: color 0.1s ease-in-out;
-
-  &:hover {
-    color: var(--color-primary);
-    text-decoration: underline;
+.v-application {
+  [class*='text-'] {
+    color: #36405a;
+    font-family: 'Product Sans Regular', sans-serif !important;
   }
+  font-family: 'Product Sans Regular', sans-serif !important;
 }
 
 .hr {
@@ -130,6 +92,11 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+}
+/* Forcing the color of the overlay */
+.v-overlay__scrim {
+  background: rgba(0, 0, 0, 0.3) !important;
+  opacity: 1 !important;
 }
 
 /* Google SANS FONT FACES */

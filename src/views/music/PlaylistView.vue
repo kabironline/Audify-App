@@ -11,11 +11,9 @@
       </p>
 
       <div class="playlist-header__buttons">
-        <a href="/player/playlist/{{playlist.id}}" class="btn btn--white"
-          ><i class="fas fa-play"></i>Play</a
-        >
-        <a href="#playlist-edit-modal" class="btn"><i class="fas fa-pencil"></i>Edit Playlist</a>
-        <a href="/playlist/{{playlist.id}}/delete" class="btn">Delete Playlist</a>
+        <BtnAction icon="play_arrow" text="Play" color="white" />
+        <BtnAction text="Edit Playlist" color="dark" />
+        <BtnAction text="Delete Playlist" color="dark" />
       </div>
     </div>
     <hr class="hr" />
@@ -28,11 +26,12 @@
 </template>
 
 <script>
+import BtnAction from '@/components/BtnAction.vue'
 import ListTracks from '@/components/ListTracks.vue'
 
 export default {
   name: 'AlbumView',
-  components: { ListTracks },
+  components: { ListTracks, BtnAction },
   data: () => ({
     playlist: {
       id: 1,

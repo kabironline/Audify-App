@@ -74,7 +74,7 @@ export default {
 }
 
 .playlist-header__buttons {
-  display: flex;
+  display: flex;  
   gap: 2rem;
 }
 </style>
