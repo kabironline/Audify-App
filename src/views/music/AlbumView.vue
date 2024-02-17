@@ -19,8 +19,12 @@
 
       <div class="playlist-header__buttons">
         <BtnAction icon="play_arrow" text="Play" />
-        <BtnAction text="Edit Playlist" color="dark" />
-        <BtnAction text="Delete Playlist" color="dark" />
+        <BtnAction text="Edit Album" color="dark" />
+        <BtnAction text="Delete Album" color="dark" @click.prevent="deleteModalVisible = true" />
+        <AlbumDeleteModal
+          :visible="deleteModalVisible"
+          @toggleVisible="deleteModalVisible = false"
+        />
       </div>
     </div>
     <hr class="hr" />
@@ -35,15 +39,17 @@
 <script>
 import BtnAction from '@/components/BtnAction.vue'
 import ListTracks from '@/components/ListTracks.vue'
+import AlbumDeleteModal from '@/components/Modals/AlbumDeleteModal.vue'
 
 export default {
   name: 'AlbumView',
-  components: { ListTracks, BtnAction },
+  components: { ListTracks, BtnAction, AlbumDeleteModal },
   data: () => ({
+    deleteModalVisible: false,
     album: {
       id: 1,
-      name: 'Playlist Name',
-      description: 'Playlist Description',
+      name: 'Album Name',
+      description: 'Album Description',
       channel: {
         name: 'Author Name'
       },
