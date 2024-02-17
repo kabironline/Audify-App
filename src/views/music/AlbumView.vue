@@ -40,8 +40,6 @@ export default {
   name: 'AlbumView',
   components: { ListTracks, BtnAction },
   data: () => ({
-    playlistEditModalVisible: false,
-    deleteModalVisible: false,
     album: {
       id: 1,
       name: 'Playlist Name',

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="290">
+  <v-dialog v-model="dialog" max-width="500">
     <v-card
       style="
         background-color: transparent;
@@ -10,15 +10,15 @@
       "
     >
       <v-card-title>
-        <p class="heading-4">Logout</p>
+        <p class="heading-4">Delete Playlist</p>
       </v-card-title>
       <v-card-text>
-        <p>Are you sure you want to logout?</p>
+        <p>Are you sure you want to delete this Playlist? This action cannot be undone.</p>
       </v-card-text>
       <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="primary" />
-        <BtnAction text="Logout" @click="logout" color="white" />
+        <BtnAction text="Delete Playlist" @click="deletePlaylist" color="white" />
       </div>
       <!-- </v-card-actions> -->
     </v-card>
@@ -29,7 +29,7 @@
 import BtnAction from '../BtnAction.vue'
 
 export default {
-  name: 'LogoutModal',
+  name: 'DeletePlaylistModal',
   emits: ['toggleVisible'],
   props: {
     visible: {
@@ -42,8 +42,8 @@ export default {
     }
   },
   methods: {
-    logout() {
-      console.log('Logging out...')
+    deletePlaylist() {
+      console.log('Deleting Playlist...')
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)

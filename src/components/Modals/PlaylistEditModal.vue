@@ -10,19 +10,20 @@
       "
     >
       <v-card-title>
-        <p class="heading-4">Create Playlist</p>
+        <p class="heading-4">Edit Playlist</p>
       </v-card-title>
+      <br />
       <form action="/playlist" method="POST">
         <div class="form__group">
           <input
             type="text"
             minlength="2"
             maxlength="20"
-            value=""
             name="name"
             id="name"
             placeholder="Playlist Name"
             class="form__input"
+            :value="playlist.name"
             required
           />
           <label for="name" class="form__label">Playlist Name</label>
@@ -32,7 +33,7 @@
           <textarea
             name="description"
             maxlength="400"
-            value=""
+            :value="playlist.description"
             id="description"
             cols="30"
             rows="10"
@@ -48,7 +49,7 @@
       <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="white" />
-        <BtnAction text="Create" @click="logout" color="primary" />
+        <BtnAction text="Edit Playlist" @click="logout" color="primary" />
       </div>
       <!-- </v-card-actions> -->
     </v-card>
@@ -59,11 +60,14 @@
 import BtnAction from '../BtnAction.vue'
 
 export default {
-  name: 'PlaylistModal',
+  name: 'PlaylistEditModal',
   emits: ['toggleVisible'],
   props: {
     visible: {
       type: Boolean
+    },
+    playlist: {
+      type: Object
     }
   },
   computed: {
