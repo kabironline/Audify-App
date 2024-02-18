@@ -10,7 +10,16 @@
       <p class="avatar-desc">
         {{ channel.description }}
       </p>
-      <BtnAction color="dark" text="Delete Account" icon="delete" />
+      <BtnAction
+        color="dark"
+        text="Delete Account"
+        icon="delete"
+        @click.prevent="deleteModalVisible = true"
+      />
+      <ChannelDeleteModal
+        :visible="deleteModalVisible"
+        @toggleVisible="deleteModalVisible = false"
+      />
     </div>
     <div class="form__container">
       <h2 class="heading-2 form__heading">Edit Profile</h2>
@@ -92,10 +101,12 @@
 
 <script>
 import BtnAction from '@/components/BtnAction.vue'
+import ChannelDeleteModal from '@/components/Modals/ChannelDeleteModal.vue'
 
 export default {
   name: 'EditProfileView',
   data: () => ({
+    deleteModalVisible: false,
     form: {
       name: '',
       email: '',
@@ -129,7 +140,7 @@ export default {
       }
     }
   },
-  components: { BtnAction }
+  components: { BtnAction, ChannelDeleteModal }
 }
 </script>
 

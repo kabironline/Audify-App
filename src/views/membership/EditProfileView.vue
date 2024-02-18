@@ -11,7 +11,13 @@
       <p class="avatar-desc">
         {{ current_user.bio }}
       </p>
-      <BtnAction color="dark" text="Delete Account" icon="delete" />
+      <BtnAction
+        color="dark"
+        text="Delete Account"
+        icon="delete"
+        @click="deleteModalVisible = true"
+      />
+      <UserDeleteModal :visible="deleteModalVisible" @toggleVisible="deleteModalVisible = false" />
     </div>
     <div class="form__container">
       <h2 class="heading-2 form__heading">Edit Profile</h2>
@@ -100,10 +106,12 @@
 
 <script>
 import BtnAction from '@/components/BtnAction.vue'
+import UserDeleteModal from '@/components/Modals/UserDeleteModal.vue'
 
 export default {
   name: 'EditProfileView',
   data: () => ({
+    deleteModalVisible: false,
     form: {
       name: '',
       email: '',
@@ -138,7 +146,7 @@ export default {
       }
     }
   },
-  components: { BtnAction }
+  components: { BtnAction, UserDeleteModal }
 }
 </script>
 
