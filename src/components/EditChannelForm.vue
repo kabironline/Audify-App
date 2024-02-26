@@ -108,3 +108,45 @@ export default {
   }
 }
 </script>
+
+<style>
+.avatar-container--editable {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  width: 100%;
+  &:hover {
+    cursor: pointer;
+
+    .avatar-img {
+      filter: blur(5px) brightness(0.5);
+    }
+
+    .avatar-edit {
+      display: block;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+}
+
+.avatar-img {
+  border-radius: 50%;
+  height: 20rem;
+  width: 20rem;
+  object-fit: cover;
+  transition: all 0.1s ease-in-out;
+}
+
+.avatar-edit {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  transition: all 0.2s ease-in-out;
+}
+
+.form__container {
+  padding: 0;
+}
+</style>
