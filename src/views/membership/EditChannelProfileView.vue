@@ -21,86 +21,13 @@
         @toggleVisible="deleteModalVisible = false"
       />
     </div>
-    <div class="form__container">
-      <h2 class="heading-2 form__heading">Edit Profile</h2>
-      <form
-        class="form__box"
-        action="/edit_profile_creator"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        <div class="avatar-container avatar-container--editable">
-          <input
-            type="file"
-            style="display: none"
-            name="avatar"
-            id="avatar"
-            accept="image/png"
-            @change="displaySelectedImage"
-          />
-          <label for="avatar" class="avatar-label" @click="openFileSelector">
-            <img
-              src="https://via.placeholder.com/340"
-              alt="avatar"
-              class="avatar-img"
-              id="currentAvatar"
-            />
-            <span class="avatar-edit"><i class="fas fa-pen"></i> Edit Avatar</span>
-          </label>
-        </div>
-
-        <div class="form__group">
-          <input
-            type="text"
-            minlength="2"
-            maxlength="20"
-            :value="channel.name"
-            name="name"
-            id="name"
-            placeholder="Channel Name"
-            class="form__input"
-          />
-          <label for="nickname" class="form__label">Channel Name</label>
-        </div>
-        <br />
-        <div class="form__group">
-          <textarea
-            name="description"
-            maxlength="200"
-            id="description"
-            cols="30"
-            rows="10"
-            :value="channel.description"
-            class="form__input form__input--textarea"
-            placeholder="Description (Optional)"
-          />
-          <label for="description" class="form__label"
-            >Description (Optional, 200 characters maximum)
-          </label>
-        </div>
-        <br />
-        <div class="form__group">
-          <input
-            type="password"
-            minlength="8"
-            name="password"
-            id="password"
-            placeholder="Password"
-            class="form__input form__input--password"
-            required
-          />
-          <label for="password" class="form__label">Password</label>
-        </div>
-        <br />
-        <input type="submit" value="Edit" class="form__button" />
-        <br />
-      </form>
-    </div>
+    <EditChannelForm />
   </section>
 </template>
 
 <script>
 import BtnAction from '@/components/BtnAction.vue'
+import EditChannelForm from '@/components/EditChannelForm.vue'
 import ChannelDeleteModal from '@/components/Modals/ChannelDeleteModal.vue'
 
 export default {
@@ -140,7 +67,7 @@ export default {
       }
     }
   },
-  components: { BtnAction, ChannelDeleteModal }
+  components: { BtnAction, ChannelDeleteModal, EditChannelForm }
 }
 </script>
 
