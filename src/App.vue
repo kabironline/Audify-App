@@ -7,7 +7,7 @@
         <Navbar v-if="headerFooterShown" />
         <div class="container">
           <RouterView v-slot="{ Component, route }">
-              <component :is="Component" :key="route.path" />
+            <component :is="Component" :key="route.path" />
           </RouterView>
         </div>
         <PlayerBar v-if="headerFooterShown" />
@@ -21,6 +21,9 @@ import { RouterView } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import Navbar from './components/Navbar.vue'
 import PlayerBar from './components/PlayerBar.vue'
+
+import { useUserStore } from './stores/user'
+
 export default {
   components: {
     RouterView,
@@ -32,6 +35,11 @@ export default {
     headerFooterShown() {
       return this.$route.name !== 'login' && this.$route.name !== 'register'
     }
+  },
+  setup() {
+    const store = useUserStore()
+    store.initializeUserAtStart()
+    return { store }
   }
 }
 </script>

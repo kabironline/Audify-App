@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -110,6 +111,18 @@ const router = createRouter({
       component: () => import('../views/music/AlbumView.vue')
     }
   ]
+})
+
+router.beforeEach(async (to) => {
+  const userStore = useUserStore()
+  try {
+    userStore.isLoggedIn
+  } catch (error) {
+    return '/login'
+  }
+  if (!userStore.isLoggedIn && !(to.name === 'login' || to.name === 'register')) {
+    return '/login'
+  }
 })
 
 export default router

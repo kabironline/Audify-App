@@ -39,12 +39,7 @@
         </v-list>
       </v-menu>
       <v-btn icon transparent id="main-menu-activator" for="profile" class="navbar__profile">
-        <v-img
-          src="https://via.placeholder.com/100
-        "
-          alt="Profile Image"
-          class="navbar__profile--image"
-        />
+        <v-img :src="this.getUserAvatar" alt="Profile Image" class="navbar__profile--image" />
       </v-btn>
     </div>
     <a class="navbar__profile" href="/dashboard"> </a>
@@ -53,6 +48,8 @@
 
 <script>
 import LogoutModal from './Modals/LogoutModal.vue'
+import { useUserStore } from '@/stores/user'
+import { mapState } from 'pinia'
 
 export default {
   name: 'AppNavbar',
@@ -67,11 +64,10 @@ export default {
       { title: 'Edit Channel', link: '/channel/edit_profile' }
     ]
   }),
+  computed: {
+    ...mapState(useUserStore, ['getUserAvatar'])
+  },
   methods: {
-    logout() {
-      this.$router.push('/login')
-      console.log('Logging out')
-    },
     navigateTo(route) {
       this.$router.push(route)
     }

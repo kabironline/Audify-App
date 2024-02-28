@@ -42,7 +42,9 @@
 
 <script>
 import router from '@/router'
-
+import { post } from '@/utils/http'
+import { useUserStore } from '@/stores/user'
+import { mapActions } from 'pinia'
 export default {
   name: 'LoginForm',
   components: {},
@@ -56,14 +58,28 @@ export default {
       isDisabled: false
     }
   },
+  setup() {
+    const store = useUserStore()
+
+    return { store }
+  },
   methods: {
+    ...mapActions(useUserStore, ['setUser', 'setToken']),
     async onSubmit() {
-      console.log('Form submitted')
-      console.log(this.form)
-      this.isDisabled = true
-      setTimeout(() => {
+      const response = await post('/login', this.form)
+      if (response.status === 200) {
+        const json = await response.json()
+        localStorage.setItem('token', json.access_token)
+        localStorage.setItem('user', JSON.stringify(json.user))
+
+        this.setUser(json.user)
+        this.setToken(json.access_token)
+
         router.push('/')
-      }, 300)
+      } else {
+        const json = await response.json()
+        this.error = json.error
+      }
     }
   }
 }

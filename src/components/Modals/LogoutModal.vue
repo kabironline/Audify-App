@@ -27,7 +27,8 @@
 
 <script>
 import BtnAction from '../BtnAction.vue'
-
+import { mapActions } from 'pinia'
+import { useUserStore } from '@/stores/user'
 export default {
   name: 'LogoutModal',
   emits: ['toggleVisible'],
@@ -42,8 +43,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useUserStore, ['logoutUser']),
     logout() {
+      this.logoutUser()
       console.log('Logging out...')
+      this.$router.push('/login')
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)
