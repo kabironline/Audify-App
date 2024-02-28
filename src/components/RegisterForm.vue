@@ -60,7 +60,9 @@
       </div>
       <h3 class="form__alternative">
         <span class="form__alternative--text"> Already have an account? </span>
-        <a href="/login" class="form__alternative--link">Log In!</a>
+        <span @click.prevent="this.$router.push('/login')" class="form__alternative--link"
+          >Log In!</span
+        >
       </h3>
       <p class="form__error">{{ error }}</p>
       <button class="form__button" type="type" :disabled="isDisabled">Submit</button>
@@ -69,8 +71,7 @@
 </template>
 
 <script>
-import router from '@/router'
-
+import { post } from '@/utils/http'
 export default {
   name: 'LoginForm',
   components: {},
@@ -88,13 +89,13 @@ export default {
   },
   methods: {
     async onSubmit() {
-      console.log('Form submitted')
-      console.log(this.form)
-      this.isDisabled = true
-
-      setTimeout(() => {
-        router.push('/login')
-      }, 300)
+      const response = await post('/user', this.form)
+      if (response.status === 201) {
+        this.$router.push('/login')
+      } else {
+        const data = await response.json()
+        this.error = data.error
+      }
     }
   }
 }

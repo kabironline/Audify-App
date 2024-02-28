@@ -32,7 +32,9 @@
       </div>
       <h3 class="form__alternative">
         <span class="form__alternative--text"> Don't have an account? </span>
-        <a href="/register" class="form__alternative--link">Register!</a>
+        <span @click.prevent="this.$router.push('/register')" class="form__alternative--link"
+          >Register!</span
+        >
       </h3>
       <p class="form__error">{{ error }}</p>
       <button class="form__button" type="type" :disabled="isDisabled">Submit</button>
