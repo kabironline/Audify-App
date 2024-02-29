@@ -7,12 +7,12 @@
     </section>
     <section class="section section-recent-tracks">
       <h2 class="heading-2 mb-medium">Latest Tracks</h2>
-      <CarouselTrack :tracks="latest" />
+      <CarouselTrack :tracks="latestTracks" />
     </section>
     <section class="section section-latest-album">
       <h2 class="heading-2">Latest Albums</h2>
       <!-- Album Carousel -->
-      <CarouselAlbum />
+      <CarouselAlbum :albums="latestAlbums" />
     </section>
     <section class="section section-latest-playlist">
       <h2 class="heading-2 mb-medium">Latest Playlists</h2>
@@ -27,7 +27,7 @@ import CarouselAlbum from '@/components/CarouselAlbum.vue'
 import TilePlaylist from '@/components/TilePlaylist.vue'
 import { useUserStore } from '@/stores/user'
 import { mapActions } from 'pinia'
-import { getLatestTracks } from '@/helper/latest'
+import { getLatestTracks, getLatestAlbums } from '@/helper/latest'
 export default {
   name: 'HomeView',
   components: {
@@ -37,7 +37,8 @@ export default {
   },
   data: () => ({
     recents: [],
-    latest: []
+    latestTracks: [],
+    latestAlbums: []
   }),
   methods: {
     ...mapActions(useUserStore, ['getUserRecents'])
@@ -46,7 +47,10 @@ export default {
     let data = await this.getUserRecents()
     this.recents = data
 
-    this.latest = await getLatestTracks()
+    this.latestTracks = await getLatestTracks()
+    const latestAlbums = await getLatestAlbums()
+    console.log(latestAlbums)
+    this.latestAlbums = latestAlbums
   }
 }
 </script>

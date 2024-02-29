@@ -57,3 +57,7 @@ export function userAvatar(userId) {
 export function trackImage(trackId) {
   return `http://localhost:${port}/tracks/${trackId}/cover`
 }
+
+export function albumImage(albumId) {
+  return `http://localhost:${port}/album/${albumId}/cover`
+}

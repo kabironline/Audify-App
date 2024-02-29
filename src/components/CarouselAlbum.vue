@@ -2,16 +2,17 @@
   <div class="track-carousel">
     <v-card
       v-for="album in albums"
-      :key="album"
+      :key="album.id"
       color="background"
       link
       class="track-carousel__item"
     >
       <div class="track-carousel__item--cover album-carousel__item--cover">
         <v-img
-          :src="`https://picsum.photos/500/500?random=${album}`"
+          :src="getAlbumCoverUrl(album.id)"
           class="track-carousel__item--img album-carousel__item--img"
-          :data-view-transition-id="`album-cover-${album}`"
+          aspect-ratio="1"
+          cover
         />
         <span class="material-symbols-rounded track-carousel__item--play"> play_arrow </span>
       </div>
@@ -20,44 +21,34 @@
           class="d-flex flex-no-wrap justify-space-between align-center pa-0"
           @click="navigateTo(`/album`)"
         >
-          <div class="track-carousel__item--title">Name of Album {{ album }}</div>
+          <div class="track-carousel__item--title">{{ album.name }}</div>
         </v-card-title>
       </div>
-      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1">Channel Name</v-card-subtitle>
+      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1">{{
+        album.created_by.name
+      }}</v-card-subtitle>
       <div class="mb-3"></div>
     </v-card>
   </div>
 </template>
 <script>
+import { albumImage } from '@/utils/http'
 export default {
   name: 'CarouselAlbum',
   props: {
     albums: {
-      type: Array,
-      default: () => [1, 2, 3, 4, 5]
+      type: Array
     }
   },
   methods: {
-    getTrackCoverUrl(trackId) {
-      // Replace this with the logic to generate track cover URLs
-      return `/api/tracks/${trackId}/cover`
-    },
-    shouldShowMenuItem(itemName) {
-      // Implement logic for deciding which menu items to show
-      // based on user permissions, track properties, etc.
-      console.log(itemName)
-      return true // Example implementation for now
-    },
-    navigateTo(route) {
-      this.$router.push(route)
+    getAlbumCoverUrl(trackId) {
+      return albumImage(trackId)
     }
   }
 }
 </script>
 
 <style scoped>
-
-
 .v-card-title {
   font-size: 2rem;
 }
@@ -95,21 +86,13 @@ export default {
   object-position: center;
 }
 
-.album-carousel__item--cover {
-  aspect-ratio: 1/1;
-}
-
 .track-carousel__item--img {
-  aspect-ratio: 16/9;
+  aspect-ratio: 1;
   object-fit: cover;
   object-position: center;
   transition: all 0.2s ease-out;
   /* height: 100%; */
   width: 100%;
-}
-
-.album-carousel__item--img {
-  aspect-ratio: 1/1;
 }
 
 .track-carousel__item--play {
