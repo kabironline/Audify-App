@@ -3,26 +3,32 @@ import { isProxy, toRaw } from 'vue'
 const port = 5000
 const baseUrl = `http://localhost:${port}/api/v2`
 
-export async function request(method, url, data, headers) {
+export async function request(method, url, data = null, headers, bearerToken = null) {
   url = baseUrl + url
 
   if (isProxy(data)) {
     data = toRaw(data)
   }
 
-  // send the request using fetch api
-  return fetch(url, {
+  let fetch_options = {
     method: method,
     headers: {
       'Content-Type': 'application/json',
+      Authorization: bearerToken ? `Bearer ${bearerToken}` : '',
       ...headers
-    },
-    body: JSON.stringify(data)
-  })
+    }
+  }
+
+  if (data) {
+    fetch_options.body = JSON.stringify(data)
+  }
+
+  // send the request using fetch api
+  return fetch(url, fetch_options)
 }
 
-export function get(url, headers) {
-  return request('GET', url, null, headers)
+export function get(url, headers, bearerToken) {
+  return request('GET', url, null, {}, bearerToken)
 }
 
 /**
@@ -32,12 +38,12 @@ export function get(url, headers) {
  * @param {*} headers
  * @returns
  */
-export function post(url, data, headers) {
-  return request('POST', url, data, headers)
+export function post(url, data, headers, bearerToken) {
+  return request('POST', url, data, headers, bearerToken)
 }
 
-export function put(url, data, headers) {
-  return request('PUT', url, data, headers)
+export function put(url, data, headers, bearerToken) {
+  return request('PUT', url, data, headers, bearerToken)
 }
 
 export function del(url, headers) {
@@ -46,4 +52,8 @@ export function del(url, headers) {
 
 export function userAvatar(userId) {
   return `http://localhost:${port}/user_avatar/${userId}`
+}
+
+export function trackImage(trackId) {
+  return `http://localhost:${port}/tracks/${trackId}/cover`
 }

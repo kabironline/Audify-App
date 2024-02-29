@@ -1,17 +1,19 @@
 <template>
   <div class="track-carousel">
-    <v-card v-for="track in 5" :key="track" color="background" link class="track-carousel__item">
+    <v-card
+      v-for="track in this.tracks"
+      :key="track.id"
+      color="background"
+      link
+      class="track-carousel__item"
+    >
       <div class="track-carousel__item--cover">
-        <v-img
-          lazy
-          :src="`https://picsum.photos/640/360?random=${track}`"
-          class="track-carousel__item--img"
-        />
+        <v-img lazy :src="this.trackImage(track.id)" class="track-carousel__item--img" />
         <span class="material-symbols-rounded track-carousel__item--play"> play_arrow </span>
       </div>
       <div>
         <v-card-title class="d-flex flex-no-wrap justify-space-between align-center pa-0">
-          <div class="track-carousel__item--title">Name of track {{ track }}</div>
+          <div class="track-carousel__item--title">{{ track.name }}</div>
           <v-menu location="start">
             <template v-slot:activator="{ props }">
               <v-btn
@@ -38,13 +40,17 @@
           </v-menu>
         </v-card-title>
       </div>
-      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1">Channel Name</v-card-subtitle>
+      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1">{{
+        track.channel.name
+      }}</v-card-subtitle>
       <div class="mb-3"></div>
     </v-card>
   </div>
 </template>
 
 <script>
+import { trackImage } from '@/utils/http'
+import { toRaw } from 'vue'
 export default {
   name: 'CarouselTrack',
   props: {
@@ -54,15 +60,8 @@ export default {
     }
   },
   methods: {
-    getTrackCoverUrl(trackId) {
-      // Replace this with the logic to generate track cover URLs
-      return `/api/tracks/${trackId}/cover`
-    },
-    shouldShowMenuItem(itemName) {
-      // Implement logic for deciding which menu items to show
-      // based on user permissions, track properties, etc.
-      console.log(itemName)
-      return true // Example implementation for now
+    trackImage(id) {
+      return trackImage(id)
     }
   }
 }
