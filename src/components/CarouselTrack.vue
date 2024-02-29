@@ -50,7 +50,6 @@
 
 <script>
 import { trackImage } from '@/utils/http'
-import { toRaw } from 'vue'
 export default {
   name: 'CarouselTrack',
   props: {
