@@ -11,3 +11,9 @@ export async function getLatestAlbums() {
   const data = await response.json()
   return data.latest
 }
+
+export async function getLatestPlaylists() {
+  const response = await get('/playlists/latest')
+  const data = await response.json()
+  return data.latest
+}

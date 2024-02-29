@@ -1,15 +1,15 @@
 <template>
   <div class="playlist-container">
     <v-card
-      v-for="playlist in 10"
+      v-for="playlist in playlists"
       :key="playlist.id"
       class="playlist__item pa-2"
       @click.capture="navigateToPlaylistPage"
     >
       <div class="playlist__details">
-        <v-card-title class="playlist__heading"> Playlist Name {{ playlist }} </v-card-title>
+        <v-card-title class="playlist__heading"> {{ playlist.name }} </v-card-title>
         <v-card-subtitle class="playlist__subheading">
-          Playlist Author {{ playlist }}
+          {{ playlist.user.nickname }}
         </v-card-subtitle>
       </div>
       <v-spacer></v-spacer>
