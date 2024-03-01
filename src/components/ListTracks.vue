@@ -1,31 +1,36 @@
 <template>
   <ul class="track-list">
-    <li v-for="track in 10" :key="track" class="track-item">
-      <a href="/" class="track-item__link">
+    <li
+      v-for="(track, index) in tracks"
+      :key="track.id"
+      class="track-item"
+      :class="{ 'track-item-selected': index === trackItemSelected }"
+    >
+      <div class="track-item__link" @click.prevent="playTrackAtIndex(index)">
         <div class="track-item__cover">
-          <v-img
-            :src="`https://picsum.photos/640/360?random=${track}`"
-            alt=""
-            class="track-item__cover--img"
-          />
+          <v-img :src="trackImage(track.id)" alt="" class="track-item__cover--img" />
           <i class="fas fa-play track-item__cover--playbutton"></i>
         </div>
-        <span class="track-item__title">Name of Track {{ track }}</span>
-        <span class="track-item__artist">Channel {{ track }}</span>
-      </a>
+        <span class="track-item__title">{{ track.name }}</span>
+        <span class="track-item__artist"> {{ track.channel.name }}</span>
+      </div>
       <div class="track-item__cta" v-if="!this.isInPlayer">
         <BtnIcon icon="thumb_up" class="track-item__cta" />
         <BtnIcon icon="thumb_down" class="track-item__cta" />
         <BtnIcon icon="remove" href="" class="track-item__cta-link track-item__cta--remove" />
         <BtnIcon icon="add" class="track-item__cta-link track-item__cta--remove" />
       </div>
-      <p class="track-item__timer">{{ track.duration }}</p>
+      <p class="track-item__timer">{{ formatDuration(track.duration) }}</p>
     </li>
   </ul>
 </template>
 
 <script>
 import BtnIcon from './BtnIcon.vue'
+import { formatDuration } from '@/helper/format'
+import { usePlayerStore } from '@/stores/player'
+import { mapActions } from 'pinia'
+import { trackImage } from '@/utils/http'
 
 export default {
   name: 'ListTracks',
@@ -45,7 +50,16 @@ export default {
     isInPlayer: {
       type: Boolean,
       default: false
+    },
+    trackItemSelected: {
+      type: Number,
+      default: -1
     }
+  },
+  methods: {
+    ...mapActions(usePlayerStore, ['playTrackAtIndex']),
+    formatDuration,
+    trackImage
   },
   components: { BtnIcon }
 }
@@ -67,7 +81,8 @@ export default {
   grid-gap: 2.5rem;
   padding: 0 2rem;
 
-  &:hover {
+  &:hover,
+  &.track-item-selected {
     background-color: var(--color-hover);
     .track-item__cover--img {
       filter: brightness(0.5);

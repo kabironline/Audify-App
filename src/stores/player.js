@@ -11,14 +11,34 @@ export const usePlayerStore = defineStore('player', {
     isListOfTracks: false
   }),
   actions: {
-    async playTrack(track) {
+    playTrack(track, playlist = [], index = null) {
       track = toRaw(track)
-      this.currentTrack = track
-      this.isPlaying = true
-      this.currentTrackImage = trackImage(track.id)
-      this.currentTrackMedia = trackMedia(track.id)
-      this.isListOfTracks = false
+      this.currentTrack =
+        playlist != [] ? track : (this.currentTrackImage = trackImage(this.currentTrack.id))
+      this.currentTrackMedia = trackMedia(this.currentTrack.id)
+      this.isListOfTracks = playlist && playlist.length > 0
+      this.currentTrackIndex = index
+      this.currentPlaylist = playlist
     },
+    playIndividualTrack(track) {
+      this.playTrack(track, [], null)
+    },
+    async playPlaylist(playlist, index, type = 'playlist') {
+      if (type === 'album') {
+        const response = await get(`/album/${playlist.id}`)
+        const data = await response.json()
+        playlist = data.album.tracks
+      } else if (type === 'playlist') {
+        const response = await get(`/playlist/${playlist.id}`)
+        const data = await response.json()
+        playlist = data.playlist.tracks
+      }
+      this.playTrack(playlist[index], playlist, index)
+    },
+    playTrackAtIndex(index) {
+      this.playTrack(this.currentPlaylist[index], this.currentPlaylist, index)
+    },
+
     initializePlayerAtStart() {
       this.currentTrack = null
       this.currentTrackIndex = null
@@ -40,6 +60,15 @@ export const usePlayerStore = defineStore('player', {
     getCurrentTrackMedia() {
       if (!this.currentTrack) return null
       return trackMedia(this.currentTrack.id)
+    },
+    getIsListOfTracks() {
+      return this.isListOfTracks
+    },
+    getCurrentPlaylist() {
+      return this.currentPlaylist
+    },
+    getCurrentIndex() {
+      return this.currentTrackIndex
     }
   }
 })

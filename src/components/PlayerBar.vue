@@ -17,9 +17,21 @@
       </Transition>
       <div class="player-controls">
         <div class="player-control-container">
-          <BtnIcon icon="fast_rewind" :iconSize="3" />
+          <BtnIcon
+            :disabled="isBackwardDisabled"
+            :action="playPrevTrack"
+            icon="fast_rewind"
+            :iconSize="3"
+            v-if="isPlaylist"
+          />
           <BtnIcon :icon="playButton" :action="togglePlayPause" class="play-button" :iconSize="3" />
-          <BtnIcon icon="fast_forward" :iconSize="3" />
+          <BtnIcon
+            :disabled="isForwardDisabled"
+            :action="playNextTrack"
+            icon="fast_forward"
+            :iconSize="3"
+            v-if="isPlaylist"
+          />
           <BtnIcon icon="repeat" :action="toggleLoop" :color="loopColor" :iconSize="2" />
           <!-- Like and dislike button -->
           <BtnIcon icon="thumb_up" :iconSize="2" />
@@ -31,6 +43,7 @@
             :style="{
               left: `${playerProgress * 100}%`
             }"
+            f
           ></div>
           <div class="player-progress-bar--track-background"></div>
           <div
@@ -43,7 +56,7 @@
         <div ref="time" class="player-control--time">0:00 / 0:00</div>
       </div>
       <div class="player-controls-extra">
-        <BtnIcon icon="volume_up" @click.prevent="togglePlayerPage" />
+        <BtnIcon icon="volume_up" @click="togglePlayerPage()" />
         <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
         <BtnIcon
           :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
@@ -73,11 +86,10 @@
         <v-tabs v-model="tab" bg-color="background">
           <v-tab value="Lryics" v-show="track.lyrics != ''">Lryics</v-tab>
           <v-tab value="Comments">Comments</v-tab>
-          <v-tab value="Playlist">Playlist</v-tab>
+          <v-tab value="Playlist" v-show="this.isPlaylist">Playlist</v-tab>
         </v-tabs>
         <v-window v-model="tab">
           <v-window-item value="Lryics" class="page-tab-window">{{ track.lyrics }}</v-window-item>
-
           <v-window-item value="Comments" class="page-tab-window">
             <div class="comment-tab-container">
               <div class="comments">
@@ -102,7 +114,7 @@
             </div>
           </v-window-item>
           <v-window-item value="Playlist" class="page-tab-window">
-            <ListTrack :isInPlayer="true" />
+            <ListTrack :isInPlayer="true" :tracks="playlist" :trackItemSelected="playlistIndex" />
           </v-window-item>
         </v-window>
       </div>
@@ -116,6 +128,7 @@ import BtnIcon from './BtnIcon.vue'
 import ListTrack from './ListTracks.vue'
 import { usePlayerStore } from '@/stores/player'
 import { mapActions, mapState } from 'pinia'
+import { formatDuration } from '@/helper/format'
 export default {
   name: 'PlayerBar',
   components: { BtnIcon, ListTrack, CommentComponent },
@@ -126,14 +139,38 @@ export default {
   watch: {
     playerStore: {
       handler() {
-        this.trackMedia = this.playerStore.getCurrentTrackMedia
-        this.$refs.audio.src = this.trackMedia
-        this.trackImage = this.playerStore.getCurrentTrackCover
-        this.track = this.playerStore.getCurrentTrack
-        this.togglePlayPause()
+        this.isPlaying = false
+        if (this.getIsListOfTracks) {
+          if (this.playlist !== this.playerStore.getCurrentPlaylist) {
+            this.isPlaylist = true
+            this.playlist = this.playerStore.getCurrentPlaylist
+          }
+          this.playlistIndex = this.playerStore.getCurrentIndex
+          this.track = this.playlist[this.playlistIndex]
+          this.trackMedia = this.playerStore.getCurrentTrackMedia
+          this.trackImage = this.playerStore.getCurrentTrackCover
+          this.$refs.audio.src = this.trackMedia
+        } else {
+          this.trackMedia = this.playerStore.getCurrentTrackMedia
+          this.$refs.audio.src = this.trackMedia
+          this.trackImage = this.playerStore.getCurrentTrackCover
+          this.track = this.playerStore.getCurrentTrack
+          this.isPlaylist = false
+          this.playlist = []
+          this.playlistIndex = null
+        }
+        this.isPlaying = true
+        this.playTrack()
         this.playerProgress = 0
       },
       deep: true
+    },
+    isPlaying() {
+      if (this.isPlaying) {
+        this.playTrack()
+      } else {
+        this.pauseTrack()
+      }
     }
   },
   data() {
@@ -147,14 +184,21 @@ export default {
       track: null,
       tab: 'Comments',
       trackMedia: '',
-      trackImage: 'https://www.picsum.photos/1920/1080'
+      trackImage: 'https://www.picsum.photos/1920/1080',
+      isPlaylist: false,
+      playlist: [],
+      playlistIndex: null,
+      isPlaying: false
     }
   },
   computed: {
     ...mapState(usePlayerStore, [
       'getCurrentTrack',
       'getCurrentTrackCover',
-      'getCurrentTrackMedia'
+      'getCurrentTrackMedia',
+      'getIsListOfTracks',
+      'getCurrentPlaylist',
+      'getCurrentIndex'
     ]),
     loopColor() {
       return this.isLooping ? 'white' : 'var(--text-placeholder-color)'
@@ -164,45 +208,55 @@ export default {
     },
     trackArtist() {
       return this.track ? this.track.channel.name : 'Artist Name'
+    },
+    isForwardDisabled() {
+      return this.playlistIndex === this.playlist.length - 1
+    },
+    isBackwardDisabled() {
+      return this.playlistIndex === 0
     }
   },
   methods: {
-    ...mapActions(usePlayerStore, ['updateIsPlaying']),
+    ...mapActions(usePlayerStore, ['updateIsPlaying', 'playTrackAtIndex']),
     togglePlayerPage() {
       this.playerPageOpen = !this.playerPageOpen
     },
     togglePlayPause() {
-      if (this.$refs.audio.paused) {
-        this.playButton = 'pause_circle'
-        setTimeout(() => {
-          this.$refs.audio.play()
-        }, 100)
-      } else {
-        this.$refs.audio.pause()
-        this.playButton = 'play_circle'
-      }
+      this.isPlaying = !this.isPlaying
     },
-    formatTime(seconds) {
-      let minutes = Math.floor(seconds / 60)
-      let sec = Math.floor(seconds % 60)
-      return `${('000' + minutes).slice(-2)}:${('00' + sec).slice(-2)}`
+    playTrack() {
+      this.playButton = 'pause_circle'
+      setTimeout(() => {
+        this.$refs.audio.play()
+      }, 100)
+    },
+    pauseTrack() {
+      this.$refs.audio.pause()
+      this.playButton = 'play_circle'
+    },
+    playNextTrack() {
+      this.playTrackAtIndex(this.playlistIndex + 1)
+    },
+    playPrevTrack() {
+      this.playTrackAtIndex(this.playlistIndex - 1)
     },
     initializePlayer() {
       const audio = this.$refs.audio
       audio.addEventListener('loadedmetadata', () => {
         const duration = audio.duration
-        this.$refs.time.textContent = `0:00 / ${this.formatTime(duration)}`
+        this.$refs.time.textContent = `0:00 / ${this.formatDuration(duration)}`
       })
     },
     timeUpdate() {
       const audio = this.$refs.audio
       const duration = audio.duration
       const currentTime = audio.currentTime
-      this.$refs.time.textContent = `${this.formatTime(currentTime)} / ${this.formatTime(duration)}`
+      this.$refs.time.textContent = `${this.formatDuration(currentTime)} / ${this.formatDuration(duration)}`
       if (this.progressSync) {
         this.playerProgress = currentTime / duration
       }
     },
+    formatDuration,
     updateProgress(e, dragOnly = false) {
       const audio = this.$refs.audio
       const progress = e.offsetX / this.$refs.playerProgressBar.offsetWidth
@@ -244,7 +298,7 @@ export default {
     }
     this.isLooping = localStorage.getItem('loop') === 'true'
   },
-  unmounted() {
+  beforeUnmount() {
     const audio = this.$refs.audio
     audio.removeEventListener('timeupdate', this.timeUpdate)
     audio.removeEventListener('ended', () => {
@@ -283,7 +337,7 @@ export default {
 
 .slide-enter-from,
 .slide-leave-to {
-  transform: translateX(-100%);
+  transform: translateY(100%);
   opacity: 0;
   z-index: 10;
 }
@@ -307,7 +361,7 @@ export default {
 
 .player-main {
   display: grid;
-  grid-template-columns: 1fr 3fr min-content;
+  grid-template-columns: 2fr 3fr min-content;
   grid-template-rows: 1fr;
   height: 100%;
   transition: all 0.3s ease-in-out;
@@ -317,7 +371,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 1rem;
-  /* transition: all 0.3s ease-in-out; */
+  overflow: hidden;
 }
 
 .player-track-img {
@@ -326,7 +380,7 @@ export default {
   border-radius: 1rem;
   margin-right: 1rem;
   border-radius: 0.5rem;
-  /* transition: all 0.3s ease-in-out; */
+  object-fit: cover;
 }
 
 .player-track-details {
@@ -340,14 +394,14 @@ export default {
     font-weight: 600;
     white-space: nowrap;
     overflow-x: hidden;
-    /* transition: all 0.3s ease-in-out; */
+    text-overflow: ellipsis;
   }
 
   .player-track-artist {
     font-size: 1.5rem;
     font-weight: 400;
     color: var(--text-subtitle-color);
-    /* transition: all 0.3s ease-in-out; */
+    text-overflow: ellipsis;
   }
 }
 

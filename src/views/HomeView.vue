@@ -50,6 +50,7 @@ export default {
 
     this.latestTracks = await getLatestTracks()
     const latestAlbums = await getLatestAlbums()
+    console.log(latestAlbums)
     this.latestAlbums = latestAlbums
 
     const latestPlaylist = await getLatestPlaylists()

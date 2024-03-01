@@ -5,6 +5,7 @@
       :key="album.id"
       color="background"
       link
+      @click.prevent="playAlbumHandler(album)"
       class="track-carousel__item"
     >
       <div class="track-carousel__item--cover album-carousel__item--cover">
@@ -33,6 +34,9 @@
 </template>
 <script>
 import { albumImage } from '@/utils/http'
+import { usePlayerStore } from '@/stores/player'
+import { mapActions } from 'pinia'
+import { toRaw } from 'vue'
 export default {
   name: 'CarouselAlbum',
   props: {
@@ -41,6 +45,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions(usePlayerStore, ['playPlaylist']),
+    async playAlbumHandler(album) {
+      album = toRaw(album)
+      await this.playPlaylist(album, 0, 'album')
+    },
     getAlbumCoverUrl(trackId) {
       return albumImage(trackId)
     }

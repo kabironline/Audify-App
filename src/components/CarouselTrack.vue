@@ -62,9 +62,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(usePlayerStore, ['playTrack']),
+    ...mapActions(usePlayerStore, ['playIndividualTrack']),
     onClickTrackHandler(track) {
-      this.playTrack(track)
+      this.playIndividualTrack(track)
     },
     trackImage(id) {
       return trackImage(id)
