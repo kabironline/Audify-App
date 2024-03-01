@@ -58,6 +58,10 @@ export function trackImage(trackId) {
   return `http://localhost:${port}/tracks/${trackId}/cover`
 }
 
+export function trackMedia(trackId) {
+  return `http://localhost:${port}/tracks/${trackId}/media`
+}
+
 export function albumImage(albumId) {
   return `http://localhost:${port}/album/${albumId}/cover`
 }

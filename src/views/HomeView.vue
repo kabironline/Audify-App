@@ -54,7 +54,6 @@ export default {
 
     const latestPlaylist = await getLatestPlaylists()
     this.latestPlaylist = latestPlaylist
-    console.log(latestPlaylist)
   }
 }
 </script>

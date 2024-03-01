@@ -23,6 +23,7 @@ import Navbar from './components/Navbar.vue'
 import PlayerBar from './components/PlayerBar.vue'
 
 import { useUserStore } from './stores/user'
+import { usePlayerStore } from './stores/player'
 
 export default {
   components: {
@@ -39,6 +40,9 @@ export default {
   setup() {
     const store = useUserStore()
     store.initializeUserAtStart()
+
+    const playerStore = usePlayerStore()
+    playerStore.initializePlayerAtStart()
     return { store }
   }
 }

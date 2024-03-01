@@ -5,6 +5,7 @@
       :key="track.id"
       color="background"
       link
+      @click="onClickTrackHandler(track)"
       class="track-carousel__item"
     >
       <div class="track-carousel__item--cover">
@@ -50,6 +51,8 @@
 
 <script>
 import { trackImage } from '@/utils/http'
+import { usePlayerStore } from '@/stores/player'
+import { mapActions } from 'pinia'
 export default {
   name: 'CarouselTrack',
   props: {
@@ -59,6 +62,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions(usePlayerStore, ['playTrack']),
+    onClickTrackHandler(track) {
+      this.playTrack(track)
+    },
     trackImage(id) {
       return trackImage(id)
     }

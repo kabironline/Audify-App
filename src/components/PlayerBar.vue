@@ -1,13 +1,17 @@
 <template>
-  <div class="player-frame-container" :class="{ 'player-page-open': playerPageOpen }">
+  <div
+    v-show="this.track !== null"
+    class="player-frame-container"
+    :class="{ 'player-page-open': playerPageOpen }"
+  >
     <div class="player-main">
-      <audio ref="audio" :src="this.media" class="player-audio" />
+      <audio ref="audio" :src="this.trackMedia" class="player-audio" />
       <Transition name="slide">
         <div class="player-track-info" v-if="!playerPageOpen">
           <img ref="image" :src="trackImage" class="player-track-img" />
           <div class="player-track-details">
-            <div class="player-track-title">Low Quality Shape of You!</div>
-            <div class="player-track-artist">Adi Shreeman</div>
+            <div class="player-track-title">{{ trackName }}</div>
+            <div class="player-track-artist">{{ trackArtist }}</div>
           </div>
         </div>
       </Transition>
@@ -62,74 +66,17 @@
           ), url(${trackImage}) center center / cover no-repeat`
           }"
         ></div>
-        <p class="player-page-track-title">Low Quality Shape of you!</p>
-        <p class="player-page-track-artist">Adi Shreeman</p>
+        <p class="player-page-track-title">{{ trackName }}</p>
+        <p class="player-page-track-artist">{{ trackArtist }}</p>
       </div>
       <div class="player-page-right">
         <v-tabs v-model="tab" bg-color="background">
-          <v-tab value="Lryics">Lryics</v-tab>
+          <v-tab value="Lryics" v-show="track.lyrics != ''">Lryics</v-tab>
           <v-tab value="Comments">Comments</v-tab>
           <v-tab value="Playlist">Playlist</v-tab>
         </v-tabs>
         <v-window v-model="tab">
-          <v-window-item value="Lryics" class="page-tab-window">
-            <p class="lyrics">
-              We're no strangers to love<br />
-              You know the rules and so do I (do I)<br />
-              A full commitment's what I'm thinking of<br />
-              You wouldn't get this from any other guy<br />
-              I just wanna tell you how I'm feeling<br />
-              Gotta make you understand<br />
-              Never gonna give you up<br />
-              Never gonna let you down<br />
-              Never gonna run around and desert you<br />
-              Never gonna make you cry<br />
-              Never gonna say goodbye<br />
-              Never gonna tell a lie and hurt you<br />
-              We've known each other for so long<br />
-              Your heart's been aching, but you're too shy to say it (say it)<br />
-              Inside, we both know what's been going on (going on)<br />
-              We know the game and we're gonna play it<br />
-              And if you ask me how I'm feeling<br />
-              Don't tell me you're too blind to see<br />
-              Never gonna give you up<br />
-              Never gonna let you down<br />
-              Never gonna run around and desert you<br />
-              Never gonna make you cry<br />
-              Never gonna say goodbye<br />
-              Never gonna tell a lie and hurt you<br />
-              Never gonna give you up<br />
-              Never gonna let you down<br />
-              Never gonna run around and desert you<br />
-              Never gonna make you cry<br />
-              Never gonna say goodbye<br />
-              Never gonna tell a lie and hurt you<br />
-              We've known each other for so long<br />
-              Your heart's been aching, but you're too shy to say it (to say it)<br />
-              Inside, we both know what's been going on (going on)<br />
-              We know the game and we're gonna play it<br />
-              I just wanna tell you how I'm feeling<br />
-              Gotta make you understand<br />
-              Never gonna give you up<br />
-              Never gonna let you down<br />
-              Never gonna run around and desert you<br />
-              Never gonna make you cry<br />
-              Never gonna say goodbye<br />
-              Never gonna tell a lie and hurt you<br />
-              Never gonna give you up<br />
-              Never gonna let you down<br />
-              Never gonna run around and desert you<br />
-              Never gonna make you cry<br />
-              Never gonna say goodbye<br />
-              Never gonna tell a lie and hurt you<br />
-              Never gonna give you up<br />
-              Never gonna let you down<br />
-              Never gonna run around and desert you<br />
-              Never gonna make you cry<br />
-              Never gonna say goodbye<br />
-              Never gonna tell a lie and hurt you<br />
-            </p>
-          </v-window-item>
+          <v-window-item value="Lryics" class="page-tab-window">{{ track.lyrics }}</v-window-item>
 
           <v-window-item value="Comments" class="page-tab-window">
             <div class="comment-tab-container">
@@ -154,7 +101,6 @@
               </form>
             </div>
           </v-window-item>
-
           <v-window-item value="Playlist" class="page-tab-window">
             <ListTrack :isInPlayer="true" />
           </v-window-item>
@@ -168,40 +114,69 @@
 import CommentComponent from './CommentComponent.vue'
 import BtnIcon from './BtnIcon.vue'
 import ListTrack from './ListTracks.vue'
-
+import { usePlayerStore } from '@/stores/player'
+import { mapActions, mapState } from 'pinia'
 export default {
   name: 'PlayerBar',
   components: { BtnIcon, ListTrack, CommentComponent },
+  setup() {
+    const playerStore = usePlayerStore()
+    return { playerStore }
+  },
+  watch: {
+    playerStore: {
+      handler() {
+        this.trackMedia = this.playerStore.getCurrentTrackMedia
+        this.$refs.audio.src = this.trackMedia
+        this.trackImage = this.playerStore.getCurrentTrackCover
+        this.track = this.playerStore.getCurrentTrack
+        this.togglePlayPause()
+        this.playerProgress = 0
+      },
+      deep: true
+    }
+  },
   data() {
     return {
       playerPageOpen: false,
-      trackImage: 'https://www.picsum.photos/1920/1080',
-      tab: 'lyrics',
       playButton: 'play_circle',
       playerProgress: 0.0,
       progressSync: true,
-      isLooping: false
-    }
-  },
-  props: {
-    media: {
-      type: String,
-      default: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+      isLooping: false,
+      playerOldState: null,
+      track: null,
+      tab: 'Comments',
+      trackMedia: '',
+      trackImage: 'https://www.picsum.photos/1920/1080'
     }
   },
   computed: {
+    ...mapState(usePlayerStore, [
+      'getCurrentTrack',
+      'getCurrentTrackCover',
+      'getCurrentTrackMedia'
+    ]),
     loopColor() {
       return this.isLooping ? 'white' : 'var(--text-placeholder-color)'
+    },
+    trackName() {
+      return this.track ? this.track.name : 'Track Name'
+    },
+    trackArtist() {
+      return this.track ? this.track.channel.name : 'Artist Name'
     }
   },
   methods: {
+    ...mapActions(usePlayerStore, ['updateIsPlaying']),
     togglePlayerPage() {
       this.playerPageOpen = !this.playerPageOpen
     },
     togglePlayPause() {
       if (this.$refs.audio.paused) {
-        this.$refs.audio.play()
         this.playButton = 'pause_circle'
+        setTimeout(() => {
+          this.$refs.audio.play()
+        }, 100)
       } else {
         this.$refs.audio.pause()
         this.playButton = 'play_circle'
@@ -210,7 +185,6 @@ export default {
     formatTime(seconds) {
       let minutes = Math.floor(seconds / 60)
       let sec = Math.floor(seconds % 60)
-      // Format the time to always have 2 digits
       return `${('000' + minutes).slice(-2)}:${('00' + sec).slice(-2)}`
     },
     initializePlayer() {
@@ -269,7 +243,23 @@ export default {
       audio.volume = volume
     }
     this.isLooping = localStorage.getItem('loop') === 'true'
-    console.log(this.isLooping)
+  },
+  unmounted() {
+    const audio = this.$refs.audio
+    audio.removeEventListener('timeupdate', this.timeUpdate)
+    audio.removeEventListener('ended', () => {
+      this.playButton = 'play_circle'
+    })
+    this.$refs.playerProgressBar.removeEventListener('click', this.updateProgress)
+    this.$refs.playerProgressBar.removeEventListener('mousemove', (e) => {
+      this.progressSync = false
+      if (e.buttons === 1) {
+        this.updateProgress(e, true)
+      }
+    })
+    this.$refs.playerProgressBar.removeEventListener('mousedown', () => {
+      this.progressSync = true
+    })
   }
 }
 </script>
