@@ -159,9 +159,15 @@ export default {
           this.playlist = []
           this.playlistIndex = null
         }
+        this.playerProgress = 0
+        if (this.track === null) {
+          this.tab = 'Comments'
+          return
+        }
         this.isPlaying = true
         this.playTrack()
-        this.playerProgress = 0
+        this.tab =
+          this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
       },
       deep: true
     },
@@ -274,21 +280,47 @@ export default {
     const audio = this.$refs.audio
     this.initializePlayer()
 
+    // Add a event listener if the state of the player changes
+
+    audio.addEventListener('pause', () => (this.isPlaying = false))
+    audio.addEventListener('play', () => (this.isPlaying = true))
+
     audio.addEventListener('timeupdate', this.timeUpdate)
     audio.addEventListener('ended', () => {
       this.playButton = 'play_circle'
-    })
+      if (this.isLooping) {
+        if (!this.isPlaylist) {
+          this.progress = 0
+          this.playTrack()
+        } else {
+          if (this.playlistIndex === this.playlist.length - 1) {
+            this.playTrackAtIndex(0)
+          } else {
+            this.playTrackAtIndex(this.playlistIndex + 1)
+          }
+        }
+      }
 
-    this.$refs.playerProgressBar.addEventListener('click', this.updateProgress)
-    // Add event listener for dragging the progress bar
-    this.$refs.playerProgressBar.addEventListener('mousemove', (e) => {
-      this.progressSync = false
-      if (e.buttons === 1) {
-        this.updateProgress(e, true)
+      if (this.isPlaylist && this.playlistIndex !== this.playlist.length - 1) {
+        this.playTrackAtIndex(this.playlistIndex + 1)
+      } else {
+        this.pauseTrack()
+        this.playerProgress = 0
       }
     })
+
     this.$refs.playerProgressBar.addEventListener('mousedown', () => {
+      this.progressSync = false
+    })
+    // Add event listener for dragging the progress bar
+    this.$refs.playerProgressBar.addEventListener('mousemove', (e) => {
+      if (e.buttons === 1) {
+        this.updateProgress(e, false)
+      }
+    })
+    this.$refs.playerProgressBar.addEventListener('mouseup', (e) => {
       this.progressSync = true
+      this.updateProgress(e, false)
     })
 
     // Getting the value from localStorage and setting the volume and the loop state
@@ -305,14 +337,17 @@ export default {
       this.playButton = 'play_circle'
     })
     this.$refs.playerProgressBar.removeEventListener('click', this.updateProgress)
-    this.$refs.playerProgressBar.removeEventListener('mousemove', (e) => {
+    this.$refs.playerProgressBar.removeEventListener('mousedown', () => {
       this.progressSync = false
+    })
+    this.$refs.playerProgressBar.removeEventListener('mousemove', (e) => {
       if (e.buttons === 1) {
-        this.updateProgress(e, true)
+        this.updateProgress(e, false)
       }
     })
-    this.$refs.playerProgressBar.removeEventListener('mousedown', () => {
+    this.$refs.playerProgressBar.removeEventListener('mouseup', (e) => {
       this.progressSync = true
+      this.updateProgress(e, false)
     })
   }
 }

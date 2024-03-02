@@ -5,15 +5,17 @@
     rounded="xl"
     size="small"
     color="transparent"
+    variant="text"
     elevation="0"
     class="btn d-flex justify-center align-center"
+    :disabled="isDisabled"
   >
     <span
       class="material-symbols-rounded"
       v-if="icon != ''"
       :style="{
         fontSize: `${iconSize}rem`,
-        color: color
+        color: isDisabled ? 'var(--text-placeholder-color)' : color
       }"
       >{{ icon }}</span
     >
@@ -43,6 +45,10 @@ export default {
     iconSize: {
       type: Number,
       default: 2
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false
     }
   }
 }
