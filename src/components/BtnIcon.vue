@@ -4,7 +4,6 @@
     @click.prevent="action"
     rounded="xl"
     size="small"
-    color="transparent"
     variant="text"
     elevation="0"
     class="btn d-flex justify-center align-center"

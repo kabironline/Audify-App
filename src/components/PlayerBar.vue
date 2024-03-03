@@ -33,9 +33,8 @@
             v-if="isPlaylist"
           />
           <BtnIcon icon="repeat" :action="toggleLoop" :color="loopColor" :iconSize="2" />
-          <!-- Like and dislike button -->
-          <BtnIcon icon="thumb_up" :iconSize="2" />
-          <BtnIcon icon="thumb_down" :iconSize="2" />
+          <BtnIcon :color="thumbsUpColor" :action="thumbsUp" icon="thumb_up" :iconSize="2" />
+          <BtnIcon :color="thumbsDownColor" :action="thumbsDown" icon="thumb_down" :iconSize="2" />
         </div>
         <div ref="playerProgressBar" class="player-progress-bar">
           <div
@@ -129,48 +128,76 @@ import ListTrack from './ListTracks.vue'
 import { usePlayerStore } from '@/stores/player'
 import { mapActions, mapState } from 'pinia'
 import { formatDuration } from '@/helper/format'
+import { useUserStore } from '@/stores/user'
+import { post } from '@/utils/http'
 export default {
   name: 'PlayerBar',
   components: { BtnIcon, ListTrack, CommentComponent },
   setup() {
-    const playerStore = usePlayerStore()
-    return { playerStore }
+    // watch(playerStore, () => {
+    //   this.isPlaying = false
+    //   if (this.getIsListOfTracks) {
+    //     if (this.playlist !== this.playerStore.getCurrentPlaylist) {
+    //       this.isPlaylist = true
+    //       this.playlist = this.playerStore.getCurrentPlaylist
+    //     }
+    //     this.playlistIndex = this.playerStore.getCurrentIndex
+    //     this.track = this.playlist[this.playlistIndex]
+    //     this.trackMedia = this.playerStore.getCurrentTrackMedia
+    //     this.trackImage = this.playerStore.getCurrentTrackCover
+    //     this.$refs.audio.src = this.trackMedia
+    //   } else {
+    //     this.trackMedia = this.playerStore.getCurrentTrackMedia
+    //     this.$refs.audio.src = this.trackMedia
+    //     this.trackImage = this.playerStore.getCurrentTrackCover
+    //     this.track = this.playerStore.getCurrentTrack
+    //     this.isPlaylist = false
+    //     this.playlist = []
+    //     this.playlistIndex = null
+    //   }
+    //   this.playerProgress = 0
+    //   if (this.track === null) {
+    //     this.tab = 'Comments'
+    //     return
+    //   }
+    //   this.isPlaying = true
+    //   this.playTrack()
+    //   this.tab =
+    //     this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
+    // })
   },
   watch: {
-    playerStore: {
-      handler() {
-        this.isPlaying = false
-        if (this.getIsListOfTracks) {
-          if (this.playlist !== this.playerStore.getCurrentPlaylist) {
-            this.isPlaylist = true
-            this.playlist = this.playerStore.getCurrentPlaylist
-          }
-          this.playlistIndex = this.playerStore.getCurrentIndex
-          this.track = this.playlist[this.playlistIndex]
-          this.trackMedia = this.playerStore.getCurrentTrackMedia
-          this.trackImage = this.playerStore.getCurrentTrackCover
-          this.$refs.audio.src = this.trackMedia
-        } else {
-          this.trackMedia = this.playerStore.getCurrentTrackMedia
-          this.$refs.audio.src = this.trackMedia
-          this.trackImage = this.playerStore.getCurrentTrackCover
-          this.track = this.playerStore.getCurrentTrack
-          this.isPlaylist = false
-          this.playlist = []
-          this.playlistIndex = null
-        }
-        this.playerProgress = 0
-        if (this.track === null) {
-          this.tab = 'Comments'
-          return
-        }
-        this.isPlaying = true
-        this.playTrack()
-        this.tab =
-          this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
-      },
-      deep: true
-    },
+    // playerStore() {
+    //   this.isPlaying = false
+    //   if (this.getIsListOfTracks) {
+    //     if (this.playlist !== this.playerStore.getCurrentPlaylist) {
+    //       this.isPlaylist = true
+    //       this.playlist = this.playerStore.getCurrentPlaylist
+    //     }
+    //     this.playlistIndex = this.playerStore.getCurrentIndex
+    //     this.track = this.playlist[this.playlistIndex]
+    //     this.trackMedia = this.playerStore.getCurrentTrackMedia
+    //     this.trackImage = this.playerStore.getCurrentTrackCover
+    //     this.$refs.audio.src = this.trackMedia
+    //   } else {
+    //     this.trackMedia = this.playerStore.getCurrentTrackMedia
+    //     this.$refs.audio.src = this.trackMedia
+    //     this.trackImage = this.playerStore.getCurrentTrackCover
+    //     this.track = this.playerStore.getCurrentTrack
+    //     this.isPlaylist = false
+    //     this.playlist = []
+    //     this.playlistIndex = null
+    //   }
+    //   this.playerProgress = 0
+    //   if (this.track === null) {
+    //     this.tab = 'Comments'
+    //     return
+    //   }
+    //   this.isPlaying = true
+    //   this.playTrack()
+    //   this.tab =
+    //     this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
+    // },
     isPlaying() {
       if (this.isPlaying) {
         this.playTrack()
@@ -220,6 +247,14 @@ export default {
     },
     isBackwardDisabled() {
       return this.playlistIndex === 0
+    },
+    thumbsUpColor() {
+      if (!this.track) return ''
+      return this.track.rating === 1 ? 'white' : 'var(--text-placeholder-color)'
+    },
+    thumbsDownColor() {
+      if (!this.track) return ''
+      return this.track.rating === 0 ? 'white' : 'var(--text-placeholder-color)'
     }
   },
   methods: {
@@ -245,6 +280,26 @@ export default {
     },
     playPrevTrack() {
       this.playTrackAtIndex(this.playlistIndex - 1)
+    },
+    thumbsUp() {
+      this.updateRating(1)
+    },
+    thumbsDown() {
+      this.updateRating(0)
+    },
+    async updateRating(rating) {
+      const store = useUserStore()
+      const token = store.getToken
+      if (this.track === null) return
+      const response = await post(`/track/${this.track.id}/rating/${rating}`, {}, {}, token)
+      const data = await response.json()
+      if (data.action === 'created') {
+        this.track.rating = rating
+        this.track.average_rating = data.average_rating
+      } else {
+        this.track.rating = null
+        this.track.average_rating = data.average_rating
+      }
     },
     initializePlayer() {
       const audio = this.$refs.audio
@@ -274,6 +329,42 @@ export default {
       this.isLooping = !this.isLooping
       audio.loop = this.isLooping
       localStorage.setItem('loop', this.isLooping)
+    },
+    updatePlayer(mutation) {
+      if (mutation.name !== 'playTrack') return
+      // mutation.after
+      mutation.after(() => {
+        this.isPlaying = false
+        if (this.getIsListOfTracks) {
+          if (this.playlist !== this.getCurrentPlaylist) {
+            this.isPlaylist = true
+            this.playlist = this.getCurrentPlaylist
+          }
+          this.playlistIndex = this.getCurrentIndex
+          this.track = this.playlist[this.playlistIndex]
+          this.trackMedia = this.getCurrentTrackMedia
+          this.trackImage = this.getCurrentTrackCover
+          this.$refs.audio.src = this.trackMedia
+        } else {
+          this.trackMedia = this.getCurrentTrackMedia
+          this.$refs.audio.src = this.trackMedia
+          this.trackImage = this.getCurrentTrackCover
+          this.track = this.getCurrentTrack
+          this.isPlaylist = false
+          this.playlist = []
+          this.playlistIndex = null
+        }
+        this.playerProgress = 0
+        console.log(this.track.rating)
+        if (this.track === null) {
+          this.tab = 'Comments'
+          return
+        }
+        this.isPlaying = true
+        this.playTrack()
+        this.tab =
+          this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
+      })
     }
   },
   mounted() {
@@ -329,6 +420,11 @@ export default {
       audio.volume = volume
     }
     this.isLooping = localStorage.getItem('loop') === 'true'
+
+    const playerStore = usePlayerStore()
+
+    // subscribe to the player store
+    playerStore.$onAction((mutation) => this.updatePlayer(mutation))
   },
   beforeUnmount() {
     const audio = this.$refs.audio

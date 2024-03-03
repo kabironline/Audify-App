@@ -47,6 +47,9 @@ export const useUserStore = defineStore('user', {
       if (!this.user) return null
       return toRaw(this.user)
     },
+    getToken() {
+      return this.token
+    },
     getUserId() {
       if (!this.user) return null
       return this.user.id

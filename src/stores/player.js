@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { get, trackImage, trackMedia } from '@/utils/http'
 import { toRaw } from 'vue'
+import { useUserStore } from './user'
 export const usePlayerStore = defineStore('player', {
   state: () => ({
     currentTrack: null,
@@ -25,7 +26,9 @@ export const usePlayerStore = defineStore('player', {
     },
     async playPlaylist(playlist, index, type = 'playlist') {
       if (type === 'album') {
-        const response = await get(`/album/${playlist.id}`)
+        const store = useUserStore()
+        const token = store.getToken
+        const response = await get(`/album/${playlist.id}`, {}, token)
         const data = await response.json()
         playlist = data.album.tracks
       } else if (type === 'playlist') {
@@ -38,7 +41,6 @@ export const usePlayerStore = defineStore('player', {
     playTrackAtIndex(index) {
       this.playTrack(this.currentPlaylist[index], this.currentPlaylist, index)
     },
-
     initializePlayerAtStart() {
       this.currentTrack = null
       this.currentTrackIndex = null

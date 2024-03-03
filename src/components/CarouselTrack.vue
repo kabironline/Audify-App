@@ -5,7 +5,7 @@
       :key="track.id"
       color="background"
       link
-      @click="onClickTrackHandler(track)"
+      @click.prevent="onClickTrackHandler(track)"
       class="track-carousel__item"
     >
       <div class="track-carousel__item--cover">
