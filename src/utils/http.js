@@ -46,8 +46,8 @@ export function put(url, data, headers, bearerToken) {
   return request('PUT', url, data, headers, bearerToken)
 }
 
-export function del(url, headers) {
-  return request('DELETE', url, null, headers)
+export function del(url, headers, bearerToken) {
+  return request('DELETE', url, null, headers, bearerToken)
 }
 
 export function userAvatar(userId) {

@@ -5,7 +5,7 @@
       :key="track.id"
       color="background"
       link
-      @click.prevent="onClickTrackHandler(track)"
+      @click.prevent="playIndividualTrack(track)"
       class="track-carousel__item"
     >
       <div class="track-carousel__item--cover">
@@ -13,14 +13,14 @@
         <span class="material-symbols-rounded track-carousel__item--play"> play_arrow </span>
       </div>
       <div>
-        <v-card-title class="d-flex flex-no-wrap justify-space-between align-center pa-0">
+        <div class="track-carousel__item--text-header">
           <div class="track-carousel__item--title">{{ track.name }}</div>
           <v-menu location="start">
             <template v-slot:activator="{ props }">
               <v-btn
                 size="x-small"
                 :elevation="0"
-                color="transparent"
+                color="background"
                 icon="mdi-dots-vertical"
                 v-bind="props"
               >
@@ -39,7 +39,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-        </v-card-title>
+        </div>
       </div>
       <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1">{{
         track.channel.name
@@ -63,12 +63,7 @@ export default {
   },
   methods: {
     ...mapActions(usePlayerStore, ['playIndividualTrack']),
-    onClickTrackHandler(track) {
-      this.playIndividualTrack(track)
-    },
-    trackImage(id) {
-      return trackImage(id)
-    }
+    trackImage
   }
 }
 </script>
@@ -163,6 +158,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  max-height: 6rem;
+  padding: 0;
+  overflow: hidden;
 }
 
 .track-carousel__item--title {

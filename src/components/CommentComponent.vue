@@ -2,18 +2,16 @@
   <div class="comment-container">
     <div class="comment-header">
       <div class="comment-user-info">
-        <img src="https://picsum.photos/200" class="comment-user-img" />
-        <p class="comment-user-name">Comment User Name</p>
+        <img :src="userAvatar(comment.user.id)" class="comment-user-img" />
+        <p class="comment-user-name">{{ comment.user.nickname }}</p>
       </div>
       <div>
-        <BtnIcon icon="delete" />
+        <BtnIcon icon="delete" :action="deleteComment" v-if="comment.user.id == userId" />
       </div>
     </div>
     <div class="comment-body">
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat.
+        {{ comment.comment }}
       </p>
     </div>
   </div>
@@ -21,6 +19,7 @@
 
 <script>
 import BtnIcon from './BtnIcon.vue'
+import { userAvatar } from '@/utils/http'
 export default {
   name: 'CommentComponent',
   components: {
@@ -29,6 +28,15 @@ export default {
   props: {
     comment: {
       type: Object
+    },
+    userId: {
+      type: Number
+    }
+  },
+  methods: {
+    userAvatar,
+    deleteComment() {
+      this.$emit('deleteComment', this.comment.id)
     }
   }
 }

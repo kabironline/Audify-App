@@ -79,7 +79,8 @@
           }"
         ></div>
         <p class="player-page-track-title">{{ trackName }}</p>
-        <p class="player-page-track-artist">{{ trackArtist }}</p>
+        <p class="player-page-track-artist">{{ trackArtist }} &CenterDot; {{ formatDateTime }}</p>
+        
       </div>
       <div class="player-page-right">
         <v-tabs v-model="tab" bg-color="background">
@@ -92,24 +93,33 @@
           <v-window-item value="Comments" class="page-tab-window">
             <div class="comment-tab-container">
               <div class="comments">
-                <CommentComponent v-for="comment in 10" :key="comment" />
+                <CommentComponent
+                  v-for="comment in trackComments"
+                  :comment="comment"
+                  :key="comment.id"
+                  :userId="getUserId"
+                  @deleteComment="deleteComment"
+                />
+                <div class="no-comment" v-if="trackComments.length == 0">
+                  No comments yet, Be the first to comment!
+                </div>
               </div>
-              <form class="comment-container" onsubmit="sendComment()">
+              <div class="comment-container">
                 <div class="comment-box">
                   <input
                     minlength="1"
                     required
                     type="text"
+                    v-model="commentBox"
                     autocomplete="off"
                     name="comment"
                     placeholder="Enter comment"
                     class="comment-box--bar"
                   />
-                  <button type="submit" value="comment" class="comment-box--btn">
-                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                  </button>
+                  <BtnIcon icon="send" :action="sendComment" :iconSize="3" class="comment-box--btn">
+                  </BtnIcon>
                 </div>
-              </form>
+              </div>
             </div>
           </v-window-item>
           <v-window-item value="Playlist" class="page-tab-window">
@@ -127,77 +137,13 @@ import BtnIcon from './BtnIcon.vue'
 import ListTrack from './ListTracks.vue'
 import { usePlayerStore } from '@/stores/player'
 import { mapActions, mapState } from 'pinia'
-import { formatDuration } from '@/helper/format'
 import { useUserStore } from '@/stores/user'
-import { post } from '@/utils/http'
+import { get, post, del } from '@/utils/http'
+import { formatDate } from '@/helper/format'
 export default {
-  name: 'PlayerBar',
+  e: 'PlayerBar',
   components: { BtnIcon, ListTrack, CommentComponent },
-  setup() {
-    // watch(playerStore, () => {
-    //   this.isPlaying = false
-    //   if (this.getIsListOfTracks) {
-    //     if (this.playlist !== this.playerStore.getCurrentPlaylist) {
-    //       this.isPlaylist = true
-    //       this.playlist = this.playerStore.getCurrentPlaylist
-    //     }
-    //     this.playlistIndex = this.playerStore.getCurrentIndex
-    //     this.track = this.playlist[this.playlistIndex]
-    //     this.trackMedia = this.playerStore.getCurrentTrackMedia
-    //     this.trackImage = this.playerStore.getCurrentTrackCover
-    //     this.$refs.audio.src = this.trackMedia
-    //   } else {
-    //     this.trackMedia = this.playerStore.getCurrentTrackMedia
-    //     this.$refs.audio.src = this.trackMedia
-    //     this.trackImage = this.playerStore.getCurrentTrackCover
-    //     this.track = this.playerStore.getCurrentTrack
-    //     this.isPlaylist = false
-    //     this.playlist = []
-    //     this.playlistIndex = null
-    //   }
-    //   this.playerProgress = 0
-    //   if (this.track === null) {
-    //     this.tab = 'Comments'
-    //     return
-    //   }
-    //   this.isPlaying = true
-    //   this.playTrack()
-    //   this.tab =
-    //     this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
-    // })
-  },
   watch: {
-    // playerStore() {
-    //   this.isPlaying = false
-    //   if (this.getIsListOfTracks) {
-    //     if (this.playlist !== this.playerStore.getCurrentPlaylist) {
-    //       this.isPlaylist = true
-    //       this.playlist = this.playerStore.getCurrentPlaylist
-    //     }
-    //     this.playlistIndex = this.playerStore.getCurrentIndex
-    //     this.track = this.playlist[this.playlistIndex]
-    //     this.trackMedia = this.playerStore.getCurrentTrackMedia
-    //     this.trackImage = this.playerStore.getCurrentTrackCover
-    //     this.$refs.audio.src = this.trackMedia
-    //   } else {
-    //     this.trackMedia = this.playerStore.getCurrentTrackMedia
-    //     this.$refs.audio.src = this.trackMedia
-    //     this.trackImage = this.playerStore.getCurrentTrackCover
-    //     this.track = this.playerStore.getCurrentTrack
-    //     this.isPlaylist = false
-    //     this.playlist = []
-    //     this.playlistIndex = null
-    //   }
-    //   this.playerProgress = 0
-    //   if (this.track === null) {
-    //     this.tab = 'Comments'
-    //     return
-    //   }
-    //   this.isPlaying = true
-    //   this.playTrack()
-    //   this.tab =
-    //     this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
-    // },
     isPlaying() {
       if (this.isPlaying) {
         this.playTrack()
@@ -213,15 +159,16 @@ export default {
       playerProgress: 0.0,
       progressSync: true,
       isLooping: false,
-      playerOldState: null,
       track: null,
       tab: 'Comments',
+      trackComments: [],
       trackMedia: '',
       trackImage: 'https://www.picsum.photos/1920/1080',
       isPlaylist: false,
       playlist: [],
       playlistIndex: null,
-      isPlaying: false
+      isPlaying: false,
+      commentBox: ''
     }
   },
   computed: {
@@ -233,6 +180,7 @@ export default {
       'getCurrentPlaylist',
       'getCurrentIndex'
     ]),
+    ...mapState(useUserStore, ['getUserId', 'getToken']),
     loopColor() {
       return this.isLooping ? 'white' : 'var(--text-placeholder-color)'
     },
@@ -255,6 +203,9 @@ export default {
     thumbsDownColor() {
       if (!this.track) return ''
       return this.track.rating === 0 ? 'white' : 'var(--text-placeholder-color)'
+    },
+    formatDateTime() {
+      return formatDate(this.track.created_at)
     }
   },
   methods: {
@@ -288,10 +239,8 @@ export default {
       this.updateRating(0)
     },
     async updateRating(rating) {
-      const store = useUserStore()
-      const token = store.getToken
       if (this.track === null) return
-      const response = await post(`/track/${this.track.id}/rating/${rating}`, {}, {}, token)
+      const response = await post(`/track/${this.track.id}/rating/${rating}`, {}, {}, this.getToken)
       const data = await response.json()
       if (data.action === 'created') {
         this.track.rating = rating
@@ -317,7 +266,6 @@ export default {
         this.playerProgress = currentTime / duration
       }
     },
-    formatDuration,
     updateProgress(e, dragOnly = false) {
       const audio = this.$refs.audio
       const progress = e.offsetX / this.$refs.playerProgressBar.offsetWidth
@@ -355,7 +303,6 @@ export default {
           this.playlistIndex = null
         }
         this.playerProgress = 0
-        console.log(this.track.rating)
         if (this.track === null) {
           this.tab = 'Comments'
           return
@@ -364,6 +311,41 @@ export default {
         this.playTrack()
         this.tab =
           this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
+        this.trackComments = []
+        this.loadComments()
+      })
+    },
+    loadComments() {
+      if (this.track === null) return
+      get(`/track/${this.track.id}/comments`, {}, this.getToken).then((response) => {
+        response.json().then((data) => {
+          this.trackComments = data.comments
+        })
+      })
+    },
+    deleteComment(id) {
+      console.log(`/track/${this.track.id}/comments/${id}`)
+      del(`/track/${this.track.id}/comment/${id}`, {}, this.getToken).then((response) => {
+        if (response.status === 200) {
+          this.loadComments()
+        }
+      })
+    },
+    sendComment() {
+      console.log(this.commentBox)
+      if (this.commentBox === '') return
+      post(
+        `/track/${this.track.id}/comments`,
+        { comment: this.commentBox },
+        {},
+        this.getToken
+      ).then((response) => {
+        if (response.status === 201) {
+          this.commentBox = ''
+          response.json().then((data) => {
+            this.trackComments.unshift(data.comment)
+          })
+        }
       })
     }
   },
@@ -703,6 +685,17 @@ export default {
   padding: 1rem;
   overflow-y: scroll;
 }
+
+.no-comment {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-light);
+  font-size: 1.8rem;
+  height: 100%;
+}
+
 .comment-box {
   padding: 0.5rem 1rem;
   border: 1px solid white;
