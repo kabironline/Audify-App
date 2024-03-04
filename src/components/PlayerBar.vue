@@ -79,8 +79,15 @@
           }"
         ></div>
         <p class="player-page-track-title">{{ trackName }}</p>
-        <p class="player-page-track-artist">{{ trackArtist }} &CenterDot; {{ formatDateTime }}</p>
-        
+        <div class="player-page-track-artist d-flex align-center gap-1">
+          {{ trackArtist }} &CenterDot; {{ formatDateTime }} &CenterDot; {{ track.views }} Views
+          &CenterDot; {{ (track.average_rating * 100).toFixed(0) }}% &ThinSpace;
+          <div class="rating">
+            <div class="rating__bar" :style="{ width: `${track.average_rating * 100}%` }"></div>
+          </div>
+          <div class="player__rating--text"></div>
+          &ThinSpace;
+        </div>
       </div>
       <div class="player-page-right">
         <v-tabs v-model="tab" bg-color="background">
@@ -139,7 +146,7 @@ import { usePlayerStore } from '@/stores/player'
 import { mapActions, mapState } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import { get, post, del } from '@/utils/http'
-import { formatDate } from '@/helper/format'
+import { formatDate, formatDuration } from '@/helper/format'
 export default {
   e: 'PlayerBar',
   components: { BtnIcon, ListTrack, CommentComponent },
@@ -210,6 +217,7 @@ export default {
   },
   methods: {
     ...mapActions(usePlayerStore, ['updateIsPlaying', 'playTrackAtIndex']),
+    formatDuration,
     togglePlayerPage() {
       this.playerPageOpen = !this.playerPageOpen
     },
@@ -324,7 +332,6 @@ export default {
       })
     },
     deleteComment(id) {
-      console.log(`/track/${this.track.id}/comments/${id}`)
       del(`/track/${this.track.id}/comment/${id}`, {}, this.getToken).then((response) => {
         if (response.status === 200) {
           this.loadComments()
@@ -332,7 +339,6 @@ export default {
       })
     },
     sendComment() {
-      console.log(this.commentBox)
       if (this.commentBox === '') return
       post(
         `/track/${this.track.id}/comments`,
@@ -516,6 +522,24 @@ export default {
     color: var(--text-subtitle-color);
     text-overflow: ellipsis;
   }
+}
+
+.rating {
+  height: 1rem;
+  width: 10rem;
+  background-color: var(--color-background-light);
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.rating__bar {
+  background-color: var(--color-primary);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  transition: all 0.2s;
 }
 
 .player-controls {
