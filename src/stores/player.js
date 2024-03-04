@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { get, post, trackImage, trackMedia } from '@/utils/http'
 import { toRaw } from 'vue'
 import { useUserStore } from './user'
+import router from '@/router'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -29,16 +30,23 @@ export const usePlayerStore = defineStore('player', {
       this.playTrack(track, [], null)
     },
     async playPlaylist(playlist, index, type = 'playlist') {
+      const store = useUserStore()
+      const token = store.getToken
       if (type === 'album') {
-        const store = useUserStore()
-        const token = store.getToken
         const response = await get(`/album/${playlist.id}`, {}, token)
         const data = await response.json()
         playlist = data.album.tracks
       } else if (type === 'playlist') {
-        const response = await get(`/playlist/${playlist.id}`)
+        const response = await get(`/playlist/${playlist.id}`, {}, token)
         const data = await response.json()
         playlist = data.playlist.tracks
+      }
+      if (playlist.length === 0) {
+        if (type === 'album') {
+          router.push({ name: 'album' })
+        } else if (type === 'playlist') {
+          router.push({ name: 'playlist' })
+        }
       }
       this.playTrack(playlist[index], playlist, index)
     },

@@ -4,7 +4,7 @@
       v-for="playlist in playlists"
       :key="playlist.id"
       class="playlist__item pa-2"
-      @click.capture="navigateToPlaylistPage"
+      @click="navigateToPlaylistPage"
     >
       <div class="playlist__details">
         <v-card-title class="playlist__heading"> {{ playlist.name }} </v-card-title>
@@ -18,7 +18,7 @@
         icon="play_circle"
         class="playlist__playbutton"
         :iconSize="3"
-        @click="navigateToPlayer"
+        @click.stop="navigateToPlayer(playlist)"
       />
       <!-- </v-card-actions> -->
     </v-card>
@@ -27,7 +27,8 @@
 
 <script>
 import BtnIcon from './BtnIcon.vue'
-
+import { usePlayerStore } from '@/stores/player'
+import { mapActions } from 'pinia'
 export default {
   name: 'TilePlaylist',
   props: {
@@ -36,9 +37,9 @@ export default {
     }
   },
   methods: {
-    navigateToPlayer() {
-      //  Opens the playlist in the player
-      this.$router.push('/')
+    ...mapActions(usePlayerStore, ['playPlaylist']),
+    navigateToPlayer(playlist) {
+      this.playPlaylist(playlist, 0)
     },
     navigateToPlaylistPage() {
       this.$router.push('/playlist')
