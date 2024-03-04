@@ -26,6 +26,7 @@ import CarouselTrack from '@/components/CarouselTrack.vue'
 import CarouselAlbum from '@/components/CarouselAlbum.vue'
 import TilePlaylist from '@/components/TilePlaylist.vue'
 import { useUserStore } from '@/stores/user'
+import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
 import { getLatestTracks, getLatestAlbums, getLatestPlaylists } from '@/helper/latest'
 export default {
@@ -42,18 +43,27 @@ export default {
     latestPlaylist: []
   }),
   methods: {
-    ...mapActions(useUserStore, ['getUserRecents'])
+    ...mapActions(useUserStore, ['getUserRecents']),
+    async updateHomeData(recentsOnly = false) {
+      this.recents = await this.getUserRecents()
+
+      if (recentsOnly) return
+
+      this.latestTracks = await getLatestTracks()
+      this.latestAlbums = await getLatestAlbums()
+      this.latestPlaylist = await getLatestPlaylists()
+    }
   },
   async created() {
-    let data = await this.getUserRecents()
-    this.recents = data
+    await this.updateHomeData()
 
-    this.latestTracks = await getLatestTracks()
-    const latestAlbums = await getLatestAlbums()
-    this.latestAlbums = latestAlbums
-
-    const latestPlaylist = await getLatestPlaylists()
-    this.latestPlaylist = latestPlaylist
+    const playerStore = usePlayerStore()
+    playerStore.$onAction((mutation) => {
+      if (mutation.name !== 'playTrack') return
+      mutation.after(() => {
+        this.updateHomeData(true)
+      })
+    })
   }
 }
 </script>

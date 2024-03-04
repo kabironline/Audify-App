@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { get, trackImage, trackMedia } from '@/utils/http'
+import { get, post, trackImage, trackMedia } from '@/utils/http'
 import { toRaw } from 'vue'
 import { useUserStore } from './user'
+
 export const usePlayerStore = defineStore('player', {
   state: () => ({
     currentTrack: null,
@@ -20,6 +21,9 @@ export const usePlayerStore = defineStore('player', {
       this.isListOfTracks = playlist && playlist.length > 0
       this.currentTrackIndex = index
       this.currentPlaylist = playlist
+      const store = useUserStore()
+      const token = store.getToken
+      post(`/tracks/recents`, { track_id: track.id }, {}, token)
     },
     playIndividualTrack(track) {
       this.playTrack(track, [], null)
