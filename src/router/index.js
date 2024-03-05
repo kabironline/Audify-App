@@ -30,9 +30,9 @@ const router = createRouter({
       component: () => import('../views/music/ExploreView.vue')
     },
     {
-      path: '/genre/:genre/tracks',
+      path: '/genre/:genreId/tracks',
       name: 'genre-tracks',
-      props: { tracks: [], heading: 'Rock Tracks' },
+      props: { heading: 'Rock Tracks' },
       component: () => import('../views/music/AllTracksView.vue')
     },
     {
@@ -42,21 +42,10 @@ const router = createRouter({
       props: { tracks: [], heading: 'New Releases' }
     },
     {
-      path: '/top',
-      name: 'top',
-      component: () => import('../views/music/TopChartsView.vue')
-    },
-    {
       path: '/top/tracks',
       name: 'top-tracks',
       component: () => import('../views/music/AllTracksView.vue'),
       props: { tracks: [], heading: 'Top Tracks' }
-    },
-    {
-      path: '/top/albums',
-      name: 'top-albums',
-      component: () => import('../views/music/AllAlbumsView.vue'),
-      props: { albums: [] }
     },
     {
       path: '/dashboard',

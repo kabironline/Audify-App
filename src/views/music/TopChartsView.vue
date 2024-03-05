@@ -7,7 +7,7 @@
 
 <script>
 import CarouselTrack from '@/components/CarouselTrack.vue'
-import { getTopTracks } from '@/helper/top'
+import { getTopTracks } from '@/helper/getters'
 export default {
   name: 'TopChartsView',
   data: () => ({

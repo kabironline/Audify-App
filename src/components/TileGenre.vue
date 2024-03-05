@@ -1,14 +1,14 @@
 <template>
   <div class="genre-tiles">
     <v-chip
-      v-for="genre in 20"
-      :key="genre"
+      v-for="genre in genres"
+      :key="genre.id"
       class="genre-tile genre__link"
       color="background"
-      :href="`/genre/${genre}/tracks`"
+      :to="`/genre/${genre.id}/tracks`"
     >
-      <div :style="{ backgroundColor: randomColor() }" class="genre-tile__cover"></div>
-      <p class="genre-tile__text">Genre {{ genre }}</p>
+      <div :style="{ backgroundColor: genre.color }" class="genre-tile__cover"></div>
+      <p class="genre-tile__text">{{ genre.name }}</p>
     </v-chip>
   </div>
 </template>
@@ -16,9 +16,10 @@
 <script>
 export default {
   name: 'TileGenre',
-  methods: {
-    randomColor() {
-      return '#' + Math.floor(Math.random() * 16777215).toString(16)
+  props: {
+    genres: {
+      type: Array,
+      default: () => []
     }
   }
 }

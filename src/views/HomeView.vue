@@ -28,7 +28,7 @@ import TilePlaylist from '@/components/TilePlaylist.vue'
 import { useUserStore } from '@/stores/user'
 import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
-import { getLatestTracks, getLatestAlbums, getLatestPlaylists } from '@/helper/latest'
+import { getLatestTracks, getLatestAlbums, getLatestPlaylists } from '@/helper/getters'
 export default {
   name: 'HomeView',
   components: {
@@ -67,3 +67,4 @@ export default {
   }
 }
 </script>
+@/helper/getters
