@@ -5,15 +5,15 @@
   </section>
   <section class="section section-latest-track">
     <h2 class="heading-2 heading-link" @click.prevent="goToNewReleases">New Releases</h2>
-    <CarouselTrack />
+    <CarouselTrack :tracks="latestTracks" />
   </section>
   <section class="section section-top-track">
     <h2 class="heading-2 heading-link" @click.prevent="goToTopTracks">Top Tracks</h2>
-    <TileTrack />
+    <TileTrack :tracks="topTracks" />
   </section>
   <section class="section section-top-channel">
     <h2 class="heading-2">Top Channels</h2>
-    <TileChannel />
+    <TileChannel :channels="topChannels" />
   </section>
 </template>
 
@@ -22,8 +22,8 @@ import TileGenre from '@/components/TileGenre.vue'
 import TileTrack from '@/components/TileTrack.vue'
 import CarouselTrack from '@/components/CarouselTrack.vue'
 import TileChannel from '@/components/TileChannel.vue'
-
-import router from '@/router'
+import { getTopChannels, getTopTracks } from '@/helper/top'
+import { getLatestTracks } from '@/helper/latest'
 export default {
   name: 'ExploreView',
   components: {
@@ -32,13 +32,26 @@ export default {
     TileChannel,
     CarouselTrack
   },
+  data: () => ({
+    latestTracks: [],
+    topTracks: [],
+    topChannels: []
+  }),
   methods: {
     goToTopTracks() {
-      router.push('/top')
+      this.$router.push('/top')
     },
     goToNewReleases() {
-      router.push('/new-releases')
+      this.$router.push('/new-releases')
+    },
+    async getExploreData() {
+      this.topChannels = await getTopChannels()
+      this.topTracks = await getTopTracks(16)
+      this.latestTracks = await getLatestTracks()
     }
+  },
+  async mounted() {
+    await this.getExploreData()
   }
 }
 </script>

@@ -1,37 +1,46 @@
 <template>
   <div class="track-tiles">
     <v-card
-      v-for="n in 16"
-      :key="n"
+      v-for="(track, n) in tracks"
+      :key="track.id"
       color="transparent"
       class="track-tile"
-      :href="`/player/${n}`"
-      :to="`/player/${n}`"
+      link
+      @click.prevent="playIndividualTrack(track)"
     >
       <v-card-title class="track-tile__position">
-        <p class="track-tile__position--text">{{ n }}</p>
+        <p class="track-tile__position--text">{{ n + 1 }}</p>
       </v-card-title>
       <v-card-media class="track-tile__cover">
         <div>
-          <v-img
-            :src="`https://picsum.photos/300/200?random=${n}`"
-            alt="track Image"
-            class="track-tile__cover--img"
-          />
+          <v-img :src="trackImage(track.id)" alt="track Image" class="track-tile__cover--img" />
           <span class="track-tile__cover--playbutton material-symbols-rounded">play_arrow</span>
         </div>
       </v-card-media>
       <v-card-title class="track-tile__text">
-        <a href="/player" class="track-tile__text--title">Name of track {{ n }}</a>
-        <a href="/player" class="track-tile__text--artist">Channel Name {{ n }}</a>
+        <a href="/player" class="track-tile__text--title">{{ track.name }}</a>
+        <a href="/player" class="track-tile__text--artist">{{ track.channel.name }}</a>
       </v-card-title>
     </v-card>
   </div>
 </template>
 
 <script>
+import { trackImage } from '@/utils/http'
+import { usePlayerStore } from '@/stores/player'
+import { mapActions } from 'pinia'
 export default {
   name: 'TileTrack',
+  props: {
+    tracks: {
+      type: Array,
+      required: true
+    }
+  },
+  methods: {
+    ...mapActions(usePlayerStore, ['playIndividualTrack']),
+    trackImage
+  }
 }
 </script>
 
