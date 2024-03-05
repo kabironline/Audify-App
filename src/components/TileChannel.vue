@@ -1,32 +1,42 @@
 <template>
   <div class="creator-tiles">
     <v-card
-      v-for="n in 16"
-      :key="n"
+      v-for="(channel, n) in channels"
+      :key="channel.id"
       color="transparent"
       class="creator-tile ma-1"
-      :to="`/dashboard/channel/${n}`"
+      :to="`/channel/dashboard/${channel.id}`"
     >
       <v-card-title class="creator-tile__position">
-        <p class="creator-tile__position--text">{{ n }}</p>
+        <p class="creator-tile__position--text">{{ n + 1 }}</p>
       </v-card-title>
-      <v-card-media class="creator-tile__cover">
+      <div class="creator-tile__cover">
         <img
-          :src="`https://picsum.photos/200?random=${n}`"
+          :src="channelAvatar(channel.id)"
           alt="creator Image"
           class="creator-tile__cover--img"
         />
-      </v-card-media>
+      </div>
       <v-card-title class="creator-tile__text">
-        <p class="creator-tile__text--title">Channel name {{ n }}</p>
+        <p class="creator-tile__text--title">{{ channel.name }}</p>
       </v-card-title>
     </v-card>
   </div>
 </template>
 
 <script>
+import { channelAvatar } from '@/utils/http'
 export default {
-  name: 'TileChannel'
+  name: 'TileChannel',
+  props: {
+    channels: {
+      type: Array,
+      required: true
+    }
+  },
+  methods: {
+    channelAvatar
+  }
 }
 </script>
 

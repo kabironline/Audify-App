@@ -11,15 +11,15 @@
       <v-card-title class="track-tile__position">
         <p class="track-tile__position--text">{{ n + 1 }}</p>
       </v-card-title>
-      <v-card-media class="track-tile__cover">
+      <div class="track-tile__cover">
         <div>
           <v-img :src="trackImage(track.id)" alt="track Image" class="track-tile__cover--img" />
           <span class="track-tile__cover--playbutton material-symbols-rounded">play_arrow</span>
         </div>
-      </v-card-media>
+      </div>
       <v-card-title class="track-tile__text">
-        <a href="/player" class="track-tile__text--title">{{ track.name }}</a>
-        <a href="/player" class="track-tile__text--artist">{{ track.channel.name }}</a>
+        <p href="/player" class="track-tile__text--title">{{ track.name }}</p>
+        <p href="/player" class="track-tile__text--artist">{{ track.channel.name }}</p>
       </v-card-title>
     </v-card>
   </div>

@@ -20,8 +20,8 @@
 <script>
 import TileGenre from '@/components/TileGenre.vue'
 import TileTrack from '@/components/TileTrack.vue'
-import CarouselTrack from '@/components/CarouselTrack.vue'
 import TileChannel from '@/components/TileChannel.vue'
+import CarouselTrack from '@/components/CarouselTrack.vue'
 import { getTopChannels, getTopTracks } from '@/helper/top'
 import { getLatestTracks } from '@/helper/latest'
 export default {
@@ -45,7 +45,7 @@ export default {
       this.$router.push('/new-releases')
     },
     async getExploreData() {
-      this.topChannels = await getTopChannels()
+      this.topChannels = await getTopChannels(16)
       this.topTracks = await getTopTracks(16)
       this.latestTracks = await getLatestTracks()
     }

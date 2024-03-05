@@ -54,6 +54,10 @@ export function userAvatar(userId) {
   return `http://localhost:${port}/user_avatar/${userId}`
 }
 
+export function channelAvatar(channelId) {
+  return `http://localhost:${port}/channel_avatar/${channelId}`
+}
+
 export function trackImage(trackId) {
   return `http://localhost:${port}/tracks/${trackId}/cover`
 }
