@@ -1,69 +1,81 @@
 <template>
-  <div
-    v-show="this.track !== null"
-    class="player-frame-container"
-    :class="{ 'player-page-open': playerPageOpen }"
-  >
-    <div class="player-main">
-      <audio ref="audio" :src="this.trackMedia" class="player-audio" />
-      <Transition name="slide">
-        <div class="player-track-info" v-if="!playerPageOpen">
-          <img ref="image" :src="trackImage" class="player-track-img" />
-          <div class="player-track-details">
-            <div class="player-track-title">{{ trackName }}</div>
-            <div class="player-track-artist">{{ trackArtist }}</div>
+  <Transition name="slide">
+    <div
+      v-show="this.track !== null"
+      class="player-frame-container"
+      :class="{ 'player-page-open': playerPageOpen }"
+    >
+      <div class="player-main">
+        <audio ref="audio" :src="this.trackMedia" class="player-audio" />
+        <Transition name="slide">
+          <div class="player-track-info" v-if="!playerPageOpen">
+            <img ref="image" :src="trackImage" class="player-track-img" />
+            <div class="player-track-details">
+              <div class="player-track-title">{{ trackName }}</div>
+              <div class="player-track-artist">{{ trackArtist }}</div>
+            </div>
           </div>
+        </Transition>
+        <div class="player-controls">
+          <div class="player-control-container">
+            <BtnIcon
+              :disabled="isBackwardDisabled"
+              :action="playPrevTrack"
+              icon="fast_rewind"
+              :iconSize="3"
+              v-if="isPlaylist"
+            />
+            <BtnIcon
+              :icon="playButton"
+              :action="togglePlayPause"
+              class="play-button"
+              :iconSize="3"
+            />
+            <BtnIcon
+              :disabled="isForwardDisabled"
+              :action="playNextTrack"
+              icon="fast_forward"
+              :iconSize="3"
+              v-if="isPlaylist"
+            />
+            <BtnIcon icon="repeat" :action="toggleLoop" :color="loopColor" :iconSize="2" />
+            <BtnIcon :color="thumbsUpColor" :action="thumbsUp" icon="thumb_up" :iconSize="2" />
+            <BtnIcon
+              :color="thumbsDownColor"
+              :action="thumbsDown"
+              icon="thumb_down"
+              :iconSize="2"
+            />
+          </div>
+          <div ref="playerProgressBar" class="player-progress-bar">
+            <div
+              class="player-progress-bar--knob"
+              :style="{
+                left: `${playerProgress * 100}%`
+              }"
+              f
+            ></div>
+            <div class="player-progress-bar--track-background"></div>
+            <div
+              class="player-progress-bar--track-progress"
+              :style="{
+                width: `${playerProgress * 100}%`
+              }"
+            ></div>
+          </div>
+          <div ref="time" class="player-control--time">0:00 / 0:00</div>
         </div>
-      </Transition>
-      <div class="player-controls">
-        <div class="player-control-container">
+        <div class="player-controls-extra">
+          <BtnIcon icon="volume_up" @click="togglePlayerPage()" />
+          <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
           <BtnIcon
-            :disabled="isBackwardDisabled"
-            :action="playPrevTrack"
-            icon="fast_rewind"
-            :iconSize="3"
-            v-if="isPlaylist"
+            :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
+            @click.prevent="togglePlayerPage"
           />
-          <BtnIcon :icon="playButton" :action="togglePlayPause" class="play-button" :iconSize="3" />
-          <BtnIcon
-            :disabled="isForwardDisabled"
-            :action="playNextTrack"
-            icon="fast_forward"
-            :iconSize="3"
-            v-if="isPlaylist"
-          />
-          <BtnIcon icon="repeat" :action="toggleLoop" :color="loopColor" :iconSize="2" />
-          <BtnIcon :color="thumbsUpColor" :action="thumbsUp" icon="thumb_up" :iconSize="2" />
-          <BtnIcon :color="thumbsDownColor" :action="thumbsDown" icon="thumb_down" :iconSize="2" />
         </div>
-        <div ref="playerProgressBar" class="player-progress-bar">
-          <div
-            class="player-progress-bar--knob"
-            :style="{
-              left: `${playerProgress * 100}%`
-            }"
-            f
-          ></div>
-          <div class="player-progress-bar--track-background"></div>
-          <div
-            class="player-progress-bar--track-progress"
-            :style="{
-              width: `${playerProgress * 100}%`
-            }"
-          ></div>
-        </div>
-        <div ref="time" class="player-control--time">0:00 / 0:00</div>
-      </div>
-      <div class="player-controls-extra">
-        <BtnIcon icon="volume_up" @click="togglePlayerPage()" />
-        <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
-        <BtnIcon
-          :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
-          @click.prevent="togglePlayerPage"
-        />
       </div>
     </div>
-  </div>
+  </Transition>
   <Transition>
     <div v-if="playerPageOpen" class="player-page">
       <div class="player-page-left">
