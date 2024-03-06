@@ -73,7 +73,6 @@ export default {
         const json = await response.json()
         localStorage.setItem('token', json.access_token)
         localStorage.setItem('user', JSON.stringify(json.user))
-
         this.setUser(json.user)
         this.setToken(json.access_token)
 

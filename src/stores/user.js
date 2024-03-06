@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { isProxy, toRaw } from 'vue'
-import { get, userAvatar } from '@/utils/http'
+import { userAvatar } from '@/utils/http'
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null,
@@ -30,13 +30,6 @@ export const useUserStore = defineStore('user', {
         this.setToken(token)
         this.setUser(user)
       }
-    },
-    async getUserRecents() {
-      if (!this.token) return null
-      // send the access token in the header as a bearer token
-      const reponse = await get('/tracks/recents', {}, this.token)
-      let data = await reponse.json()
-      return data.recents
     }
   },
   getters: {

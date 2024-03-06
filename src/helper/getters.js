@@ -1,6 +1,13 @@
 import { get } from '@/utils/http'
 import { useUserStore } from '@/stores/user'
 
+export async function getUserRecents(userId, number = 5) {
+  const token = useUserStore().token
+  const response = await get(`/user/${userId}/tracks/recents?n=${number}`, {}, token)
+  const data = await response.json()
+  return data.recents
+}
+
 export async function getLatestTracks(number = 5) {
   const token = useUserStore().token
   const response = await get(`/tracks/latest?n=${number}`, {}, token)

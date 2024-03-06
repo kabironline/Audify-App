@@ -92,14 +92,7 @@ export default {
     }
   },
   mounted() {
-    const store = useUserStore()
-    store.$onAction((mutation) => {
-      if (mutation.name === 'setUser' || mutation.name === 'initializeUserAtStart') {
-        mutation.after(() => {
-          this.updateMenuItems()
-        })
-      } 
-    })
+    this.updateMenuItems()
   }
 }
 </script>

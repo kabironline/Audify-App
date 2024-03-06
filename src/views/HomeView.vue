@@ -27,8 +27,13 @@ import CarouselAlbum from '@/components/CarouselAlbum.vue'
 import TilePlaylist from '@/components/TilePlaylist.vue'
 import { useUserStore } from '@/stores/user'
 import { usePlayerStore } from '@/stores/player'
-import { mapActions } from 'pinia'
-import { getLatestTracks, getLatestAlbums, getLatestPlaylists } from '@/helper/getters'
+import { mapState } from 'pinia'
+import {
+  getLatestTracks,
+  getLatestAlbums,
+  getLatestPlaylists,
+  getUserRecents
+} from '@/helper/getters'
 export default {
   name: 'HomeView',
   components: {
@@ -42,10 +47,12 @@ export default {
     latestAlbums: [],
     latestPlaylist: []
   }),
+  computed: {
+    ...mapState(useUserStore, ['getUserId'])
+  },
   methods: {
-    ...mapActions(useUserStore, ['getUserRecents']),
     async updateHomeData(recentsOnly = false) {
-      this.recents = await this.getUserRecents()
+      this.recents = await getUserRecents(this.getUserId)
 
       if (recentsOnly) return
 

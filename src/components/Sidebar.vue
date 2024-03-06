@@ -75,15 +75,8 @@ export default {
       this.menuItems = menuItems
     }
   },
-  async created() {
-    const store = useUserStore()
-    store.$onAction((mutation) => {
-      if (mutation.name === 'setUser' || mutation.name === 'initializeUserAtStart') {
-        mutation.after(() => {
-          this.updateMenuItems()
-        })
-      }
-    })
+  mounted() {
+    this.updateMenuItems()
   }
 }
 </script>

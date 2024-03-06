@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app v-if="storeInitialized">
     <div class="page-container">
       <Sidebar v-if="headerFooterShown" />
       <div class="page-content">
@@ -14,6 +14,9 @@
       </div>
     </div>
   </v-app>
+  <v-overlay v-else>
+    <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
+  </v-overlay>
 </template>
 
 <script>
@@ -24,6 +27,7 @@ import PlayerBar from './components/PlayerBar.vue'
 
 import { useUserStore } from './stores/user'
 import { usePlayerStore } from './stores/player'
+import { onBeforeMount, ref } from 'vue'
 
 export default {
   components: {
@@ -38,12 +42,18 @@ export default {
     }
   },
   setup() {
-    const store = useUserStore()
-    store.initializeUserAtStart()
+    const storeInitialized = ref(false)
+    onBeforeMount(async () => {
+      const store = useUserStore()
+      store.initializeUserAtStart().then(() => {
+        const playerStore = usePlayerStore()
+        playerStore.initializePlayerAtStart()
 
-    const playerStore = usePlayerStore()
-    playerStore.initializePlayerAtStart()
-    return { store }
+        storeInitialized.value = true
+      })
+    })
+
+    return { storeInitialized }
   }
 }
 </script>

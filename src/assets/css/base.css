@@ -38,6 +38,7 @@
 html {
   font-size: 62.5% !important;
   scroll-behavior: smooth;
+  overflow: hidden !important;
 
   /* width */
   ::-webkit-scrollbar {
