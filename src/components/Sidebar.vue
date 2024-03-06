@@ -51,7 +51,8 @@ export default {
         {
           title: 'Dashboard',
           icon: 'dashboard',
-          link: `/dashboard/${this.getUserId}`
+          link: `/dashboard/${this.getUserId}`,
+          route_name: 'dashboard'
         }
       ]
       if (this.getUserChannel !== null) {

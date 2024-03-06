@@ -1,5 +1,11 @@
 import { get } from '@/utils/http'
 import { useUserStore } from '@/stores/user'
+import { toRaw } from 'vue'
+export async function getUser(userId) {
+  const response = await get(`/user/${userId}`)
+  const data = await response.json()
+  return data
+}
 
 export async function getUserRecents(userId, number = 5) {
   const token = useUserStore().token
@@ -35,8 +41,7 @@ export async function getTopTracks(number = 10) {
 }
 
 export async function getTopChannels(number = 10) {
-  const token = useUserStore().getToken
-  const response = await get(`/channels/top?n=${number}`, {}, token)
+  const response = await get(`/channels/top?n=${number}`)
   const data = await response.json()
   return data.top
 }
@@ -51,4 +56,10 @@ export async function getGenreTracks(genreId) {
   const response = await get(`/genre/${genreId}/tracks`)
   const data = await response.json()
   return data.tracks
+}
+
+export async function getUserPlaylists(userId) {
+  const response = await get(`/user/${userId}/playlists`)
+  const data = await response.json()
+  return data.playlists
 }

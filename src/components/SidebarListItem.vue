@@ -10,9 +10,6 @@
       <span class="material-symbols-rounded"> {{ item.icon }}</span>
     </template>
     <v-list-item-title class="sidebar__item--text"> {{ item.title }}</v-list-item-title>
-    <!-- <div @click.prevent="navigateTo(item.link)" href="/" class="sidebar__link">
-      <span class="sidebar__item--text">{{ item.title }}</span>
-    </div> -->
   </v-list-item>
 </template>
 

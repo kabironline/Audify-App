@@ -2,7 +2,7 @@
   <section class="section section-hero">
     <section class="hero">
       <div class="hero__avatar">
-        <img src="https://www.picsum.photos/200/200" alt="Avatar" class="hero__avatar--img" />
+        <img :src="userAvatar(user.id)" alt="Avatar" class="hero__avatar--img" />
       </div>
       <div class="hero__details">
         <div class="hero__details--header">
@@ -23,13 +23,16 @@
     </section>
     <hr class="hr" />
   </section>
-  <section class="section section-recents">
+  <section class="section section-recents" v-show="userRecents.length">
     <h2 class="heading-2 mb-medium">Recently Played</h2>
-    <ListTracks />
+    <ListTracks :tracks="userRecents" />
   </section>
-  <section class="section section-playlists">
+  <section class="section section-playlists" v-show="userPlaylists.length">
     <h2 class="heading-2 mb-medium">User Playlists</h2>
-    <TilePlaylist />
+    <TilePlaylist :playlists="userPlaylists" />
+  </section>
+  <section class="section section-playlists" v-show="noContent">
+    <h2 class="heading-2 mb-medium">User hasn't been active!</h2>
   </section>
 </template>
 
@@ -37,24 +40,49 @@
 import BtnNavigation from '@/components/BtnNavigation.vue'
 import ListTracks from '@/components/ListTracks.vue'
 import TilePlaylist from '@/components/TilePlaylist.vue'
-
+import { getUserRecents, getUserPlaylists, getUser } from '@/helper/getters'
+import { useUserStore } from '@/stores/user'
+import { mapState } from 'pinia'
+import { userAvatar } from '@/utils/http'
 export default {
   name: 'DashboardUser',
   computed: {
+    ...mapState(useUserStore, ['getUser']),
     userBio() {
       return this.user.bio ? this.user.bio : `Welcome to the channel of ${this.user.nickname}`
+    },
+    noContent() {
+      return !this.userRecents.length && !this.userPlaylists.length
     }
   },
   data() {
     return {
       user: {
-        nickname: 'John Doe',
-        username: 'johndoe',
-        bio: 'Welcome to the channel of John Doe'
-      }
+        nickname: '',
+        username: '',
+        bio: ''
+      },
+      userRecents: [],
+      userPlaylists: []
     }
   },
-  components: { BtnNavigation, ListTracks, TilePlaylist }
+  methods: {
+    userAvatar
+  },
+  components: { BtnNavigation, ListTracks, TilePlaylist },
+  async beforeMount() {
+    const userId = this.$route.params.userId
+
+    if (userId == this.getUser.id) {
+      this.user = this.getUser
+    } else {
+      this.user = await getUser(userId)
+    }
+
+    // Fetch user recents
+    this.userRecents = await getUserRecents(userId, 10)
+    this.userPlaylists = await getUserPlaylists(userId, 10)
+  }
 }
 </script>
 
