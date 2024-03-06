@@ -7,7 +7,7 @@
     </a>
     <hr class="sidebar__hr" />
     <div class="side-nav">
-      <SidebarListItem v-for="item in items" :key="item.title" :item="item" />
+      <SidebarListItem v-for="item in menuItems" :key="item.title" :item="item" />
     </div>
 
     <hr class="sidebar__hr" />
@@ -23,9 +23,11 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/user'
 import BtnAction from './BtnAction.vue'
 import PlaylistModal from './Modals/PlaylistModal.vue'
 import SidebarListItem from './SidebarListItem.vue'
+import { mapState } from 'pinia'
 export default {
   name: 'AppSidebar',
   components: {
@@ -36,14 +38,53 @@ export default {
   data: () => ({
     drawer: false,
     playlistModalVisible: false,
-    items: [
-      { title: 'Home', icon: 'home', link: '/', route_name: 'home' },
-      { title: 'Explore', icon: 'explore', link: '/explore', route_name: 'explore' },
-      { title: 'Dashboard', icon: 'dashboard', link: '/dashboard', route_name: 'dashboard' },
-      { title: 'Upload Track', icon: 'upload', link: '/upload', route_name: 'upload' },
-      { title: 'Create Album', icon: 'album', link: '/album/create', route_name: 'album-add' }
-    ]
-  })
+    menuItems: []
+  }),
+  computed: {
+    ...mapState(useUserStore, ['getUserChannel', 'getUserId'])
+  },
+  methods: {
+    updateMenuItems() {
+      const menuItems = [
+        { title: 'Home', icon: 'home', link: '/', route_name: 'home' },
+        { title: 'Explore', icon: 'explore', link: '/explore', route_name: 'explore' },
+        {
+          title: 'Dashboard',
+          icon: 'dashboard',
+          link: `/dashboard/${this.getUserId}`
+        }
+      ]
+      if (this.getUserChannel !== null) {
+        menuItems.push({
+          title: 'Channel Dashboard',
+          link: `/channel/${this.getUserChannel.id}/dashboard`
+        })
+        menuItems.push({
+          title: 'Upload Track',
+          icon: 'upload',
+          link: '/upload',
+          route_name: 'upload'
+        })
+        menuItems.push({
+          title: 'Create Album',
+          icon: 'album',
+          link: '/album/create',
+          route_name: 'album-add'
+        })
+      }
+      this.menuItems = menuItems
+    }
+  },
+  async created() {
+    const store = useUserStore()
+    store.$onAction((mutation) => {
+      if (mutation.name === 'setUser' || mutation.name === 'initializeUserAtStart') {
+        mutation.after(() => {
+          this.updateMenuItems()
+        })
+      }
+    })
+  }
 }
 </script>
 

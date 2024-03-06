@@ -2,7 +2,6 @@
   <section class="section section-hero">
     <section class="hero">
       <div class="hero__avatar">
-        <!-- TODO: Add Avatar in the databases -->
         <img src="https://www.picsum.photos/200/200" alt="Avatar" class="hero__avatar--img" />
       </div>
       <div class="hero__details">

@@ -1,7 +1,7 @@
 <template>
   <LogoutModal :visible="logoutModalVisible" @toggleVisible="logoutModalVisible = false" />
   <nav class="navbar">
-    <form action="/search" method="get" class="search-container">
+    <form class="search-container">
       <div class="search">
         <input
           type="text"
@@ -53,26 +53,54 @@ import { mapState } from 'pinia'
 
 export default {
   name: 'AppNavbar',
+  components: { LogoutModal },
   data: () => ({
     logoutModalVisible: false,
-    menuItems: [
-      { title: 'Dashboard', link: '/dashboard' },
-      { title: 'Channel Dashboard', link: '/channel/dashboard' },
-      { title: 'Admin Dashboard', link: '/admin/dashboard' },
-      { title: 'Edit Profile', link: '/edit_profile' },
-      { title: 'Register as Creator', link: '/register_channel' },
-      { title: 'Edit Channel', link: '/channel/edit_profile' }
-    ]
+    menuItems: []
   }),
   computed: {
-    ...mapState(useUserStore, ['getUserAvatar'])
+    ...mapState(useUserStore, [
+      'getUserAvatar',
+      'getUserId',
+      'getUserChannel',
+      'getUserIsAdmin',
+      'getUser'
+    ])
   },
   methods: {
     navigateTo(route) {
       this.$router.push(route)
+    },
+    updateMenuItems() {
+      const menuItems = [
+        { title: 'Dashboard', link: `/dashboard/${this.getUserId}` },
+        { title: 'Edit Profile', link: '/edit_profile' }
+      ]
+      if (this.getUserChannel !== null) {
+        menuItems.push({
+          title: 'Channel Dashboard',
+          link: `/channel/${this.getUserChannel.id}/dashboard`
+        })
+      } else {
+        menuItems.push({ title: 'Create Channel', link: '/channel/create' })
+      }
+      if (this.getUserIsAdmin) {
+        menuItems.push({ title: 'Admin Dashboard', link: '/admin/dashboard' })
+      }
+
+      this.menuItems = menuItems
     }
   },
-  components: { LogoutModal }
+  mounted() {
+    const store = useUserStore()
+    store.$onAction((mutation) => {
+      if (mutation.name === 'setUser' || mutation.name === 'initializeUserAtStart') {
+        mutation.after(() => {
+          this.updateMenuItems()
+        })
+      } 
+    })
+  }
 }
 </script>
 

@@ -48,7 +48,7 @@ const router = createRouter({
       props: { tracks: [], heading: 'Top Tracks' }
     },
     {
-      path: '/dashboard',
+      path: '/dashboard/:userId',
       name: 'dashboard',
       component: () => import('../views/music/DashboardUserView.vue')
     },

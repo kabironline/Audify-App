@@ -61,6 +61,10 @@ export const useUserStore = defineStore('user', {
     getUserAvatar() {
       if (!this.user) return null
       return userAvatar(this.user.id)
+    },
+    getUserIsAdmin() {
+      if (!this.user) return false
+      return this.user.is_admin
     }
   }
 })
