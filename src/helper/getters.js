@@ -69,3 +69,9 @@ export async function getUserPlaylists(userId) {
   const data = await response.json()
   return data.playlists
 }
+
+export async function getPlaylist(playlistId) {
+  const response = await get(`/playlist/${playlistId}`, {}, useUserStore().token)
+  const data = await response.json()
+  return data.playlist
+}

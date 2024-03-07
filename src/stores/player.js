@@ -32,23 +32,22 @@ export const usePlayerStore = defineStore('player', {
     async playPlaylist(playlist, index, type = 'playlist') {
       const store = useUserStore()
       const token = store.getToken
+
       if (type === 'album') {
         const response = await get(`/album/${playlist.id}`, {}, token)
         const data = await response.json()
-        playlist = data.album.tracks
+        playlist = data.album.tracks.length ? data.album.tracks : playlist
       } else if (type === 'playlist') {
         const response = await get(`/playlist/${playlist.id}`, {}, token)
         const data = await response.json()
-        playlist = data.playlist.tracks
+        playlist = data.playlist.tracks.length ? data.playlist.tracks : playlist
       }
-      if (playlist.length === 0) {
-        if (type === 'album') {
-          router.push({ name: 'album' })
-        } else if (type === 'playlist') {
-          router.push({ name: 'playlist' })
-        }
+
+      if (playlist.length) {
+        this.playTrack(playlist[index], playlist, index)
+      } else {
+        router.push(`/${type}/${playlist.id}`)
       }
-      this.playTrack(playlist[index], playlist, index)
     },
     playTrackAtIndex(index) {
       this.playTrack(this.currentPlaylist[index], this.currentPlaylist, index)

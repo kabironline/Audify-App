@@ -90,14 +90,14 @@ const router = createRouter({
       component: () => import('../views/music/AlbumCreateView.vue')
     },
     {
-      path: '/playlist',
+      path: '/playlist/:id',
       name: 'playlist',
       component: () => import('../views/music/PlaylistView.vue')
     },
     {
-      path: '/album',
+      path: '/album:id',
       name: 'album',
-      component: () => import('../views/music/AlbumView.vue')
+      component: () => import('../views/music/PlaylistView.vue')
     }
   ]
 })

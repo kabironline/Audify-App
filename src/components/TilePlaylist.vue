@@ -12,7 +12,7 @@
       v-for="playlist in playlists"
       :key="playlist.id"
       class="playlist__item pa-2"
-      @click="navigateToPlaylistPage"
+      @click="navigateToPlaylistPage(playlist.id)"
     >
       <div class="playlist__details">
         <v-card-title class="playlist__heading"> {{ playlist.name }} </v-card-title>
@@ -49,8 +49,8 @@ export default {
     navigateToPlayer(playlist) {
       this.playPlaylist(playlist, 0)
     },
-    navigateToPlaylistPage() {
-      this.$router.push('/playlist')
+    navigateToPlaylistPage(playlistId) {
+      this.$router.push(`/playlist/${playlistId}`)
     }
   },
   components: { BtnIcon }

@@ -38,7 +38,7 @@
           :class="{ 'track-item__cta-link': track.rating !== 0 }"
         />
         <BtnIcon v-if="isInPlaylist" icon="remove" href="" class="track-item__cta-link" />
-        <BtnIcon v-if="!isInPlaylist"icon="add" class="track-item__cta-link" />
+        <BtnIcon v-if="!isInPlaylist" icon="add" class="track-item__cta-link" />
       </div>
       <p class="track-item__timer">{{ formatDuration(track.duration) }}</p>
     </li>
