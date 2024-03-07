@@ -90,9 +90,13 @@ export default {
     }
 
     // Fetch user recents
-    this.userRecents = await getUserRecents(userId, 10)
-    this.userPlaylists = await getUserPlaylists(userId, 10)
-    this.isLoading = false
+    getUserRecents(userId, 10).then((recents) => {
+      this.userRecents = recents
+    })
+    getUserPlaylists(userId, 10).then((userPlaylists) => {
+      this.userPlaylists = userPlaylists
+      this.isLoading = false
+    })
   }
 }
 </script>

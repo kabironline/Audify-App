@@ -56,11 +56,21 @@ export default {
       this.$router.push('/new-releases')
     },
     async getExploreData() {
-      this.genres = await getGenres()
-      this.latestTracks = await getLatestTracks()
-      this.topTracks = await getTopTracks(16)
-      this.topRatedTracks = await getTopRatedTracks(16)
-      this.topChannels = await getTopChannels(16)
+      getGenres().then((genres) => {
+        this.genres = genres
+      })
+      getLatestTracks().then((latestTracks) => {
+        this.latestTracks = latestTracks
+      })
+      getTopTracks(16).then((topTracks) => {
+        this.topTracks = topTracks
+      })
+      getTopRatedTracks(16).then((topRatedTracks) => {
+        this.topRatedTracks = topRatedTracks
+      })
+      getTopChannels(16).then((topChannels) => {
+        this.topChannels = topChannels
+      })
     }
   },
   async mounted() {

@@ -52,13 +52,21 @@ export default {
   },
   methods: {
     async updateHomeData(recentsOnly = false) {
-      this.recents = await getUserRecents(this.getUserId)
+      getUserRecents(this.getUserId).then((recents) => {
+        this.recents = recents
+      })
 
       if (recentsOnly) return
 
-      this.latestTracks = await getLatestTracks()
-      this.latestAlbums = await getLatestAlbums()
-      this.latestPlaylist = await getLatestPlaylists()
+      getLatestTracks().then((latestTracks) => {
+        this.latestTracks = latestTracks
+      })
+      await getLatestAlbums().then((latestAlbums) => {
+        this.latestAlbums = latestAlbums
+      })
+      await getLatestPlaylists().then((latestPlaylist) => {
+        this.latestPlaylist = latestPlaylist
+      })
     }
   },
   async created() {
