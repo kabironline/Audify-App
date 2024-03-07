@@ -1,5 +1,13 @@
 <template>
   <div class="genre-tiles">
+    <v-skeleton-loader
+      v-show="!genres.length"
+      v-for="genre in 10"
+      :key="genre"
+      class="genre-tile"
+      type="chip"
+      color="var(--color-background-light)"
+    />
     <v-chip
       v-for="genre in genres"
       :key="genre.id"

@@ -1,11 +1,26 @@
 <template>
-  <section class="section section-album-header">
+  <section class="section section-album-header" v-if="isLoading">
     <div class="playlist-header__image">
-      <img
+      <v-skeleton-loader type="image" color="transparent" :height="300" :width="300" />
+    </div>
+    <div class="playlist-header">
+      <v-skeleton-loader type="text" :width="300" color="transparent" />
+      <v-skeleton-loader type="paragraph" :width="300" color="transparent" />
+      <v-skeleton-loader type="text" :width="300" color="transparent" />
+
+      <div class="playlist-header__buttons">
+        <v-skeleton-loader type="button@3" :width="300" color="transparent" />
+      </div>
+    </div>
+  </section>
+  <section class="section section-album-header" v-else>
+    <div class="playlist-header__image">
+      <v-img
         v-if="!isPlaylist"
-        src="https://picsum.photos/500/500?random=1"
+        :src="albumImage(playlist.id)"
         alt="{{playlist.name}}"
         class="album-header__image__img"
+        cover
       />
     </div>
     <div class="playlist-header">
@@ -16,13 +31,13 @@
         Description: {{ playlist.description }}
       </p>
       <p class="playlist-header__description">
-        {{ isPlaylist ? playlist.user.nickname : playlist.channel.name }} •
+        {{ isPlaylist ? playlist.user.nickname : playlist.created_by.name }} •
         {{ playlist.tracks.length }} songs,
         {{ playlistDuration }}
       </p>
 
       <div class="playlist-header__buttons">
-        <BtnAction icon="play_arrow" text="Play" />
+        <BtnAction icon="play_arrow" text="Play" @click.prevent="play()" />
         <BtnAction text="Edit Album" color="dark" />
         <BtnAction text="Delete Album" color="dark" @click.prevent="deleteModalVisible = true" />
         <AlbumDeleteModal
@@ -34,7 +49,11 @@
   </section>
   <hr class="hr" />
   <section class="section section-playlist-songs" v-if="!showNoTracks">
-    <ListTracks :tracks="this.playlist.tracks" :isInPlaylist="true" @updateRating="updateRating" />
+    <ListTracks
+      :tracks="this.playlist.tracks"
+      :isInPlaylist="isPlaylist"
+      @updateRating="updateRating"
+    />
   </section>
   <section class="section section-playlist-songs" v-else>
     <h2 class="heading-2">No tracks in this playlist</h2>
@@ -45,9 +64,11 @@
 import BtnAction from '@/components/BtnAction.vue'
 import ListTracks from '@/components/ListTracks.vue'
 import AlbumDeleteModal from '@/components/Modals/AlbumDeleteModal.vue'
+import { usePlayerStore } from '@/stores/player'
 import { formatDurationWords } from '@/helper/format'
-import { getPlaylist } from '@/helper/getters'
+import { getAlbum, getPlaylist } from '@/helper/getters'
 import { toRaw } from 'vue'
+import { albumImage } from '@/utils/http'
 
 export default {
   name: 'PlaylistView',
@@ -82,8 +103,13 @@ export default {
     }
   },
   methods: {
+    albumImage,
     updateRating(index, rating) {
       this.playlist.tracks[index].rating = rating
+    },
+    play() {
+      const store = usePlayerStore()
+      store.playPlaylist(this.playlist, 0, this.isPlaylist ? 'playlist' : 'album')
     }
   },
   async beforeMount() {
@@ -94,6 +120,9 @@ export default {
     if (type === 'playlist') {
       this.isPlaylist = true
       this.playlist = toRaw(await getPlaylist(id))
+    } else if (type === 'album') {
+      this.playlist = toRaw(await getAlbum(id))
+      this.isPlaylist = false
     }
     this.isLoading = false
   }

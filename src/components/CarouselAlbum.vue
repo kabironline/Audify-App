@@ -12,12 +12,15 @@
       :key="album.id"
       color="background"
       link
-      @click.prevent="playAlbumHandler(album)"
+      @click.prevent="navigateToAlbumPage(album.id)"
       class="track-carousel__item"
     >
-      <div class="track-carousel__item--cover album-carousel__item--cover">
+      <div
+        class="track-carousel__item--cover album-carousel__item--cover"
+        @click.stop="playAlbumHandler(album)"
+      >
         <v-img
-          :src="getAlbumCoverUrl(album.id)"
+          :src="albumImage(album.id)"
           class="track-carousel__item--img album-carousel__item--img"
           aspect-ratio="1"
           cover
@@ -57,8 +60,9 @@ export default {
       album = toRaw(album)
       await this.playPlaylist(album, 0, 'album')
     },
-    getAlbumCoverUrl(trackId) {
-      return albumImage(trackId)
+    albumImage,
+    navigateToAlbumPage(albumId) {
+      this.$router.push(`/album/${albumId}`)
     }
   }
 }

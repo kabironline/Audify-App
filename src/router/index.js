@@ -95,7 +95,7 @@ const router = createRouter({
       component: () => import('../views/music/PlaylistView.vue')
     },
     {
-      path: '/album:id',
+      path: '/album/:id',
       name: 'album',
       component: () => import('../views/music/PlaylistView.vue')
     }
