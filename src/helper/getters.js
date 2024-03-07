@@ -35,7 +35,14 @@ export async function getLatestPlaylists() {
 
 export async function getTopTracks(number = 10) {
   const token = useUserStore().token
-  const response = await get(`/tracks/top?n=${number}`, {}, token)
+  const response = await get(`/tracks/top/views?n=${number}`, {}, token)
+  const data = await response.json()
+  return data.top
+}
+
+export async function getTopRatedTracks(number = 10) {
+  const token = useUserStore().token
+  const response = await get(`/tracks/top/ratings?n=${number}`, {}, token)
   const data = await response.json()
   return data.top
 }

@@ -11,6 +11,10 @@
     <h2 class="heading-2 heading-link" @click.prevent="goToTopTracks">Top Tracks</h2>
     <TileTrack :tracks="topTracks" />
   </section>
+  <section class="section section-top-track">
+    <h2 class="heading-2 heading-link">Top Rated Tracks</h2>
+    <TileTrack :tracks="topRatedTracks" />
+  </section>
   <section class="section section-top-channel">
     <h2 class="heading-2">Top Channels</h2>
     <TileChannel :channels="topChannels" />
@@ -22,7 +26,13 @@ import TileGenre from '@/components/TileGenre.vue'
 import TileTrack from '@/components/TileTrack.vue'
 import TileChannel from '@/components/TileChannel.vue'
 import CarouselTrack from '@/components/CarouselTrack.vue'
-import { getTopChannels, getTopTracks, getLatestTracks, getGenres } from '@/helper/getters'
+import {
+  getTopChannels,
+  getTopTracks,
+  getLatestTracks,
+  getGenres,
+  getTopRatedTracks
+} from '@/helper/getters'
 export default {
   name: 'ExploreView',
   components: {
@@ -34,6 +44,7 @@ export default {
   data: () => ({
     latestTracks: [],
     topTracks: [],
+    topRatedTracks: [],
     topChannels: [],
     genres: []
   }),
@@ -48,6 +59,7 @@ export default {
       this.genres = await getGenres()
       this.latestTracks = await getLatestTracks()
       this.topTracks = await getTopTracks(16)
+      this.topRatedTracks = await getTopRatedTracks(16)
       this.topChannels = await getTopChannels(16)
     }
   },
