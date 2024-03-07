@@ -1,5 +1,12 @@
 <template>
   <div class="track-carousel">
+    <v-skeleton-loader
+      class="track-carousel__item"
+      :border-radius="5"
+      type="image, text"
+      v-show="!this.albums.length"
+      color="transparent"
+    />
     <v-card
       v-for="album in albums"
       :key="album.id"

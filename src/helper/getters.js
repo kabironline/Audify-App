@@ -1,6 +1,5 @@
 import { get } from '@/utils/http'
 import { useUserStore } from '@/stores/user'
-import { toRaw } from 'vue'
 export async function getUser(userId) {
   const response = await get(`/user/${userId}`)
   const data = await response.json()

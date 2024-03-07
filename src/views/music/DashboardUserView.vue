@@ -23,11 +23,11 @@
     </section>
     <hr class="hr" />
   </section>
-  <section class="section section-recents" v-show="userRecents.length">
+  <section class="section section-recents" v-show="showRecents">
     <h2 class="heading-2 mb-medium">Recently Played</h2>
-    <ListTracks :tracks="userRecents" />
+    <ListTracks :tracks="userRecents" @updateRating="updateRating" />
   </section>
-  <section class="section section-playlists" v-show="userPlaylists.length">
+  <section class="section section-playlists" v-show="showPlaylists">
     <h2 class="heading-2 mb-medium">User Playlists</h2>
     <TilePlaylist :playlists="userPlaylists" />
   </section>
@@ -52,7 +52,13 @@ export default {
       return this.user.bio ? this.user.bio : `Welcome to the channel of ${this.user.nickname}`
     },
     noContent() {
-      return !this.userRecents.length && !this.userPlaylists.length
+      return !this.userRecents.length && !this.userPlaylists.length && !this.isLoading
+    },
+    showRecents() {
+      return this.isLoading ? true : this.userRecents.length
+    },
+    showPlaylists() {
+      return this.isLoading ? true : this.userPlaylists.length
     }
   },
   data() {
@@ -63,11 +69,15 @@ export default {
         bio: ''
       },
       userRecents: [],
-      userPlaylists: []
+      userPlaylists: [],
+      isLoading: true
     }
   },
   methods: {
-    userAvatar
+    userAvatar,
+    updateRating(index, new_rating) {
+      this.userRecents[index].rating = new_rating
+    }
   },
   components: { BtnNavigation, ListTracks, TilePlaylist },
   async beforeMount() {
@@ -82,6 +92,7 @@ export default {
     // Fetch user recents
     this.userRecents = await getUserRecents(userId, 10)
     this.userPlaylists = await getUserPlaylists(userId, 10)
+    this.isLoading = false
   }
 }
 </script>

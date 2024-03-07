@@ -1,5 +1,14 @@
 <template>
   <div class="track-tiles">
+    <v-skeleton-loader
+      v-for="track in 16"
+      :key="track"
+      class="track-tile-skeleton-loader"
+      :border-radius="5"
+      type="list-item-avatar"
+      v-show="!this.tracks.length"
+      color="transparent"
+    />
     <v-card
       v-for="(track, n) in tracks"
       :key="track.id"
@@ -51,6 +60,11 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
   padding: 2rem 0;
 }
+
+.track-tile-skeleton-loader {
+  padding: 1rem 2rem;
+}
+
 .track-tile {
   display: grid;
   grid-template-columns: min-content min-content 1fr;

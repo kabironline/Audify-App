@@ -1,5 +1,13 @@
 <template>
   <div class="playlist-container">
+    <v-skeleton-loader
+      v-for="playlist in 5"
+      :key="playlist"
+      v-show="!playlists.length"
+      class="playlist__item"
+      type="list-item-two-line"
+      color="var(--color-background-light)"
+    />
     <v-card
       v-for="playlist in playlists"
       :key="playlist.id"

@@ -1,5 +1,14 @@
 <template>
   <div class="track-carousel">
+    <v-skeleton-loader
+      v-for="track in 5"
+      :key="track"
+      class="track-carousel__item"
+      :border-radius="5"
+      type="card"
+      v-show="!this.tracks.length"
+      color="background"
+    />
     <v-card
       v-for="track in this.tracks"
       :key="track.id"
