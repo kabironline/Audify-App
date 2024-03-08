@@ -66,8 +66,8 @@
           <div ref="time" class="player-control--time">0:00 / 0:00</div>
         </div>
         <div class="player-controls-extra">
-          <BtnIcon icon="volume_up" @click="togglePlayerPage()" />
-          <input type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
+          <BtnIcon :icon="volumeIcon" @click="toggleVolume()" />
+          <input v-model.lazy="volume" type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
           <BtnIcon
             :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
             @click.prevent="togglePlayerPage"
@@ -169,6 +169,11 @@ export default {
       } else {
         this.pauseTrack()
       }
+    },
+    volume() {
+      const audio = this.$refs.audio
+      audio.volume = this.volume
+      localStorage.setItem('volume', this.volume)
     }
   },
   data() {
@@ -187,7 +192,8 @@ export default {
       playlist: [],
       playlistIndex: null,
       isPlaying: false,
-      commentBox: ''
+      commentBox: '',
+      volume: 1
     }
   },
   computed: {
@@ -225,6 +231,9 @@ export default {
     },
     formatDateTime() {
       return formatDate(this.track.created_at)
+    },
+    volumeIcon() {
+      return this.volume == 0 ? 'volume_off' : this.volume < 0.5 ? 'volume_down' : 'volume_up'
     }
   },
   methods: {
@@ -233,6 +242,9 @@ export default {
     navigateToChannel() {
       this.playerPageOpen = false
       this.$router.push(`/channel/${this.track.channel.id}/dashboard`)
+    },
+    toggleVolume() {
+      this.volume = this.volume == 0 ? 1 : 0
     },
     togglePlayerPage() {
       this.playerPageOpen = !this.playerPageOpen
@@ -429,6 +441,8 @@ export default {
 
     // subscribe to the player store
     playerStore.$onAction((mutation) => this.updatePlayer(mutation))
+
+    this.volume = localStorage.getItem('volume') || 1
   },
   beforeUnmount() {
     const audio = this.$refs.audio
