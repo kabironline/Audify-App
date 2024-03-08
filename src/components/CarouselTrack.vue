@@ -50,7 +50,7 @@
           </v-menu>
         </div>
       </div>
-      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1">{{
+      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1" @click.stop="navigateToChannel(track.channel.id)">{{
         track.channel.name
       }}</v-card-subtitle>
       <div class="mb-3"></div>
@@ -71,8 +71,11 @@ export default {
     }
   },
   methods: {
+    trackImage,
     ...mapActions(usePlayerStore, ['playIndividualTrack']),
-    trackImage
+    navigateToChannel(channelId) {
+      this.$router.push(`/channel/${channelId}/dashboard`)
+    }
   }
 }
 </script>

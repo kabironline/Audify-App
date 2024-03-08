@@ -12,7 +12,7 @@
             <img ref="image" :src="trackImage" class="player-track-img" />
             <div class="player-track-details">
               <div class="player-track-title">{{ trackName }}</div>
-              <div class="player-track-artist">{{ trackArtist }}</div>
+              <div class="player-track-artist" @click.stop="navigateToChannel()">{{ trackArtist }}</div>
             </div>
           </div>
         </Transition>
@@ -91,7 +91,7 @@
           }"
         ></div>
         <p class="player-page-track-title">{{ trackName }}</p>
-        <div class="player-page-track-artist d-flex align-center gap-1">
+        <div class="player-page-track-artist d-flex align-center gap-1" @click.stop="navigateToChannel">
           {{ trackArtist }} &CenterDot; {{ formatDateTime }} &CenterDot; {{ track.views }} Views
           &CenterDot; {{ (track.average_rating * 100).toFixed(0) }}% &ThinSpace;
           <div class="rating">
@@ -230,6 +230,10 @@ export default {
   methods: {
     ...mapActions(usePlayerStore, ['updateIsPlaying', 'playTrackAtIndex']),
     formatDuration,
+    navigateToChannel() {
+      this.playerPageOpen = false
+      this.$router.push(`/channel/${this.track.channel.id}/dashboard`)
+    },
     togglePlayerPage() {
       this.playerPageOpen = !this.playerPageOpen
     },
@@ -533,6 +537,11 @@ export default {
     font-weight: 400;
     color: var(--text-subtitle-color);
     text-overflow: ellipsis;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 }
 
@@ -688,6 +697,11 @@ export default {
       font-size: 2rem;
       font-weight: 400;
       color: var(--text-subtitle-color);
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
   }
 

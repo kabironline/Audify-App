@@ -28,7 +28,7 @@
       </div>
       <v-card-title class="track-tile__text">
         <p href="/player" class="track-tile__text--title">{{ track.name }}</p>
-        <p href="/player" class="track-tile__text--artist">{{ track.channel.name }}</p>
+        <p href="/player" class="track-tile__text--artist" @click.stop="navigateToChannel(track.channel.id)">{{ track.channel.name }}</p>
       </v-card-title>
     </v-card>
   </div>
@@ -48,7 +48,10 @@ export default {
   },
   methods: {
     ...mapActions(usePlayerStore, ['playIndividualTrack']),
-    trackImage
+    trackImage,
+    navigateToChannel(channelId) {
+      this.$router.push(`/channel/${channelId}/dashboard`)
+    }
   }
 }
 </script>

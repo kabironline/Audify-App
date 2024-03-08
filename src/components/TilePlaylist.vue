@@ -16,19 +16,20 @@
     >
       <div class="playlist__details">
         <v-card-title class="playlist__heading"> {{ playlist.name }} </v-card-title>
-        <v-card-subtitle class="playlist__subheading">
+        <v-card-subtitle
+          class="playlist__subheading"
+          @click.stop="navigateToUserDashboard(playlist.user.id)"
+        >
           {{ playlist.user.nickname }}
         </v-card-subtitle>
       </div>
       <v-spacer></v-spacer>
-      <!-- <v-card-actions> -->
       <BtnIcon
         icon="play_circle"
         class="playlist__playbutton"
         :iconSize="3"
         @click.stop="navigateToPlayer(playlist)"
       />
-      <!-- </v-card-actions> -->
     </v-card>
   </div>
 </template>
@@ -51,6 +52,9 @@ export default {
     },
     navigateToPlaylistPage(playlistId) {
       this.$router.push(`/playlist/${playlistId}`)
+    },
+    navigateToUserDashboard(userId) {
+      this.$router.push(`/dashboard/${userId}`)
     }
   },
   components: { BtnIcon }
@@ -104,5 +108,9 @@ export default {
   font-size: 1.2rem;
   font-weight: light;
   color: var(--text-label-color);
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 </style>

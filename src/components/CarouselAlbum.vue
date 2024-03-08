@@ -35,9 +35,11 @@
           <div class="track-carousel__item--title">{{ album.name }}</div>
         </v-card-title>
       </div>
-      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1">{{
-        album.created_by.name
-      }}</v-card-subtitle>
+      <v-card-subtitle
+        class="pa-0 track-carousel__item--artist pl-1"
+        @click.stop="navigateToChannel(album.created_by.id)"
+        >{{ album.created_by.name }}</v-card-subtitle
+      >
       <div class="mb-3"></div>
     </v-card>
   </div>
@@ -63,6 +65,9 @@ export default {
     albumImage,
     navigateToAlbumPage(albumId) {
       this.$router.push(`/album/${albumId}`)
+    },
+    navigateToChannel(channelId) {
+      this.$router.push(`/channel/${channelId}/dashboard`)
     }
   }
 }
