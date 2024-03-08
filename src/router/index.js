@@ -53,19 +53,19 @@ const router = createRouter({
       component: () => import('../views/music/DashboardUserView.vue')
     },
     {
-      path: '/channel/dashboard/:channelId',
+      path: '/channel/:channelId/dashboard',
       name: 'channel-dashboard',
       component: () => import('../views/music/DashboardChannelView.vue')
     },
     {
-      path: '/channel/dashboard/tracks',
-      name: 'channel-dashboard-tracks',
+      path: '/channel/:channelId/tracks',
+      name: 'channel-tracks',
       component: () => import('../views/music/AllTracksView.vue'),
       props: { tracks: [], heading: 'Channel Tracks' }
     },
     {
-      path: '/channel/dashboard/albums',
-      name: 'channel-dashboard-albums',
+      path: '/channel/:channelId/albums',
+      name: 'channel-albums',
       component: () => import('../views/music/AllAlbumsView.vue'),
       props: { albums: [], heading: 'Channel Albums' }
     },

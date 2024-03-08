@@ -5,7 +5,7 @@
       :key="channel.id"
       color="transparent"
       class="creator-tile ma-1"
-      :to="`/channel/dashboard/${channel.id}`"
+      :to="`/channel/${channel.id}/dashboard`"
     >
       <v-card-title class="creator-tile__position">
         <p class="creator-tile__position--text">{{ n + 1 }}</p>

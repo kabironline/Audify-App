@@ -1,7 +1,23 @@
 import { get } from '@/utils/http'
 import { useUserStore } from '@/stores/user'
+
 export async function getUser(userId) {
   const response = await get(`/user/${userId}`)
+  const data = await response.json()
+  return data
+}
+
+export async function getChannel(channelId, full = false) {
+  const response = await get(`/channel/${channelId}${full ? '?detail=full' : ''}`)
+  const data = await response.json()
+  if (full) {
+    return data
+  }
+  return data.channel
+}
+
+export async function getChannelTracks(channelId) {
+  const response = await get(`/channel/${channelId}?detail=tracks`)
   const data = await response.json()
   return data
 }

@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <h2 class="heading-2">
-      {{ heading }}
+      {{ customHeading }}
     </h2>
     <CarouselTrack :tracks="tracks" />
   </section>
@@ -9,22 +9,24 @@
 
 <script>
 import CarouselTrack from '@/components/CarouselTrack.vue'
-import { getTopTracks, getLatestTracks, getGenreTracks } from '@/helper/getters'
+import { getTopTracks, getLatestTracks, getGenreTracks, getChannelTracks } from '@/helper/getters'
 export default {
   name: 'AllTracksView',
   components: {
     CarouselTrack
   },
-  data: () => ({
-    tracks: []
-  }),
   props: {
     heading: {
       type: String,
       default: 'All Tracks'
     }
   },
+  data: () => ({
+    tracks: [],
+    customHeading: ""
+  }),
   async created() {
+    this.customHeading = this.heading
     const route_name = this.$route.name
     if (route_name === 'new-releases') {
       this.tracks = await getLatestTracks(30)
@@ -33,7 +35,12 @@ export default {
     } else if (route_name === 'genre-tracks') {
       const genre = this.$route.params.genreId
       this.tracks = await getGenreTracks(genre)
-      // edit the heading
+      this.customHeading = `Tracks in ${genre}`
+    }else if (route_name === 'channel-tracks') {
+      const channelId = this.$route.params.channelId
+      const data = await getChannelTracks(channelId)
+      this.customHeading = `Tracks by ${data.channel.name}`
+      this.tracks = data.tracks
     }
   }
 }

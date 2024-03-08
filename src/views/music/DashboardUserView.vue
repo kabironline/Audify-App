@@ -18,7 +18,7 @@
         </p>
       </div>
       <div class="hero__cta">
-        <BtnNavigation to="/edit_profile" icon="edit" text="Edit Profile" />
+        <BtnNavigation to="/edit_profile" icon="edit" text="Edit Profile" v-if="isUserDashboard" />
       </div>
     </section>
     <hr class="hr" />
@@ -59,6 +59,9 @@ export default {
     },
     showPlaylists() {
       return this.isLoading ? true : this.userPlaylists.length
+    },
+    isUserDashboard() {
+      return this.$route.params.userId == this.getUser.id
     }
   },
   data() {

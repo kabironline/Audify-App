@@ -1,38 +1,65 @@
 <template>
   <section class="section section-hero">
-    <section class="hero">
+    <section class="hero" v-if="isLoading">
       <div class="hero__avatar">
-        <!-- TODO: Add Avatar in the databases -->
-        <img src="https://www.picsum.photos/200/200" alt="Avatar" class="hero__avatar--img" />
+        <v-skeleton-loader type="ossein" :height="200" :width="200" color="background" />
       </div>
       <div class="hero__details">
         <div class="hero__details--header">
           <div class="hero__details--header">
             <h2 class="heading-2 hero__details--title">
-              {{ user.nickname }}
+              <v-skeleton-loader type="text" :width="200" color="background" />
             </h2>
-            <p class="hero__details--subtitle">@{{ user.username }}</p>
           </div>
         </div>
         <p class="hero__details--bio">
-          {{ userBio }}
+          <v-skeleton-loader type="paragraph" :width="400" color="background" />
         </p>
       </div>
       <div class="hero__cta">
-      <BtnNavigation to="/channel/edit_profile" icon="edit" text="Edit Profile" />
+        <v-skeleton-loader type="button" :width="100" color="background" />
+      </div>
+    </section>
+    <section class="hero" v-else>
+      <div class="hero__avatar">
+        <img :src="channelAvatar(channel.id)" alt="Avatar" class="hero__avatar--img" />
+      </div>
+      <div class="hero__details">
+        <div class="hero__details--header">
+          <div class="hero__details--header">
+            <h2 class="heading-2 hero__details--title">
+              {{ channel.name }}
+            </h2>
+          </div>
+        </div>
+        <p class="hero__details--bio">
+          {{ channel.bio }}
+        </p>
+      </div>
+      <div class="hero__cta">
+        <BtnNavigation
+          to="/channel/edit_profile"
+          icon="edit"
+          text="Edit Profile"
+          v-if="isUserChannel"
+        />
       </div>
     </section>
     <hr class="hr" />
   </section>
-  <section class="section section-tracks">
+  <section class="section section-tracks" v-show="trackIsEmpty">
     <h2 class="heading-2 mb-medium">Channel Tracks</h2>
-    <CarouselTrack />
-    <BtnNavigation to="/channel/dashboard/tracks" text="View More" />
+    <CarouselTrack :tracks="tracks" />
+    <BtnNavigation :to="`/channel/${channel.id}/tracks`" text="View More" v-if="moreTracks" />
   </section>
-  <section class="section section-albums">
+  <section class="section section-albums" v-show="albumIsEmpty">
     <h2 class="heading-2 mb-medium">Channel Albums</h2>
-    <CarouselAlbum />
-    <BtnNavigation to="/channel/dashboard/albums" text="View More" />
+    <CarouselAlbum :albums="albums" />
+    <BtnNavigation :to="`/channel/${channel.id}/albums`" text="View More" v-if="moreAlbums" />
+  </section>
+  <section class="section section-playlists" v-show="noContent">
+    <h2 class="heading-2 mb-medium">Channel hasn't posted anything!</h2>
+    <p>Be sure to be on the lookout.</p>
   </section>
 </template>
 
@@ -40,16 +67,58 @@
 import BtnNavigation from '@/components/BtnNavigation.vue'
 import CarouselAlbum from '@/components/CarouselAlbum.vue'
 import CarouselTrack from '@/components/CarouselTrack.vue'
+import { useUserStore } from '@/stores/user'
+import { getChannel } from '@/helper/getters'
+import { channelAvatar } from '@/utils/http'
 
 export default {
   name: 'ChannelDashboard',
+  components: { CarouselTrack, BtnNavigation, CarouselAlbum },
   data() {
     return {
-      user: { nickname: 'Jhon Denver Offical', username: 'jhondenver_1' },
-      userBio: 'This is the official account of jhon denver'
+      channel: {
+        name: 'Channel Name',
+        description: 'Channel Description',
+        id: '0'
+      },
+      tracks: [],
+      albums: [],
+      moreTracks: false,
+      moreAlbums: false,
+      isLoading: true
     }
   },
-  components: { CarouselTrack, BtnNavigation, CarouselAlbum }
+  methods: {
+    channelAvatar
+  },
+  computed: {
+    albumIsEmpty() {
+      return this.isLoading ? true : this.albums.length
+    },
+    trackIsEmpty() {
+      return this.isLoading ? true : this.tracks.length
+    },
+    noContent() {
+      return !this.albums.length && !this.tracks.length && !this.isLoading
+    },
+    isUserChannel() {
+      const store = useUserStore()
+      if (store.getChannel === undefined) return false
+      return store.getChannel.id === this.channel.id
+    }
+  },
+  beforeMount() {
+    // get the channel id from the route params
+    const channelId = this.$route.params.channelId
+    getChannel(channelId, true).then((res) => {
+      this.channel = res.channel
+      this.tracks = res.tracks.slice(0, 5)
+      this.albums = res.albums.slice(0, 5)
+      this.moreTracks = res.tracks.length > 5
+      this.moreAlbums = res.albums.length > 5
+      this.isLoading = false
+    })
+  }
 }
 </script>
 
