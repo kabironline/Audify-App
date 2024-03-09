@@ -18,7 +18,10 @@
       @click="playlistModalVisible = true"
     />
     <PlaylistModal :visible="playlistModalVisible" @toggleVisible="playlistModalVisible = false" />
-    <ul class="side-nav"></ul>
+    <br />
+    <ul class="side-nav" v-if="showPlaylist">
+      <TilePlaylist :playlists="playlists" />
+    </ul>
   </div>
 </template>
 
@@ -28,20 +31,27 @@ import BtnAction from './BtnAction.vue'
 import PlaylistModal from './Modals/PlaylistModal.vue'
 import SidebarListItem from './SidebarListItem.vue'
 import { mapState } from 'pinia'
+import TilePlaylist from './TilePlaylist.vue'
 export default {
   name: 'AppSidebar',
   components: {
     SidebarListItem,
     BtnAction,
-    PlaylistModal
+    PlaylistModal,
+    TilePlaylist
   },
   data: () => ({
     drawer: false,
     playlistModalVisible: false,
-    menuItems: []
+    menuItems: [],
+    playlists: [],
+    isLoading: false
   }),
   computed: {
-    ...mapState(useUserStore, ['getUserChannel', 'getUserId'])
+    ...mapState(useUserStore, ['getUserChannel', 'getUserId', 'getUserPlaylist']),
+    showPlaylist() {
+      return this.isLoading ? true : this.playlists.length > 0
+    }
   },
   methods: {
     updateMenuItems() {
@@ -78,6 +88,9 @@ export default {
   },
   mounted() {
     this.updateMenuItems()
+    this.playlists = this.getUserPlaylist
+    console.log(this.playlists)
+    this.isLoading = false
   }
 }
 </script>

@@ -34,8 +34,9 @@ export default {
       this.tracks = await getTopTracks(30)
     } else if (route_name === 'genre-tracks') {
       const genre = this.$route.params.genreId
-      this.tracks = await getGenreTracks(genre)
-      this.customHeading = `Tracks in ${genre}`
+      const data = await getGenreTracks(genre) 
+      this.tracks = data.tracks
+      this.customHeading = `${data.genre.name}'s Tracks`
     }else if (route_name === 'channel-tracks') {
       const channelId = this.$route.params.channelId
       const data = await getChannelTracks(channelId)

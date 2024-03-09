@@ -36,11 +36,29 @@
         {{ playlistDuration }}
       </p>
 
-      <div class="playlist-header__buttons">
+      <div class="playlist-header__buttons" v-if="!isPlaylist">
         <BtnAction icon="play_arrow" text="Play" @click.prevent="play()" />
         <BtnAction text="Edit Album" color="dark" />
         <BtnAction text="Delete Album" color="dark" @click.prevent="deleteModalVisible = true" />
         <AlbumDeleteModal
+          :visible="deleteModalVisible"
+          @toggleVisible="deleteModalVisible = false"
+        />
+      </div>
+      <div class="playlist-header__buttons" v-else>
+        <BtnAction icon="play_arrow" text="Play" color="white" @click.prevent="play()" />
+        <BtnAction
+          text="Edit Playlist"
+          color="dark"
+          @click.prevent="playlistEditModalVisible = true"
+        />
+        <BtnAction text="Delete Playlist" color="dark" @click.prevent="deleteModalVisible = true" />
+        <PlaylistEditModal
+          :visible="playlistEditModalVisible"
+          @toggleVisible="playlistEditModalVisible = false"
+          :playlist="playlist"
+        />
+        <PlaylistDeleteModal
           :visible="deleteModalVisible"
           @toggleVisible="deleteModalVisible = false"
         />
@@ -64,6 +82,8 @@
 import BtnAction from '@/components/BtnAction.vue'
 import ListTracks from '@/components/ListTracks.vue'
 import AlbumDeleteModal from '@/components/Modals/AlbumDeleteModal.vue'
+import PlaylistDeleteModal from '@/components/Modals/PlaylistDeleteModal.vue'
+import PlaylistEditModal from '@/components/Modals/PlaylistEditModal.vue'
 import { usePlayerStore } from '@/stores/player'
 import { formatDurationWords } from '@/helper/format'
 import { getAlbum, getPlaylist } from '@/helper/getters'
@@ -72,11 +92,12 @@ import { albumImage } from '@/utils/http'
 
 export default {
   name: 'PlaylistView',
-  components: { ListTracks, BtnAction, AlbumDeleteModal },
+  components: { ListTracks, BtnAction, AlbumDeleteModal, PlaylistDeleteModal, PlaylistEditModal },
   data() {
     return {
       isLoading: true,
       deleteModalVisible: false,
+      playlistEditModalVisible: false,
       isPlaylist: true,
       playlist: {
         id: 1,

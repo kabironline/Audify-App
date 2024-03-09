@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { isProxy, toRaw } from 'vue'
-import { userAvatar } from '@/utils/http'
+import { get, userAvatar } from '@/utils/http'
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null,
@@ -22,6 +22,10 @@ export const useUserStore = defineStore('user', {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
     },
+    addPlaylist(playlist) {
+      if (!this.user) return
+      this.user.playlists.push(playlist)
+    },
     async initializeUserAtStart() {
       // Reading local storage for token and user
       const token = localStorage.getItem('token')
@@ -29,6 +33,17 @@ export const useUserStore = defineStore('user', {
       if (token && user) {
         this.setToken(token)
         this.setUser(user)
+      }
+      // Update the user from the server
+      if (this.token) {
+        const response = await get('/user/me', {}, this.token)
+        if (response.status !== 200) {
+          return
+        }
+        const json = await response.json()
+        console.log(json)
+        localStorage.setItem('user', JSON.stringify(json))
+        this.setUser(json)
       }
     }
   },
@@ -58,6 +73,10 @@ export const useUserStore = defineStore('user', {
     getUserIsAdmin() {
       if (!this.user) return false
       return this.user.is_admin
+    },
+    getUserPlaylist() {
+      if (!this.user) return null
+      return this.user.playlists ? toRaw(this.user.playlists) : null
     }
   }
 })

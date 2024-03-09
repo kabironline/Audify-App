@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="450">
+  <v-dialog v-model="dialog" persistent max-width="450">
     <v-card
       style="
         background-color: transparent;
@@ -12,7 +12,7 @@
       <v-card-title>
         <p class="heading-4">Create Playlist</p>
       </v-card-title>
-      <form action="/playlist" method="POST">
+      <form @submit.prevent="onSubmit">
         <div class="form__group">
           <input
             type="text"
@@ -23,6 +23,7 @@
             id="name"
             placeholder="Playlist Name"
             class="form__input"
+            v-model="data.playlist_name"
             required
           />
           <label for="name" class="form__label">Playlist Name</label>
@@ -36,6 +37,7 @@
             id="description"
             cols="30"
             rows="10"
+            v-model="data.playlist_description"
             class="form__input form__input--textarea"
             placeholder="Description (Optional)"
           />
@@ -45,19 +47,19 @@
         </div>
       </form>
       <br />
-      <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="white" />
-        <BtnAction text="Create" @click="logout" color="primary" />
+        <BtnAction text="Create" @click="onSubmit" color="primary" />
       </div>
-      <!-- </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
 
 <script>
 import BtnAction from '../BtnAction.vue'
-
+import { createPlaylist } from '@/helper/setters'
+import { useUserStore } from '@/stores/user'
+import { mapActions } from 'pinia'
 export default {
   name: 'PlaylistModal',
   emits: ['toggleVisible'],
@@ -66,17 +68,28 @@ export default {
       type: Boolean
     }
   },
+  data: () => ({
+    data: {
+      playlist_name: '',
+      playlist_description: ''
+    }
+  }),
   computed: {
     dialog() {
       return this.visible
     }
   },
   methods: {
-    logout() {
-      console.log('Logging out...')
-    },
+    ...mapActions(useUserStore, ['addPlaylist']),
     updateVisible(value) {
       this.$emit('toggleVisible', value)
+    },
+    async onSubmit() {
+      const playlist = await createPlaylist(this.data)
+      if (playlist) {
+        this.addPlaylist(playlist)
+        this.updateVisible(false)
+      }
     }
   },
   components: { BtnAction }

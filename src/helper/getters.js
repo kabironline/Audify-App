@@ -57,7 +57,7 @@ export async function getTopTracks(number = 10) {
 
 export async function getTopRatedTracks(number = 10) {
   const token = useUserStore().token
-  const response = await get(`/tracks/top/ratings?n=${number}`, {}, token)
+const response = await get(`/tracks/top/ratings?n=${number}`, {}, token)
   const data = await response.json()
   return data.top
 }
@@ -77,7 +77,7 @@ export async function getGenres() {
 export async function getGenreTracks(genreId) {
   const response = await get(`/genre/${genreId}/tracks`)
   const data = await response.json()
-  return data.tracks
+  return data
 }
 
 export async function getUserPlaylists(userId) {
