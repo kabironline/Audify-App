@@ -26,6 +26,19 @@ export const useUserStore = defineStore('user', {
       if (!this.user) return
       this.user.playlists.push(playlist)
     },
+    removePlaylist(playlistId) {
+      if (!this.user) return
+      let playlists = toRaw(this.user.playlists)
+      console.log(
+        playlists.filter((p) => {
+          return p.id != playlistId
+        })
+      )
+      playlists = playlists.filter((p) => {
+        return p.id != playlistId
+      })
+      this.user.playlists = playlists
+    },
     async initializeUserAtStart() {
       // Reading local storage for token and user
       const token = localStorage.getItem('token')
@@ -41,7 +54,6 @@ export const useUserStore = defineStore('user', {
           return
         }
         const json = await response.json()
-        console.log(json)
         localStorage.setItem('user', JSON.stringify(json))
         this.setUser(json)
       }

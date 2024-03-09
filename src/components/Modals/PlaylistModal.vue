@@ -57,7 +57,7 @@
 
 <script>
 import BtnAction from '../BtnAction.vue'
-import { createPlaylist } from '@/helper/setters'
+import { createPlaylist } from '@/api/playlist'
 import { useUserStore } from '@/stores/user'
 import { mapActions } from 'pinia'
 export default {

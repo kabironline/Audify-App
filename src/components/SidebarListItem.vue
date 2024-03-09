@@ -7,7 +7,14 @@
     @click.prevent="navigateTo(item.link)"
   >
     <template v-slot:prepend>
-      <span class="material-symbols-rounded"> {{ item.icon }}</span>
+      <span
+        :class="{
+          'material-symbols-rounded': item.route_name === activeItem,
+          'material-symbols-outlined': item.route_name !== activeItem
+        }"
+      >
+        {{ item.icon }}</span
+      >
     </template>
     <v-list-item-title class="sidebar__item--text"> {{ item.title }}</v-list-item-title>
   </v-list-item>

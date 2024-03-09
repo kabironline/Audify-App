@@ -15,19 +15,18 @@
       <v-card-text>
         <p>Are you sure you want to delete this Playlist? This action cannot be undone.</p>
       </v-card-text>
-      <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="primary" />
         <BtnAction text="Delete Playlist" @click="deletePlaylist" color="white" />
       </div>
-      <!-- </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import { deletePlaylist } from '@/api/playlist'
+import { useUserStore } from '@/stores/user'
 import BtnAction from '../BtnAction.vue'
-
 export default {
   name: 'DeletePlaylistModal',
   emits: ['toggleVisible'],
@@ -42,8 +41,14 @@ export default {
     }
   },
   methods: {
-    deletePlaylist() {
-      console.log('Deleting Playlist...')
+    async deletePlaylist() {
+      const response = await deletePlaylist(this.$route.params.id)
+      if (response) {
+        const store = useUserStore()
+        store.removePlaylist(this.$route.params.id)
+        this.$router.push('/')
+        this.updateVisible(false)
+      }
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)

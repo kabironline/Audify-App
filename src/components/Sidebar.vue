@@ -89,8 +89,14 @@ export default {
   mounted() {
     this.updateMenuItems()
     this.playlists = this.getUserPlaylist
-    console.log(this.playlists)
     this.isLoading = false
+
+    this.$watch(
+      () => this.getUserPlaylist,
+      () => {
+        this.playlists = this.getUserPlaylist
+      }
+    )
   }
 }
 </script>

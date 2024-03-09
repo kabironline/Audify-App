@@ -28,10 +28,10 @@ import TilePlaylist from '@/components/TilePlaylist.vue'
 import { useUserStore } from '@/stores/user'
 import { usePlayerStore } from '@/stores/player'
 import { mapState } from 'pinia'
+import { getLatestPlaylists } from '@/api/playlist'
 import {
   getLatestTracks,
   getLatestAlbums,
-  getLatestPlaylists,
   getUserRecents
 } from '@/helper/getters'
 export default {

@@ -42,12 +42,6 @@ export async function getLatestAlbums() {
   return data.latest
 }
 
-export async function getLatestPlaylists() {
-  const response = await get('/playlists/latest')
-  const data = await response.json()
-  return data.latest
-}
-
 export async function getTopTracks(number = 10) {
   const token = useUserStore().token
   const response = await get(`/tracks/top/views?n=${number}`, {}, token)
@@ -78,18 +72,6 @@ export async function getGenreTracks(genreId) {
   const response = await get(`/genre/${genreId}/tracks`)
   const data = await response.json()
   return data
-}
-
-export async function getUserPlaylists(userId) {
-  const response = await get(`/user/${userId}/playlists`)
-  const data = await response.json()
-  return data.playlists
-}
-
-export async function getPlaylist(playlistId) {
-  const response = await get(`/playlist/${playlistId}`, {}, useUserStore().token)
-  const data = await response.json()
-  return data.playlist
 }
 
 export async function getAlbum(albumId) {
