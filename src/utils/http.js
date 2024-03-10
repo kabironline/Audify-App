@@ -19,9 +19,17 @@ export async function request(method, url, data = null, headers, bearerToken = n
     }
   }
 
-  if (data) {
-    fetch_options.body = JSON.stringify(data)
+  if (data instanceof FormData) {
+    // remove the content type header
+    delete fetch_options.headers['Content-Type']
   }
+
+  if (data !== null) {
+    data = data instanceof FormData ? data : JSON.stringify(toRaw(data))
+    fetch_options.body = data
+  }
+
+  console.log('fetch_options', fetch_options)
 
   // send the request using fetch api
   return fetch(url, fetch_options)

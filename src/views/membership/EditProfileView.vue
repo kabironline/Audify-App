@@ -4,7 +4,7 @@
       <h3 class="heading-3">Current Profile</h3>
       <br />
       <div class="avatar-container">
-        <img src="https://via.placeholder.com/300" alt="Avatar" class="avatar-img" />
+        <img :src="current_user.avatar" alt="Avatar" class="avatar-img" />
       </div>
       <h3 class="heading-3 avatar--title">{{ current_user.nickname }}</h3>
       <h4 class="heading-4 avatar--subtitle">{{ current_user.username }}</h4>
@@ -19,7 +19,7 @@
       />
       <UserDeleteModal :visible="deleteModalVisible" @toggleVisible="deleteModalVisible = false" />
     </div>
-    <EditUserForm />
+    <EditUserForm :user="current_user"/>
   </section>
 </template>
 
@@ -27,26 +27,27 @@
 import BtnAction from '@/components/BtnAction.vue'
 import EditUserForm from '@/components/EditUserForm.vue'
 import UserDeleteModal from '@/components/Modals/UserDeleteModal.vue'
-
+import { useUserStore } from '@/stores/user'
+import { userAvatar } from '@/utils/http'
 export default {
   name: 'EditProfileView',
   data: () => ({
     deleteModalVisible: false,
-    form: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    },
     current_user: {
-      nickname: 'John Doe',
-      username: 'johndoe',
-      bio: 'I am a music lover'
+      nickname: '',
+      username: '',
+      bio: '',
+      avatar: '',
+      id: '',
     },
     error: ''
   }),
-
-  components: { BtnAction, UserDeleteModal, EditUserForm }
+  components: { BtnAction, UserDeleteModal, EditUserForm },
+  created() {
+    const store = useUserStore()
+    this.current_user = store.getUser
+    this.current_user.avatar = userAvatar(this.current_user.id)
+  }
 }
 </script>
 

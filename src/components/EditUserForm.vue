@@ -1,8 +1,8 @@
 <template>
   <div class="form__container">
     <h2 class="heading-2 form__heading">Edit Profile</h2>
-    <form class="form__box" action="/edit_profile" method="post" enctype="multipart/form-data">
-      <div class="avatar-container avatar-container--editable">
+    <form class="form__box" @submit.prevent="submit" method="post" enctype="multipart/form-data">
+      <div class="avatar-container avatar-container--editable" @click="openFileSelector">
         <input
           type="file"
           style="display: none"
@@ -11,15 +11,12 @@
           accept="image/png"
           @change="displaySelectedImage"
         />
-        <label for="avatar" class="avatar-label" @click="openFileSelector">
-          <img
-            src="https://via.placeholder.com/300"
-            alt="avatar"
-            class="avatar-img"
-            id="currentAvatar"
-          />
-          <span class="avatar-edit"><i class="fas fa-pen"></i> Edit Avatar</span>
+        <label for="avatar" class="avatar-label">
+          <img :src="current_user.avatar" alt="avatar" class="avatar-img" id="currentAvatar" />
         </label>
+        <span class="avatar-edit" @click="openFileSelector"
+          ><i class="fas fa-pen"></i> Edit Avatar</span
+        >
       </div>
 
       <div class="form__group">
@@ -27,9 +24,9 @@
           type="text"
           minlength="2"
           maxlength="20"
-          :value="current_user.nickname"
           name="nickname"
           id="nickname"
+          v-model="current_user.nickname"
           placeholder="Nickname"
           class="form__input"
         />
@@ -41,7 +38,7 @@
           name="bio"
           maxlength="200"
           id="bio"
-          :value="current_user.bio"
+          v-model="current_user.bio"
           cols="30"
           rows="10"
           class="form__input form__input--textarea"
@@ -56,6 +53,7 @@
           minlength="8"
           name="password"
           id="password"
+          v-model="current_user.password"
           placeholder="Password"
           class="form__input form__input--password"
           required
@@ -70,6 +68,7 @@
           minlength="8"
           name="new_password"
           id="new_password"
+          v-model="current_user.new_password"
           placeholder="New Password"
           class="form__input form__input--password"
         />
@@ -84,19 +83,36 @@
 </template>
 
 <script>
+import { updateUser } from '@/api/user'
+
 export default {
   name: 'EditUserForm',
+  props: {
+    user: {
+      type: Object,
+      required: true
+    },
+  },
   data: () => ({
     current_user: {
       nickname: 'John Doe',
       username: 'johndoe',
-      bio: 'I am a music lover'
+      bio: 'I am a music lover',
+      password: 'password',
+      new_password: '',
     },
+    selectedAvatar: null,
     error: ''
   }),
   methods: {
-    submit() {
-      console.log('Submitting form')
+    async submit() {
+      const formData = new FormData()
+      formData.append('nickname', this.current_user.nickname)
+      formData.append('bio', this.current_user.bio)
+      formData.append('password', this.current_user.password)
+      formData.append('new_password', this.current_user.new_password)
+      if (this.selectedAvatar) formData.append('avatar', this.selectedAvatar)
+      this.error = await updateUser(formData)
     },
     openFileSelector() {
       document.getElementById('fileInput').click() // Trigger click on the hidden file input
@@ -105,6 +121,7 @@ export default {
       const file = event.target.files[0] // Get the selected file
       if (file && file.type === 'image/png') {
         const reader = new FileReader() // Create a FileReader object
+        this.selectedAvatar = file
         reader.onload = function () {
           const newAvatar = document.getElementById('currentAvatar')
           newAvatar.src = reader.result // Display the selected image
@@ -114,6 +131,9 @@ export default {
         alert('Please select a PNG image file.')
       }
     }
+  },
+  created() {
+    this.current_user = this.user
   }
 }
 </script>
@@ -123,6 +143,7 @@ export default {
   /* display: flex;
   justify-content: center;
   align-items: center; */
+  position: relative;
   width: 100%;
   &:hover {
     cursor: pointer;
@@ -144,6 +165,7 @@ export default {
   width: 20rem;
   object-fit: cover;
   transition: all 0.1s ease-in-out;
+  position: relative;
 }
 
 .avatar-edit {
@@ -153,6 +175,11 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%) scale(0.8);
   transition: all 0.2s ease-in-out;
+}
+
+.avatar-label {
+  height: 20rem;
+  width: 20rem;
 }
 
 .form__container {

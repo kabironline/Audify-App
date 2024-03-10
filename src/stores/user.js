@@ -53,16 +53,17 @@ export const useUserStore = defineStore('user', {
         this.setToken(token)
         this.setUser(user)
       }
-      // Update the user from the server
-      if (this.token) {
-        const response = await get('/user/me', {}, this.token)
-        if (response.status !== 200) {
-          return
-        }
-        const json = await response.json()
-        localStorage.setItem('user', JSON.stringify(json))
-        this.setUser(json)
+      this.updateUser()
+    },
+    async updateUser() {
+      if (!this.user) return
+      const response = await get('/user/me', {}, this.token)
+      if (response.status !== 200) {
+        return
       }
+      const json = await response.json()
+      localStorage.setItem('user', JSON.stringify(json))
+      this.setUser(json)
     }
   },
   getters: {
