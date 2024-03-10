@@ -1,4 +1,4 @@
-import { get, post, del } from '@/utils/http'
+import { get, post, del, put } from '@/utils/http'
 import { useUserStore } from '@/stores/user'
 import { toRaw } from 'vue'
 
@@ -24,6 +24,14 @@ export async function createPlaylist(data) {
   const token = useUserStore().token
   data = toRaw(data)
   const response = await post('/playlist', data, {}, token)
+  const json = await response.json()
+  return json.playlist
+}
+
+export async function updatePlaylist(playlistId, data) {
+  const token = useUserStore().token
+  data = toRaw(data)
+  const response = await put(`/playlist/${playlistId}`, data, {}, token)
   const json = await response.json()
   return json.playlist
 }

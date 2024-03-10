@@ -32,6 +32,7 @@ import PlaylistModal from './Modals/PlaylistModal.vue'
 import SidebarListItem from './SidebarListItem.vue'
 import { mapState } from 'pinia'
 import TilePlaylist from './TilePlaylist.vue'
+import { toRaw } from 'vue'
 export default {
   name: 'AppSidebar',
   components: {
@@ -45,7 +46,8 @@ export default {
     playlistModalVisible: false,
     menuItems: [],
     playlists: [],
-    isLoading: false
+    isLoading: false,
+    flipFlop: false
   }),
   computed: {
     ...mapState(useUserStore, ['getUserChannel', 'getUserId', 'getUserPlaylist']),
@@ -92,7 +94,7 @@ export default {
     this.isLoading = false
 
     this.$watch(
-      () => this.getUserPlaylist,
+      () => toRaw(this.getUserPlaylist),
       () => {
         this.playlists = this.getUserPlaylist
       }

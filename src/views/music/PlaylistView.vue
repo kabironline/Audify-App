@@ -56,6 +56,7 @@
         <PlaylistEditModal
           :visible="playlistEditModalVisible"
           @toggleVisible="playlistEditModalVisible = false"
+          @updatePlaylist="updatePlaylist"
           :playlist="playlist"
         />
         <PlaylistDeleteModal
@@ -132,6 +133,11 @@ export default {
     play() {
       const store = usePlayerStore()
       store.playPlaylist(this.playlist, 0, this.isPlaylist ? 'playlist' : 'album')
+    },
+    updatePlaylist(playlist) {
+      this.playlist.name = playlist.name
+      this.playlist.description = playlist.description
+      this.playlistEditModalVisible = false
     }
   },
   async beforeMount() {

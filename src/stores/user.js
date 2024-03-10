@@ -37,7 +37,13 @@ export const useUserStore = defineStore('user', {
       playlists = playlists.filter((p) => {
         return p.id != playlistId
       })
-      this.user.playlists = playlists
+      this.user.playlists.splice(0, this.user.playlists.length, ...playlists)
+    },
+    updatePlaylist(playlist) {
+      if (!this.user) return
+      const index = this.user.playlists.findIndex((p) => p.id === playlist.id)
+      // pop the old playlist and push the new one
+      this.user.playlists.splice(index, 1, playlist)
     },
     async initializeUserAtStart() {
       // Reading local storage for token and user
