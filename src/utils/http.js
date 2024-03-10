@@ -29,8 +29,6 @@ export async function request(method, url, data = null, headers, bearerToken = n
     fetch_options.body = data
   }
 
-  console.log('fetch_options', fetch_options)
-
   // send the request using fetch api
   return fetch(url, fetch_options)
 }

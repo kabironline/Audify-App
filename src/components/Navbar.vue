@@ -39,7 +39,7 @@
         </v-list>
       </v-menu>
       <v-btn icon transparent id="main-menu-activator" for="profile" class="navbar__profile">
-        <v-img :src="this.getUserAvatar" alt="Profile Image" class="navbar__profile--image" />
+        <v-img cover :src="this.getUserAvatar" alt="Profile Image" class="navbar__profile--image" />
       </v-btn>
     </div>
     <a class="navbar__profile" href="/dashboard"> </a>

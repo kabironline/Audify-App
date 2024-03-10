@@ -1,4 +1,4 @@
-import { del, post, put } from '@/utils/http'
+import { del, put } from '@/utils/http'
 import { useUserStore } from '@/stores/user'
 
 export const updateUser = async (formData) => {

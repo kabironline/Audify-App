@@ -70,7 +70,8 @@ export default {
       if (this.getUserChannel !== null) {
         menuItems.push({
           title: 'Channel Dashboard',
-          link: `/channel/${this.getUserChannel.id}/dashboard`
+          link: `/channel/${this.getUserChannel.id}/dashboard`,
+          icon: 'music_note'
         })
         menuItems.push({
           title: 'Upload Track',

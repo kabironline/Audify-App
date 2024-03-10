@@ -3,8 +3,8 @@
     <h2 class="heading-2">Create an Album</h2>
     <form
       class="form__container form__container--track"
-      action="/album/add"
       method="post"
+      @submit.prevent="submit"
       enctype="multipart/form-data"
     >
       <div>
@@ -14,6 +14,7 @@
             minlength="1"
             maxlength="50"
             name="title"
+            v-model="form_data.album_name"
             id="title"
             placeholder="Album Name"
             class="form__input"
@@ -27,6 +28,7 @@
             type="date"
             name="release_date"
             id="release_date"
+            v-model="form_data.release_date"
             placeholder="Release Date"
             class="form__input"
             required
@@ -39,6 +41,7 @@
             name="description"
             id="description"
             class="form__input form__input--textarea"
+            v-model="form_data.description"
             placeholder="Description (Optional)"
           ></textarea>
           <label for="description" class="form__label">Description (Optional)</label>
@@ -74,15 +77,15 @@
               name="tracks"
               class="checkbox-disable track-tile-checkbox"
               :id="`track-tile-${track.id}`"
+              v-model="selectedTracks"
               :value="track.id"
             />
             <label :for="`track-tile-${track.id}`" class="track-tile-label">
               <div class="track-tile track-tile-small">
-                <!-- Add postion of the track in the top charts -->
                 <div class="track-tile__cover">
                   <div>
                     <img
-                      :src="`https://picsum.photos/640/360?random=${track.id}`"
+                      :src="trackImage(track.id)"
                       alt="track Image"
                       class="track-tile__cover--img selectable"
                     />
@@ -95,7 +98,6 @@
               </div>
             </label>
           </div>
-          {% endfor %}
         </div>
       </div>
       <input
@@ -108,13 +110,25 @@
 </template>
 
 <script>
+import { createAlbum } from '@/api/album'
+import { getChannelTracks } from '@/helper/getters'
+import { useUserStore } from '@/stores/user'
+import { trackImage } from '@/utils/http'
 export default {
   name: 'AlbumCreate',
   data: () => ({
     imageSrc: '',
-    error: ''
+    error: '',
+    tracks: [],
+    selectedTracks: [],
+    form_data: {
+      album_name: '',
+      release_date: '',
+      description: '',
+    }
   }),
   methods: {
+    trackImage,
     handleCoverImage(event) {
       const file = event.target.files[0]
       if (!file) {
@@ -122,23 +136,32 @@ export default {
       }
       const src = URL.createObjectURL(file)
       this.imageSrc = src
-      console.log(this.imageSrc)
+    },
+    async submit() {
+      const formData = new FormData()
+      formData.append('album_name', this.form_data.album_name)
+      formData.append('release_date', this.form_data.release_date)
+      formData.append('album_description', this.form_data.description)
+      formData.append('album_art', document.getElementById('cover').files[0])
+      this.selectedTracks.forEach((track) => {
+        formData.append('album_tracks', track)
+      })
+
+      // print the form data
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1])
+      }
+      this.error = await createAlbum(formData)
     }
   },
-  computed: {
-    tracks() {
-      let list = []
-      for (let i = 0; i < 25; i++) {
-        list.push({
-          id: i,
-          name: `Track ${i}`,
-          channel: {
-            name: `Channel ${i}`
-          }
-        })
-      }
-      return list
+  async mounted() {
+    const channel = useUserStore().getUserChannel
+    const channel_info = await getChannelTracks(channel.id)
+    if (!channel_info.tracks.length) {
+      this.error = 'No tracks found'
+      return
     }
+    this.tracks = channel_info.tracks
   }
 }
 </script>

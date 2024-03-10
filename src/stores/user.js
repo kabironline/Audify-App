@@ -29,11 +29,6 @@ export const useUserStore = defineStore('user', {
     removePlaylist(playlistId) {
       if (!this.user) return
       let playlists = toRaw(this.user.playlists)
-      console.log(
-        playlists.filter((p) => {
-          return p.id != playlistId
-        })
-      )
       playlists = playlists.filter((p) => {
         return p.id != playlistId
       })
@@ -83,7 +78,7 @@ export const useUserStore = defineStore('user', {
     },
     getUserChannel() {
       if (!this.user) return null
-      return this.user.channel ? toRaw(this.user.channel) : null
+      return this.user.channels ? toRaw(this.user.channels[0]) : null
     },
     getUserAvatar() {
       if (!this.user) return null
