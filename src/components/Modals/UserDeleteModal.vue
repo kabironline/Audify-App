@@ -15,17 +15,16 @@
       <v-card-text>
         <p>Are you sure you want to delete your own account? This action cannot be undone.</p>
       </v-card-text>
-      <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="primary" />
-        <BtnAction text="Delete User" @click="deleteUser" color="white" />
+        <BtnAction text="Delete User" @click="deleteHandler" color="white" />
       </div>
-      <!-- </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import { deleteUser } from '@/api/user'
 import BtnAction from '../BtnAction.vue'
 
 export default {
@@ -42,8 +41,10 @@ export default {
     }
   },
   methods: {
-    deleteUser() {
-      console.log('Deleting User...')
+    async deleteHandler() {
+      await deleteUser()
+      this.updateVisible(false)
+      this.$router.push('/login')
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)
