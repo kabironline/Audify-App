@@ -1,6 +1,6 @@
 <template>
   <section class="section section-upload">
-    <h2 class="heading-2">Create an Album</h2>
+    <h2 class="heading-2">{{ editingMode ? 'Edit the album' : 'Create an album' }}</h2>
     <form
       class="form__container form__container--track"
       method="post"
@@ -57,7 +57,7 @@
               name="cover"
               id="cover"
               @change="handleCoverImage"
-              required
+              :required="!editingMode"
             />
             <img
               :src="imageSrc"
@@ -110,10 +110,10 @@
 </template>
 
 <script>
-import { createAlbum } from '@/api/album'
-import { getChannelTracks } from '@/helper/getters'
+import { createAlbum, updateAlbum } from '@/api/album'
+import { getAlbum, getChannelTracks } from '@/helper/getters'
 import { useUserStore } from '@/stores/user'
-import { trackImage } from '@/utils/http'
+import { albumImage, trackImage } from '@/utils/http'
 export default {
   name: 'AlbumCreate',
   data: () => ({
@@ -124,8 +124,9 @@ export default {
     form_data: {
       album_name: '',
       release_date: '',
-      description: '',
-    }
+      description: ''
+    },
+    editingMode: false
   }),
   methods: {
     trackImage,
@@ -146,17 +147,37 @@ export default {
       this.selectedTracks.forEach((track) => {
         formData.append('album_tracks', track)
       })
-      this.error = await createAlbum(formData)
+      if (this.editingMode) {
+        const response = await updateAlbum(this.$route.params.id, formData)
+        if (response === '') {
+          this.$router.push(`/album/${this.$route.params.id}`)
+        } else {
+          this.error = response
+        }
+      } else {
+        this.error = await createAlbum(formData)
+      }
     }
   },
   async mounted() {
     const channel = useUserStore().getUserChannel
     const channel_info = await getChannelTracks(channel.id)
     if (!channel_info.tracks.length) {
-      this.error = 'No tracks found'
-      return
+      this.$router.push('/upload')
     }
     this.tracks = channel_info.tracks
+
+    if (this.$route.params.id) {
+      this.editingMode = true
+      const album = await getAlbum(this.$route.params.id)
+      this.form_data.album_name = album.name
+      this.form_data.description = album.description
+      this.selectedTracks = album.tracks.map((track) => track.id)
+      let date = new Date(Date.parse(album.release_date)).toISOString().slice(0, 10)
+      console.log(date)
+      this.form_data.release_date = date
+      this.imageSrc = albumImage(album.id)
+    }
   }
 }
 </script>

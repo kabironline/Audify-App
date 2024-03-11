@@ -38,7 +38,7 @@
 
       <div class="playlist-header__buttons" v-if="!isPlaylist">
         <BtnAction icon="play_arrow" text="Play" @click.prevent="play()" />
-        <BtnAction text="Edit Album" color="dark" />
+        <BtnAction text="Edit Album" color="dark" @click.prevent="navigateToAlbumEdit()"/>
         <BtnAction text="Delete Album" color="dark" @click.prevent="deleteModalVisible = true" />
         <AlbumDeleteModal
           :visible="deleteModalVisible"
@@ -138,6 +138,9 @@ export default {
       this.playlist.name = playlist.name
       this.playlist.description = playlist.description
       this.playlistEditModalVisible = false
+    },
+    navigateToAlbumEdit() {
+      this.$router.push(`/album/edit/${this.playlist.id}`)
     }
   },
   async beforeMount() {
