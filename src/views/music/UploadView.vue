@@ -3,8 +3,7 @@
     <h2 class="heading-2">Upload a track</h2>
     <form
       class="form__container form__container--track"
-      action="/upload"
-      method="post"
+      @submit.prevent="handleUpload"
       enctype="multipart/form-data"
     >
       <div class="form__group">
@@ -13,6 +12,7 @@
           minlength="1"
           maxlength="50"
           name="title"
+          v-model="form_data.name"
           id="title"
           placeholder="Track Name"
           class="form__input"
@@ -21,10 +21,17 @@
         <label for="title" class="form__label">Track Name</label>
       </div>
       <div class="form__group">
-        <select aria-required="true" name="genre" id="genre" class="form__input" required>
+        <select
+          aria-required="true"
+          name="genre"
+          id="genre"
+          class="form__input"
+          required
+          v-model="form_data.genre"
+        >
           <option value="" disabled selected>Genre</option>
 
-          <option v-for="genre in genres" :key="genre" value="{{genre.id}}">
+          <option v-for="genre in genres" :key="genre" :value="genre.id">
             {{ genre.name }}
           </option>
         </select>
@@ -35,6 +42,7 @@
           type="date"
           name="release_date"
           id="release_date"
+          v-model="form_data.release_date"
           placeholder="Release Date"
           class="form__input"
           required
@@ -47,6 +55,7 @@
           id="lyrics"
           class="form__input form__input--textarea"
           placeholder="Lyrics"
+          v-model="form_data.lyrics"
         ></textarea>
         <label for="lyrics" class="form__label">Lyrics (Optional)</label>
       </div>
@@ -58,6 +67,7 @@
           accept=".mp3"
           name="track"
           id="track"
+          ref="track"
           required
         />
         <img src="" alt="" class="form__input--img" />
@@ -89,27 +99,27 @@
         type="submit"
         value="Upload"
       />
+      <p>{{ this.error }}</p>
     </form>
   </section>
 </template>
 
 <script>
+import { uploadTrack } from '@/api/track'
+import { getGenres } from '@/helper/getters'
+
 export default {
   name: 'UploadView',
   data: () => ({
     imageSrc: '',
-    genres: [
-      { id: 1, name: 'Rock' },
-      { id: 2, name: 'Pop' },
-      { id: 3, name: 'Jazz' },
-      { id: 4, name: 'Hip Hop' },
-      { id: 5, name: 'Classical' },
-      { id: 6, name: 'Country' },
-      { id: 7, name: 'Blues' },
-      { id: 8, name: 'Electronic' },
-      { id: 9, name: 'Folk' },
-      { id: 10, name: 'R&B' }
-    ]
+    genres: [],
+    form_data: {
+      name: '',
+      genre: '',
+      release_date: '',
+      lyrics: ''
+    },
+    error: ''
   }),
   methods: {
     handleCoverImage(event) {
@@ -119,7 +129,28 @@ export default {
       }
       const src = URL.createObjectURL(file)
       this.imageSrc = src
+    },
+    async handleUpload() {
+      const formData = new FormData()
+      formData.append('track_name', this.form_data.name)
+      formData.append('track_genre', this.form_data.genre)
+      formData.append('release_date', this.form_data.release_date)
+      formData.append('track_lyrics', this.form_data.lyrics)
+      formData.append('track_media', this.$refs.track.files[0])
+      formData.append('track_cover', this.$refs.coverLarge.files[0])
+
+      const response = await uploadTrack(formData)
+      if (response) {
+        this.$router.push('/')
+      } else {
+        this.error = "Error uploading track. Please try again."
+      }
     }
+  },
+  mounted() {
+    getGenres().then((response) => {
+      this.genres = response
+    })
   }
 }
 </script>
