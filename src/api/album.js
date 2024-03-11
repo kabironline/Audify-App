@@ -1,4 +1,4 @@
-import {  post } from '@/utils/http'
+import { del, post } from '@/utils/http'
 import { useUserStore } from '@/stores/user'
 import { toRaw } from 'vue'
 
@@ -7,9 +7,18 @@ export async function createAlbum(data) {
   data = toRaw(data)
   const response = await post('/album', data, {}, token)
   if (response.status === 201) {
-    const json = await response.json()
-    return ""
+    return ''
   }
 
-  return "error creating album"
+  return 'Error creating album'
+}
+
+export async function deleteAlbum(id) {
+  const token = useUserStore().token
+  const response = await del(`/album/${id}`, {},  token)
+  if (response.status === 200) {
+    return true
+  }
+
+  return false
 }

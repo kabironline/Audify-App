@@ -146,11 +146,6 @@ export default {
       this.selectedTracks.forEach((track) => {
         formData.append('album_tracks', track)
       })
-
-      // print the form data
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1])
-      }
       this.error = await createAlbum(formData)
     }
   },

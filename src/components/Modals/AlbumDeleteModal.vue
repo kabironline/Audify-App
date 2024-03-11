@@ -15,17 +15,16 @@
       <v-card-text>
         <p>Are you sure you want to delete this Album? This action cannot be undone.</p>
       </v-card-text>
-      <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="primary" />
         <BtnAction text="Delete Album" @click="deleteAlbum" color="white" />
       </div>
-      <!-- </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import { deleteAlbum } from '@/api/album'
 import BtnAction from '../BtnAction.vue'
 
 export default {
@@ -42,8 +41,12 @@ export default {
     }
   },
   methods: {
-    deleteAlbum() {
-      console.log('Deleting Album...')
+    async deleteAlbum() {
+      const result = await deleteAlbum(this.$route.params.id)
+      if (result) {
+        this.updateVisible(false)
+        this.$router.push('/')
+      }
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)
