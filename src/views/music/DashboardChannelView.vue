@@ -85,7 +85,8 @@ export default {
       albums: [],
       moreTracks: false,
       moreAlbums: false,
-      isLoading: true
+      isLoading: true,
+      isUserChannel: false
     }
   },
   methods: {
@@ -100,11 +101,6 @@ export default {
     },
     noContent() {
       return !this.albums.length && !this.tracks.length && !this.isLoading
-    },
-    isUserChannel() {
-      const store = useUserStore()
-      if (store.getChannel === undefined) return false
-      return store.getChannel.id === this.channel.id
     }
   },
   beforeMount() {
@@ -118,6 +114,9 @@ export default {
       this.moreAlbums = res.albums.length > 5
       this.isLoading = false
     })
+
+    const store = useUserStore()
+    this.isUserChannel = store.getUserChannel?.id == channelId
   }
 }
 </script>

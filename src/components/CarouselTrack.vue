@@ -40,10 +40,10 @@
               <v-list-item link class="dropdown-item">
                 <v-list-item-title class="dropdown-item--link"> Add To Playlist </v-list-item-title>
               </v-list-item>
-              <v-list-item link class="dropdown-item">
+              <v-list-item v-if="isAdmin || track.channel.id == channelId" link class="dropdown-item">
                 <v-list-item-title class="dropdown-item--link"> Delete Track </v-list-item-title>
               </v-list-item>
-              <v-list-item link class="dropdown-item">
+              <v-list-item v-if="isAdmin" link class="dropdown-item">
                 <v-list-item-title class="dropdown-item--link"> Flag Track </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -62,8 +62,15 @@
 import { trackImage } from '@/utils/http'
 import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
+import { useUserStore } from '@/stores/user'
 export default {
   name: 'CarouselTrack',
+  data () {
+    return {
+      channelId: -1,
+      isAdmin: false
+    }
+  },
   props: {
     tracks: {
       type: Array,
@@ -75,6 +82,14 @@ export default {
     ...mapActions(usePlayerStore, ['playIndividualTrack']),
     navigateToChannel(channelId) {
       this.$router.push(`/channel/${channelId}/dashboard`)
+    }
+  },
+  mounted () {
+    const store = useUserStore()
+    this.isAdmin = store.isAdmin
+    const channel = store.channel
+    if (channel) {
+      this.channelId = channel.id
     }
   }
 }

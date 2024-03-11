@@ -56,7 +56,7 @@ export default {
   components: { LogoutModal },
   data: () => ({
     logoutModalVisible: false,
-    menuItems: []
+    menuItems: [],
   }),
   computed: {
     ...mapState(useUserStore, [
@@ -76,7 +76,7 @@ export default {
         { title: 'Dashboard', link: `/dashboard/${this.getUserId}` },
         { title: 'Edit Profile', link: '/edit_profile' }
       ]
-      if (this.getUserChannel !== null) {
+      if (this.getUserChannel) {
         menuItems.push({
           title: 'Channel Dashboard',
           link: `/channel/${this.getUserChannel.id}/dashboard`

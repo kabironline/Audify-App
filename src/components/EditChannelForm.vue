@@ -18,7 +18,7 @@
         />
         <label for="avatar" class="avatar-label" @click="openFileSelector">
           <img
-            src="https://via.placeholder.com/340"
+            :src="channelAvatar(channel.id)"
             alt="avatar"
             class="avatar-img"
             id="currentAvatar"
@@ -77,15 +77,23 @@
 </template>
 
 <script>
+import { channelAvatar } from '@/utils/http'
 export default {
   name: 'EditChannelForm',
-  data: () => ({
+  props: {
     channel: {
+      type: Object,
+      required: true
+    }
+  },
+  data: () => ({
+    channelData: {
       name: 'Jhon Denver Official',
       description: 'This is the official account of Jhon Denver'
     }
   }),
   methods: {
+    channelAvatar,
     submit() {
       console.log('Submitting form')
     },

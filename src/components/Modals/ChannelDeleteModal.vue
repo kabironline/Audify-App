@@ -15,12 +15,10 @@
       <v-card-text>
         <p>Are you sure you want to delete your own Channel? This action cannot be undone.</p>
       </v-card-text>
-      <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="primary" />
         <BtnAction text="Delete Channel" @click="deleteChannel" color="white" />
       </div>
-      <!-- </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>

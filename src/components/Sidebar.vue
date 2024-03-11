@@ -52,7 +52,7 @@ export default {
   computed: {
     ...mapState(useUserStore, ['getUserChannel', 'getUserId', 'getUserPlaylist']),
     showPlaylist() {
-      return this.isLoading ? true : this.playlists.length > 0
+      return this.isLoading ? true : this.playlists ? this.playlists.length > 0 : false
     }
   },
   methods: {

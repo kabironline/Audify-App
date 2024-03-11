@@ -91,6 +91,10 @@ export const useUserStore = defineStore('user', {
     getUserPlaylist() {
       if (!this.user) return null
       return this.user.playlists ? toRaw(this.user.playlists) : null
+    },
+    isAdmin() {
+      if (!this.user) return false
+      return this.user.is_admin
     }
   }
 })

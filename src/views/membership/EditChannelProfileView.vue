@@ -4,7 +4,7 @@
       <h3 class="heading-3">Current Profile</h3>
       <br />
       <div class="avatar-container">
-        <img src="https://via.placeholder.com/340" alt="Avatar" class="avatar-img" />
+        <img :src="channelAvatar(channel.id)" alt="Avatar" class="avatar-img" />
       </div>
       <h3 class="heading-3 avatar--title">{{ channel.name }}</h3>
       <p class="avatar-desc">
@@ -21,7 +21,7 @@
         @toggleVisible="deleteModalVisible = false"
       />
     </div>
-    <EditChannelForm />
+    <EditChannelForm :channel="channel" :channelAvatar/>
   </section>
 </template>
 
@@ -29,45 +29,34 @@
 import BtnAction from '@/components/BtnAction.vue'
 import EditChannelForm from '@/components/EditChannelForm.vue'
 import ChannelDeleteModal from '@/components/Modals/ChannelDeleteModal.vue'
+import { useUserStore } from '@/stores/user'
+import { channelAvatar } from '@/utils/http'
+
 
 export default {
   name: 'EditProfileView',
   data: () => ({
     deleteModalVisible: false,
-    form: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    },
+
     channel: {
-      name: 'Jhon Denver Official',
-      description: 'This is the official account of Jhon Denver'
+      name: '',
+      description: ''
     },
     error: ''
   }),
+  components: { BtnAction, ChannelDeleteModal, EditChannelForm },
   methods: {
-    submit() {
-      console.log('Submitting form')
-    },
-    openFileSelector() {
-      document.getElementById('fileInput').click() // Trigger click on the hidden file input
-    },
-    displaySelectedImage(event) {
-      const file = event.target.files[0] // Get the selected file
-      if (file && file.type === 'image/png') {
-        const reader = new FileReader() // Create a FileReader object
-        reader.onload = function () {
-          const newAvatar = document.getElementById('currentAvatar')
-          newAvatar.src = reader.result // Display the selected image
-        }
-        reader.readAsDataURL(file) // Read the file as a data URL
-      } else {
-        alert('Please select a PNG image file.')
-      }
-    }
+    channelAvatar,
   },
-  components: { BtnAction, ChannelDeleteModal, EditChannelForm }
+  mounted() {
+    const store = useUserStore()
+    const channel = store.getUserChannel
+    if (!channel) {
+      this.$router.push('/channel/create')
+    }
+
+    this.channel = channel
+  }
 }
 </script>
 
