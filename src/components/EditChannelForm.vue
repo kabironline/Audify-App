@@ -3,8 +3,7 @@
     <h2 class="heading-2 form__heading">Edit Profile</h2>
     <form
       class="form__box"
-      action="/edit_profile_creator"
-      method="post"
+      @submit.prevent="submit"
       enctype="multipart/form-data"
     >
       <div class="avatar-container avatar-container--editable">
@@ -32,7 +31,7 @@
           type="text"
           minlength="2"
           maxlength="20"
-          :value="channel.name"
+          v-model="channelData.name"
           name="name"
           id="name"
           placeholder="Channel Name"
@@ -48,7 +47,7 @@
           id="description"
           cols="30"
           rows="10"
-          :value="channel.description"
+          v-model="channelData.bio"
           class="form__input form__input--textarea"
           placeholder="Description (Optional)"
         />
@@ -63,6 +62,7 @@
           minlength="8"
           name="password"
           id="password"
+          v-model="channelData.password"
           placeholder="Password"
           class="form__input form__input--password"
           required
@@ -72,11 +72,13 @@
       <br />
       <input type="submit" value="Edit" class="form__button" />
       <br />
+      <p class="error">{{ error }}</p>
     </form>
   </div>
 </template>
 
 <script>
+import { updateChannel } from '@/api/channel'
 import { channelAvatar } from '@/utils/http'
 export default {
   name: 'EditChannelForm',
@@ -89,13 +91,26 @@ export default {
   data: () => ({
     channelData: {
       name: 'Jhon Denver Official',
-      description: 'This is the official account of Jhon Denver'
-    }
+      bio: 'This is the official account of Jhon Denver',
+      password: '',
+    },
+    error: ''
   }),
   methods: {
     channelAvatar,
-    submit() {
-      console.log('Submitting form')
+    async submit() {
+      const formData = new FormData() 
+      formData.append('name', this.channelData.name)
+      formData.append('bio', this.channelData.bio)
+      formData.append('password', this.channelData.password)
+      formData.append('avatar', document.getElementById('avatar').files[0])
+      
+      const error = await updateChannel(formData)
+      if (error != '') {
+        this.error = error
+      } else {
+        this.$router.push(`/channel/${this.channel.id}/dashboard`)
+      }
     },
     openFileSelector() {
       document.getElementById('fileInput').click() // Trigger click on the hidden file input
@@ -113,15 +128,17 @@ export default {
         alert('Please select a PNG image file.')
       }
     }
+  },
+  mounted() {
+    this.channelData.name = this.channel.name
+    this.channelData.bio = this.channel.description
   }
 }
 </script>
 
 <style>
 .avatar-container--editable {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
+  position: relative;
   width: 100%;
   &:hover {
     cursor: pointer;

@@ -33,7 +33,7 @@
           </div>
         </div>
         <p class="hero__details--bio">
-          {{ channel.bio }}
+          {{ channel.description }}
         </p>
       </div>
       <div class="hero__cta">
