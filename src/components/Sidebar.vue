@@ -71,19 +71,20 @@ export default {
         menuItems.push({
           title: 'Channel Dashboard',
           link: `/channel/${this.getUserChannel.id}/dashboard`,
-          icon: 'music_note'
+          icon: 'music_note',
+          route_name: 'channel-dashboard'
         })
         menuItems.push({
           title: 'Upload Track',
           icon: 'upload',
           link: '/upload',
-          route_name: 'upload'
+          route_name: 'track-upload'
         })
         menuItems.push({
           title: 'Create Album',
           icon: 'album',
           link: '/album/create',
-          route_name: 'album-add'
+          route_name: 'album-create'
         })
       }
       this.menuItems = menuItems

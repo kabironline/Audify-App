@@ -58,6 +58,7 @@ export const useUserStore = defineStore('user', {
       }
       const json = await response.json()
       localStorage.setItem('user', JSON.stringify(json))
+      console.log('updating user', json)
       this.setUser(json)
     }
   },
@@ -78,7 +79,7 @@ export const useUserStore = defineStore('user', {
     },
     getUserChannel() {
       if (!this.user) return null
-      return this.user.channels ? toRaw(this.user.channels[0]) : null
+      return this.user.channels.length ? toRaw(this.user.channels[0]) : null
     },
     getUserAvatar() {
       if (!this.user) return null

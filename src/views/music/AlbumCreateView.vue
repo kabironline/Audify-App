@@ -144,9 +144,7 @@ export default {
       formData.append('release_date', this.form_data.release_date)
       formData.append('album_description', this.form_data.description)
       formData.append('album_art', document.getElementById('cover').files[0])
-      this.selectedTracks.forEach((track) => {
-        formData.append('album_tracks', track)
-      })
+      formData.append('album_tracks', this.selectedTracks)
       if (this.editingMode) {
         const response = await updateAlbum(this.$route.params.id, formData)
         if (response === '') {

@@ -17,13 +17,14 @@
       </v-card-text>
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="primary" />
-        <BtnAction text="Delete Channel" @click="deleteChannel" color="white" />
+        <BtnAction text="Delete Channel" @click="deleteHanlder" color="white" />
       </div>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import { deleteChannel } from '@/api/channel'
 import BtnAction from '../BtnAction.vue'
 
 export default {
@@ -40,8 +41,12 @@ export default {
     }
   },
   methods: {
-    deleteChannel() {
-      console.log('Deleting Channel...')
+    async deleteHanlder() {
+      const response = await deleteChannel()
+      if (response.status === 200) {
+        this.updateVisible(false)
+        this.$router.push('/')
+      }
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)
