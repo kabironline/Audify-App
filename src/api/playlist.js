@@ -44,10 +44,9 @@ export async function deletePlaylist(playlistId) {
 
 // PlaylistItem
 
-export async function addPlaylistItem(playlistId, data) {
+export async function addPlaylistItem(playlistId, trackId) {
   const token = useUserStore().token
-  data = toRaw(data)
-  const response = await post(`/playlist/${playlistId}/item`, data, {}, token)
+  const response = await post(`/playlist/${playlistId}/add/${trackId}`, {}, {}, token)
   const json = await response.json()
   return json.playlistItem
 }

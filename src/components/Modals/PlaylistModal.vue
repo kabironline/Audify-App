@@ -48,7 +48,7 @@
       </form>
       <br />
       <div class="d-flex justify-end">
-        <BtnAction text="Cancel" @click="updateVisible(false)" color="white" />
+        <BtnAction text="Cancel" @click="closePlaylistModal" color="white" />
         <BtnAction text="Create" @click="onSubmit" color="primary" />
       </div>
     </v-card>
@@ -60,6 +60,8 @@ import BtnAction from '../BtnAction.vue'
 import { createPlaylist } from '@/api/playlist'
 import { useUserStore } from '@/stores/user'
 import { mapActions } from 'pinia'
+import { useModalStore } from '@/stores/modal'
+
 export default {
   name: 'PlaylistModal',
   emits: ['toggleVisible'],
@@ -72,26 +74,32 @@ export default {
     data: {
       playlist_name: '',
       playlist_description: ''
-    }
+    },
+    dialog: false
   }),
-  computed: {
-    dialog() {
-      return this.visible
-    }
-  },
   methods: {
     ...mapActions(useUserStore, ['addPlaylist']),
-    updateVisible(value) {
-      this.$emit('toggleVisible', value)
+    ...mapActions(useModalStore, ['closePlaylistModal']),
+    closeModal() {
+      this.closePlaylistModal()
+      this.dialog = false
     },
     async onSubmit() {
       const playlist = await createPlaylist(this.data)
       if (playlist) {
         this.addPlaylist(playlist)
-        this.updateVisible(false)
+        this.closeModal()
       }
     }
   },
-  components: { BtnAction }
+  components: { BtnAction },
+  mounted() {
+    const store = useModalStore()
+    store.$onAction((mutation) => {
+      mutation.after(() => {
+        this.dialog = store.playlistModalOpen
+      })
+    })
+  }
 }
 </script>

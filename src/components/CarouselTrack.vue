@@ -1,4 +1,9 @@
 <template>
+  <PlaylistAddModal
+    :visible="addToPlaylistModal"
+    :trackId="selectedTrack"
+    @toggleVisible="toggleAddToPlaylistModal"
+  />
   <div class="track-carousel">
     <v-skeleton-loader
       v-for="track in 5"
@@ -37,7 +42,7 @@
               </v-btn>
             </template>
             <v-list>
-              <v-list-item link class="dropdown-item">
+              <v-list-item @click="openAddToPlaylist(track.id)" link class="dropdown-item">
                 <v-list-item-title class="dropdown-item--link"> Add To Playlist </v-list-item-title>
               </v-list-item>
               <v-list-item v-if="track.channel.id == channelId" link class="dropdown-item">
@@ -50,9 +55,11 @@
           </v-menu>
         </div>
       </div>
-      <v-card-subtitle class="pa-0 track-carousel__item--artist pl-1" @click.stop="navigateToChannel(track.channel.id)">{{
-        track.channel.name
-      }}</v-card-subtitle>
+      <v-card-subtitle
+        class="pa-0 track-carousel__item--artist pl-1"
+        @click.stop="navigateToChannel(track.channel.id)"
+        >{{ track.channel.name }}</v-card-subtitle
+      >
       <div class="mb-3"></div>
     </v-card>
   </div>
@@ -63,12 +70,18 @@ import { trackImage } from '@/utils/http'
 import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
 import { useUserStore } from '@/stores/user'
+import PlaylistAddModal from '@/components/Modals/PlaylistAddModal.vue'
 export default {
   name: 'CarouselTrack',
-  data () {
+  components: {
+    PlaylistAddModal
+  },
+  data() {
     return {
       channelId: -1,
-      isAdmin: false
+      isAdmin: false,
+      selectedTrack: -1,
+      addToPlaylistModal: false
     }
   },
   props: {
@@ -82,9 +95,16 @@ export default {
     ...mapActions(usePlayerStore, ['playIndividualTrack']),
     navigateToChannel(channelId) {
       this.$router.push(`/channel/${channelId}/dashboard`)
+    },
+    openAddToPlaylist(trackId) {
+      this.selectedTrack = trackId
+      this.toggleAddToPlaylistModal(true)
+    },
+    toggleAddToPlaylistModal(value) {
+      this.addToPlaylistModal = value
     }
   },
-  mounted () {
+  mounted() {
     const store = useUserStore()
     this.isAdmin = store.isAdmin
     const channel = store.getUserChannel
