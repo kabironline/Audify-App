@@ -93,6 +93,12 @@ export default {
   },
   mounted() {
     this.updateMenuItems()
+    this.$watch(
+      () => this.getUserChannel,
+      () => {
+        this.updateMenuItems()
+      }
+    )
   }
 }
 </script>

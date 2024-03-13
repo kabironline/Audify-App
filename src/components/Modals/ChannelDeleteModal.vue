@@ -43,7 +43,8 @@ export default {
   methods: {
     async deleteHanlder() {
       const response = await deleteChannel()
-      if (response.status === 200) {
+
+      if (response === '') {
         this.updateVisible(false)
         this.$router.push('/')
       }

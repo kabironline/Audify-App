@@ -101,6 +101,13 @@ export default {
         this.playlists = this.getUserPlaylist
       }
     )
+
+    this.$watch(
+      () => toRaw(this.getUserChannel),
+      () => {
+        this.updateMenuItems()
+      }
+    )
   }
 }
 </script>
