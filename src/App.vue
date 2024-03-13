@@ -1,6 +1,10 @@
 <template>
   <v-app v-if="storeInitialized">
     <div class="page-container">
+      <PlaylistModal
+        :visible="playlistModalVisible"
+        @toggleVisible="playlistModalVisible = false"
+      />
       <Sidebar v-if="headerFooterShown" />
       <div class="page-content">
         <!-- Insert Navbar here -->
@@ -24,18 +28,22 @@ import { RouterView } from 'vue-router'
 import Sidebar from './components/Sidebar.vue'
 import Navbar from './components/Navbar.vue'
 import PlayerBar from './components/PlayerBar.vue'
-
+import PlaylistModal from './components/Modals/PlaylistModal.vue'
 import { useUserStore } from './stores/user'
 import { usePlayerStore } from './stores/player'
+import { useModalStore } from './stores/modal'
 import { onBeforeMount, ref } from 'vue'
-
 export default {
   components: {
     RouterView,
     Sidebar,
     Navbar,
-    PlayerBar
+    PlayerBar,
+    PlaylistModal
   },
+  data: () => ({
+    playlistModalVisible: false
+  }),
   computed: {
     headerFooterShown() {
       return this.$route.name !== 'login' && this.$route.name !== 'register'
@@ -48,6 +56,7 @@ export default {
       store.initializeUserAtStart().then(() => {
         const playerStore = usePlayerStore()
         playerStore.initializePlayerAtStart()
+        const modalStore = useModalStore()
 
         storeInitialized.value = true
       })

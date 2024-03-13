@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'BtnNavigation',
+  name: 'BtnAction',
   props: {
     action: {
       type: Function,

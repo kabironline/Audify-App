@@ -15,9 +15,8 @@
       icon="add"
       text="Create Playlist"
       color="white"
-      @click="playlistModalVisible = true"
+      @click="openPlaylistModal"
     />
-    <PlaylistModal :visible="playlistModalVisible" @toggleVisible="playlistModalVisible = false" />
     <br />
     <ul class="side-nav" v-if="showPlaylist">
       <TilePlaylist :playlists="playlists" />
@@ -28,17 +27,17 @@
 <script>
 import { useUserStore } from '@/stores/user'
 import BtnAction from './BtnAction.vue'
-import PlaylistModal from './Modals/PlaylistModal.vue'
 import SidebarListItem from './SidebarListItem.vue'
 import { mapState } from 'pinia'
 import TilePlaylist from './TilePlaylist.vue'
+import { useModalStore } from '@/stores/modal'
+import { mapActions } from 'pinia'
 import { toRaw } from 'vue'
 export default {
   name: 'AppSidebar',
   components: {
     SidebarListItem,
     BtnAction,
-    PlaylistModal,
     TilePlaylist
   },
   data: () => ({
@@ -56,6 +55,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useModalStore, ['openPlaylistModal']),
     updateMenuItems() {
       const menuItems = [
         { title: 'Home', icon: 'home', link: '/', route_name: 'home' },
