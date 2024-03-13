@@ -58,7 +58,6 @@ export const useUserStore = defineStore('user', {
       }
       const json = await response.json()
       localStorage.setItem('user', JSON.stringify(json))
-      console.log('updating user', json)
       this.setUser(json)
     }
   },
