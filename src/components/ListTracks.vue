@@ -37,7 +37,12 @@
           icon="thumb_down"
           :class="{ 'track-item__cta-link': track.rating !== 0 }"
         />
-        <BtnIcon v-if="isInPlaylist" icon="remove" href="" class="track-item__cta-link" />
+        <BtnIcon
+          v-if="isInPlaylist"
+          icon="remove"
+          @click.prevent="removeTrackFromPlaylist(track.id, index)"
+          class="track-item__cta-link"
+        />
         <BtnIcon v-if="!isInPlaylist" icon="add" class="track-item__cta-link" />
       </div>
       <p class="track-item__timer">{{ formatDuration(track.duration) }}</p>
@@ -51,6 +56,7 @@ import { formatDuration } from '@/helper/format'
 import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
 import { post, trackImage } from '@/utils/http'
+import { deletePlaylistItem } from '@/api/playlist'
 
 export default {
   name: 'ListTracks',
@@ -60,7 +66,7 @@ export default {
     },
     playlist_id: {
       type: Number,
-      default: 0
+      default: -1
     },
     author_id: {
       type: Number,
@@ -84,7 +90,7 @@ export default {
   }),
   emits: ['updateRating'],
   methods: {
-    ...mapActions(usePlayerStore, ['playTrackAtIndex']),
+    ...mapActions(usePlayerStore, ['playTrackAtIndex', 'removeTrack']),
     formatDuration,
     trackImage,
     thumbsUpColor(rating) {
@@ -106,10 +112,15 @@ export default {
       if (data.action === 'created') {
         new_rating = rating
       }
-
       // finding the index of the track
       const index = this.tracks.findIndex((t) => t.id === track.id)
       this.$emit('updateRating', index, new_rating)
+    },
+    async removeTrackFromPlaylist(trackid, index) {
+      const response = await deletePlaylistItem(trackid, this.playlist_id)
+      if (response) {
+        this.$emit('removeTrack', index)
+      }
     }
   },
   components: { BtnIcon }

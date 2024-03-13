@@ -41,3 +41,19 @@ export async function deletePlaylist(playlistId) {
   const response = await del(`/playlist/${playlistId}`, {}, token)
   return response.status === 200
 }
+
+// PlaylistItem
+
+export async function addPlaylistItem(playlistId, data) {
+  const token = useUserStore().token
+  data = toRaw(data)
+  const response = await post(`/playlist/${playlistId}/item`, data, {}, token)
+  const json = await response.json()
+  return json.playlistItem
+}
+
+export async function deletePlaylistItem(trackId, playlistId) {
+  const token = useUserStore().token
+  const response = await del(`/playlist/${playlistId}/remove/${trackId}`, {}, token)
+  return response.status === 200
+}

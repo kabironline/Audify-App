@@ -71,7 +71,9 @@
     <ListTracks
       :tracks="this.playlist.tracks"
       :isInPlaylist="isPlaylist"
+      :playlist_id="playlist.id"
       @updateRating="updateRating"
+      @removeTrack="removeTrackFromPlaylist"
     />
   </section>
   <section class="section section-playlist-songs" v-else>
@@ -129,6 +131,9 @@ export default {
     albumImage,
     updateRating(index, rating) {
       this.playlist.tracks[index].rating = rating
+    },
+    removeTrackFromPlaylist(index) {
+      this.playlist.tracks.splice(index, 1)
     },
     play() {
       const store = usePlayerStore()
