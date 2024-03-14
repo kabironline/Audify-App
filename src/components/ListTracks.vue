@@ -1,4 +1,9 @@
 <template>
+  <PlaylistAddModal
+    :visible="addToPlaylistModal"
+    :trackId="selectedTrack"
+    @toggleVisible="toggleAddToPlaylistModal"
+  />
   <ul class="track-list">
     <v-skeleton-loader
       v-for="track in 10"
@@ -16,7 +21,7 @@
       class="track-item"
       :class="{ 'track-item-selected': index === trackItemSelected }"
     >
-      <div class="track-item__link" @click.prevent="playTrackAtIndex(index)">
+      <div class="track-item__link" @click.prevent="isInPlayer ? playTrackAtIndex(index) : playIndividualTrack(track)">
         <div class="track-item__cover">
           <v-img :src="trackImage(track.id)" alt="" class="track-item__cover--img" />
           <i class="fas fa-play track-item__cover--playbutton"></i>
@@ -43,7 +48,7 @@
           @click.prevent="removeTrackFromPlaylist(track.id, index)"
           class="track-item__cta-link"
         />
-        <BtnIcon v-if="!isInPlaylist" icon="add" class="track-item__cta-link" />
+        <BtnIcon v-if="!isInPlaylist" icon="add" @click.prevent="openAddToPlaylist(track.id)" class="track-item__cta-link" />
       </div>
       <p class="track-item__timer">{{ formatDuration(track.duration) }}</p>
     </li>
@@ -57,6 +62,7 @@ import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
 import { post, trackImage } from '@/utils/http'
 import { deletePlaylistItem } from '@/api/playlist'
+import PlaylistAddModal from '@/components/Modals/PlaylistAddModal.vue'
 
 export default {
   name: 'ListTracks',
@@ -86,11 +92,12 @@ export default {
     }
   },
   data: () => ({
-    // tracksData: this.tracks
+    selectedTrack: -1,
+    addToPlaylistModal: false
   }),
   emits: ['updateRating'],
   methods: {
-    ...mapActions(usePlayerStore, ['playTrackAtIndex', 'removeTrack']),
+    ...mapActions(usePlayerStore, ['playTrackAtIndex', 'removeTrack', 'playIndividualTrack']),
     formatDuration,
     trackImage,
     thumbsUpColor(rating) {
@@ -121,9 +128,16 @@ export default {
       if (response) {
         this.$emit('removeTrack', index)
       }
+    },
+    openAddToPlaylist(trackId) {
+      this.selectedTrack = trackId
+      this.toggleAddToPlaylistModal(true)
+    },
+    toggleAddToPlaylistModal(value) {
+      this.addToPlaylistModal = value
     }
   },
-  components: { BtnIcon }
+  components: { BtnIcon, PlaylistAddModal }
 }
 </script>
 
