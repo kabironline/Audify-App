@@ -2,12 +2,7 @@
   <section class="section section-edit-profile">
     <div class="form__container">
       <h2 class="heading-2 form__heading">Register Channel</h2>
-      <form
-        class="form__box"
-        action="/register_creator"
-        method="post"
-        enctype="multipart/form-data"
-      >
+      <form class="form__box" enctype="multipart/form-data">
         <div class="avatar-container avatar-container--editable">
           <input
             type="file"
@@ -32,8 +27,8 @@
             type="text"
             minlength="2"
             maxlength="20"
-            :value="current_user.nickname"
             name="name"
+            v-model="channel.name"
             id="name"
             placeholder="Channel Name"
             class="form__input"
@@ -45,7 +40,7 @@
           <textarea
             name="description"
             maxlength="400"
-            :value="current_user.bio"
+            v-model="channel.bio"
             id="description"
             cols="30"
             rows="10"
@@ -63,6 +58,7 @@
             minlength="8"
             name="password"
             id="password"
+            v-model="channel.password"
             placeholder="Password"
             class="form__input form__input--password"
             required
@@ -70,7 +66,8 @@
           <label for="password" class="form__label">Password</label>
         </div>
         <br />
-        <input type="submit" value="Edit" class="form__button" />
+        <!-- <input type="submit" value="Create" class="form__button" /> -->
+        <v-btn @click="submit" color="primary" class="form__button">Create</v-btn>
         <br />
         <p class="form__error">{{ error }}</p>
       </form>
@@ -79,24 +76,39 @@
 </template>
 
 <script>
+import { createChannel } from '@/api/channel'
+import { useUserStore } from '@/stores/user'
+
 export default {
   name: 'RegisterChannelView',
   data: () => ({
     channel: {
       name: '',
-      description: '',
-      genre: '',
-      image: ''
+      bio: '',
+      password: ''
     },
-    current_user: {
-      nickname: 'Channel Name',
-      bio: 'Description'
-    },
+    avatar: null,
     error: ''
   }),
   methods: {
-    submit() {
-      console.log('Submitting form')
+    async submit() {
+      if (this.channel.avatar === null) {
+        this.error = 'Please select an avatar.'
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('avatar', document.getElementById('avatar').files[0])
+      formData.append('name', this.channel.name)
+      formData.append('bio', this.channel.bio)
+      formData.append('password', this.channel.password)
+
+      const response = await createChannel(formData)
+      if (response === '') {
+        this.$router.push('/')
+      } else {
+        this.error = response
+      }
     },
     displaySelectedImage(event) {
       const file = event.target.files[0] // Get the selected file
@@ -104,12 +116,18 @@ export default {
         const reader = new FileReader() // Create a FileReader object
         reader.onload = function () {
           const newAvatar = document.getElementById('currentAvatar')
+          this.avatar = file
           newAvatar.src = reader.result // Display the selected image
         }
         reader.readAsDataURL(file) // Read the file as a data URL
       } else {
         alert('Please select a PNG image file.')
       }
+    }
+  },
+  mounted() {
+    if (useUserStore().getUserChannel) {
+      this.$router.push(`/channel/${useUserStore().getUserChannel.id}/dashboard`)
     }
   }
 }

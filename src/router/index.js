@@ -15,8 +15,8 @@ const router = createRouter({
       component: () => import('../views/membership/RegisterView.vue')
     },
     {
-      path: '/register_channel',
-      name: 'register-channel',
+      path: '/channel/create',
+      name: 'channel-create',
       component: () => import('../views/membership/RegisterChannelView.vue')
     },
     {
