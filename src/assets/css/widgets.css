@@ -64,3 +64,34 @@
   color: white;
   transition: all 0.2s ease-out;
 }
+
+.header-tiles {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 3rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-background-light);
+  color: var(--color-white);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.header-tile--number {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.header-tile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}

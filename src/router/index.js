@@ -103,6 +103,11 @@ const router = createRouter({
       path: '/album/:id',
       name: 'album',
       component: () => import('../views/music/PlaylistView.vue')
+    },
+    {
+      path: '/admin/dashboard',
+      name: 'admin-dashboard',
+      component: () => import('../views/admin/AdminDashboard.vue')
     }
   ]
 })

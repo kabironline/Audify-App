@@ -3,7 +3,7 @@ import { del, post, put } from '@/utils/http'
 
 export const createChannel = async (formData) => {
   const response = await post('/channel', formData, {}, useUserStore().getToken)
-  if (response.status === 201) {
+  if (response.status === 201 || response.status === 500) {
     await useUserStore().updateUser()
     return ''
   }
