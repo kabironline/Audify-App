@@ -43,6 +43,12 @@
           text="Edit Profile"
           v-if="isUserChannel"
         />
+        <BtnAction
+          text="Blacklist"
+          color="dark"
+          v-if="showBlacklist"
+          @click="blacklistChannelHandler()"
+        />
       </div>
     </section>
     <hr class="hr" />
@@ -70,27 +76,37 @@ import CarouselTrack from '@/components/CarouselTrack.vue'
 import { useUserStore } from '@/stores/user'
 import { getChannel } from '@/helper/getters'
 import { channelAvatar } from '@/utils/http'
+import BtnAction from '@/components/BtnAction.vue'
+import { blacklistChannel } from '@/api/admin'
 
 export default {
   name: 'ChannelDashboard',
-  components: { CarouselTrack, BtnNavigation, CarouselAlbum },
+  components: { CarouselTrack, BtnNavigation, BtnAction, CarouselAlbum },
   data() {
     return {
       channel: {
         name: 'Channel Name',
         description: 'Channel Description',
-        id: '0'
+        id: '0',
+        blacklisted: false
       },
       tracks: [],
       albums: [],
       moreTracks: false,
       moreAlbums: false,
       isLoading: true,
-      isUserChannel: false
+      isUserChannel: false,
+      isUserAdmin: false
     }
   },
   methods: {
-    channelAvatar
+    channelAvatar,
+    async blacklistChannelHandler() {
+      const response = await blacklistChannel(this.channel.id)
+      if (response) {
+        this.$router.push('/')
+      }
+    }
   },
   computed: {
     albumIsEmpty() {
@@ -101,12 +117,21 @@ export default {
     },
     noContent() {
       return !this.albums.length && !this.tracks.length && !this.isLoading
+    },
+    showBlacklist() {
+      return this.isUserAdmin && !this.channel.blacklisted
     }
   },
   beforeMount() {
     // get the channel id from the route params
     const channelId = this.$route.params.channelId
+    this.isUserAdmin = useUserStore().isAdmin
     getChannel(channelId, true).then((res) => {
+
+      if (res.channel.blacklisted) {
+        this.$router.push('/')
+      }
+
       this.channel = res.channel
       this.tracks = res.tracks.slice(0, 5)
       this.albums = res.albums.slice(0, 5)

@@ -34,3 +34,11 @@ export const unflagTrack = async (trackId) => {
   }
   return false
 }
+
+export const blacklistChannel = async (channelId) => {
+  const response = await post(`/admin/channel/${channelId}/blacklist`, {}, {}, useUserStore().getToken)
+  if (response.status === 200) {
+    return true
+  }
+  return false
+}
