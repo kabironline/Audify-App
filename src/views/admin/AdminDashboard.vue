@@ -24,18 +24,18 @@
         <p class="header-tile--number">{{ genres }}</p>
         <p class="header-tile--title">Total Genres</p>
       </div>
-      <a href="/admin/dashboard/tracks">
+      <div @click.prevent="navigateTo('/admin/tracks')">
         <div class="header-tile">
           <p class="header-tile--number">{{ tracks }}</p>
           <p class="header-tile--title">Total Tracks</p>
         </div>
-      </a>
-      <a href="/admin/dashboard/blacklist">
+      </div>
+      <div>
         <div class="header-tile">
           <p class="header-tile--number">{{ blacklisted_channels }}</p>
           <p class="header-tile--title">Blacklisted Channels</p>
         </div>
-      </a>
+      </div>
       <a href="/admin/dashboard/whitelist">
         <div class="header-tile">
           <p class="header-tile--number">{{ whitelisted_channels }}</p>
@@ -83,7 +83,11 @@ export default {
       viewership_graph: ''
     }
   },
-  methods: {},
+  methods: {
+    navigateTo(path) {
+      this.$router.push(path)
+    }
+  },
   async created() {
     getAdminDashboardNumbers().then((response) => {
       this.tracks = response.tracks

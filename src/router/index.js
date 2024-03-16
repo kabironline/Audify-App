@@ -108,6 +108,11 @@ const router = createRouter({
       path: '/admin/dashboard',
       name: 'admin-dashboard',
       component: () => import('../views/admin/AdminDashboard.vue')
+    },
+    {
+      path: '/admin/tracks',
+      name: 'admin-tracks',
+      component: () => import('../views/music/AllTracksList.vue'),
     }
   ]
 })

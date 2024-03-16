@@ -95,3 +95,29 @@
   transform: translateY(-5px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th {
+  border-bottom: 2px solid #333;
+  text-align: center;
+  font-size: 2rem;
+  background-color: var(--color-background-light);
+  padding: 2rem;
+}
+
+.table td {
+  justify-content: center;
+  border-bottom: 1px solid #333;
+  padding: 1rem;
+  text-align: center;
+}
+
+.table td:last-child {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}

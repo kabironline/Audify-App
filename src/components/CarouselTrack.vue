@@ -48,7 +48,7 @@
               <v-list-item v-if="track.channel.id == channelId" link class="dropdown-item">
                 <v-list-item-title class="dropdown-item--link"> Delete Track </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="isAdmin" link class="dropdown-item">
+              <v-list-item v-if="isAdmin" @click="flagTrack(track.id)" link class="dropdown-item">
                 <v-list-item-title class="dropdown-item--link"> Flag Track </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -71,6 +71,7 @@ import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import PlaylistAddModal from '@/components/Modals/PlaylistAddModal.vue'
+import { flagTrack } from '@/api/admin'
 export default {
   name: 'CarouselTrack',
   components: {
@@ -92,6 +93,7 @@ export default {
   },
   methods: {
     trackImage,
+    flagTrack,
     ...mapActions(usePlayerStore, ['playIndividualTrack']),
     navigateToChannel(channelId) {
       this.$router.push(`/channel/${channelId}/dashboard`)

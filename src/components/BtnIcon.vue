@@ -4,7 +4,8 @@
     @click.prevent="action"
     rounded="xl"
     size="small"
-    variant="text"
+    :variant="variant"
+    :color="color"
     elevation="0"
     class="btn d-flex justify-center align-center"
     :disabled="isDisabled"
@@ -48,6 +49,11 @@ export default {
     isDisabled: {
       type: Boolean,
       default: false
+    },
+    variant: {
+      type: String,
+      default: 'text',
+      required: false
     }
   }
 }
