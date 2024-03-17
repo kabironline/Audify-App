@@ -112,7 +112,12 @@ const router = createRouter({
     {
       path: '/admin/tracks',
       name: 'admin-tracks',
-      component: () => import('../views/music/AllTracksList.vue'),
+      component: () => import('../views/music/AllTracksList.vue')
+    },
+    {
+      path: '/admin/blacklist',
+      name: 'admin-blacklist',
+      component: () => import('../views/admin/BlacklistView.vue')
     }
   ]
 })

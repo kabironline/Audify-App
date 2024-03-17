@@ -31,7 +31,7 @@
         </div>
       </div>
       <div>
-        <div class="header-tile">
+        <div class="header-tile" @click.prevent="navigateTo('/admin/blacklist')">
           <p class="header-tile--number">{{ blacklisted_channels }}</p>
           <p class="header-tile--title">Blacklisted Channels</p>
         </div>

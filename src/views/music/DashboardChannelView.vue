@@ -49,6 +49,18 @@
           v-if="showBlacklist"
           @click="blacklistChannelHandler()"
         />
+        <BtnAction
+          text="Whitelist"
+          color="white"
+          v-if="showWhitelist"
+          @click="whitelistChannelHandler()"
+        />
+        <BtnAction
+          text="Remove Whitelist"
+          color="dark"
+          v-if="!showWhitelist"
+          @click="removeWhitelistChannelHandler()"
+        />
       </div>
     </section>
     <hr class="hr" />
@@ -77,7 +89,7 @@ import { useUserStore } from '@/stores/user'
 import { getChannel } from '@/helper/getters'
 import { channelAvatar } from '@/utils/http'
 import BtnAction from '@/components/BtnAction.vue'
-import { blacklistChannel } from '@/api/admin'
+import { blacklistChannel, removeWhitelistChannel, whitelistChannel } from '@/api/admin'
 
 export default {
   name: 'ChannelDashboard',
@@ -88,7 +100,8 @@ export default {
         name: 'Channel Name',
         description: 'Channel Description',
         id: '0',
-        blacklisted: false
+        blacklisted: false,
+        whitelisted: false
       },
       tracks: [],
       albums: [],
@@ -106,6 +119,18 @@ export default {
       if (response) {
         this.$router.push('/')
       }
+    },
+    async whitelistChannelHandler() {
+      const response = await whitelistChannel(this.channel.id)
+      if (response) {
+        this.channel.whitelisted = true
+      }
+    },
+    async removeWhitelistChannelHandler() {
+      const response = await removeWhitelistChannel(this.channel.id, true)
+      if (response) {
+        this.channel.whitelisted = false
+      }
     }
   },
   computed: {
@@ -119,7 +144,13 @@ export default {
       return !this.albums.length && !this.tracks.length && !this.isLoading
     },
     showBlacklist() {
-      return this.isUserAdmin && !this.channel.blacklisted
+      return this.isUserAdmin && !this.channel.blacklisted && !this.channel.whitelisted
+    },
+    showWhitelist() {
+      return this.isUserAdmin && !this.channel.whitelisted
+    },
+    showRemoveWhitelist() {
+      return this.isUserAdmin && this.channel.whitelisted
     }
   },
   beforeMount() {
@@ -127,7 +158,6 @@ export default {
     const channelId = this.$route.params.channelId
     this.isUserAdmin = useUserStore().isAdmin
     getChannel(channelId, true).then((res) => {
-
       if (res.channel.blacklisted) {
         this.$router.push('/')
       }

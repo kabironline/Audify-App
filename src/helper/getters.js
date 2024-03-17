@@ -8,7 +8,11 @@ export async function getUser(userId) {
 }
 
 export async function getChannel(channelId, full = false) {
-  const response = await get(`/channel/${channelId}${full ? '?detail=full' : ''}`)
+  const response = await get(
+    `/channel/${channelId}${full ? '?detail=full' : ''}`,
+    {},
+    useUserStore().token
+  )
   const data = await response.json()
   if (full) {
     return data
@@ -51,7 +55,7 @@ export async function getTopTracks(number = 10) {
 
 export async function getTopRatedTracks(number = 10) {
   const token = useUserStore().token
-const response = await get(`/tracks/top/ratings?n=${number}`, {}, token)
+  const response = await get(`/tracks/top/ratings?n=${number}`, {}, token)
   const data = await response.json()
   return data.top
 }
