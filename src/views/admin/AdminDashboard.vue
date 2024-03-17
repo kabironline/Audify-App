@@ -36,12 +36,10 @@
           <p class="header-tile--title">Blacklisted Channels</p>
         </div>
       </div>
-      <a href="/admin/dashboard/whitelist">
-        <div class="header-tile">
+        <div class="header-tile"  @click.prevent="navigateTo('/admin/whitelist')">
           <p class="header-tile--number">{{ whitelisted_channels }}</p>
           <p class="header-tile--title">Whitelisted Channels</p>
         </div>
-      </a>
     </div>
     <h3 class="heading-3">Graphical Overview</h3>
     <div class="graph-container">

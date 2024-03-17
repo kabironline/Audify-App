@@ -1,7 +1,7 @@
 <template>
   <section id="section section-blacklisted">
     <div class="admin-dashboard__header mb-medium">
-      <h1 class="heading-1">Blacklisted Users</h1>
+      <h1 class="heading-1">Whitelisted Users</h1>
     </div>
     <div class="admin-dashboard__table" v-if="channels.length">
       <table class="table">
@@ -9,8 +9,8 @@
           <tr>
             <th>Channel Name</th>
             <th>Channel ID</th>
-            <th>Blacklisted By</th>
-            <th>Blacklisted On</th>
+            <th>Whitelisted By</th>
+            <th>Whitelisted On</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -20,15 +20,15 @@
             <td>{{ channel.id }}</td>
             <td>
               <p @click="navigateTo(`/dashboard/${channel.id}`)">
-                @{{ channel.blacklisted_by.username }}
+                @{{ channel.whitelisted_by.username }}
               </p>
             </td>
             <td>{{ channel.last_modified_at }}</td>
             <td>
               <BtnAction
-                text="Remove Blacklist"
+                text="Remove Whitelist"
                 color="dark"
-                @click="removeBlacklistChannelHandler(channel.id, index)"
+                @click="removeWhitelistChannelHandler(channel.id, index)"
               />
             </td>
           </tr>
@@ -36,17 +36,17 @@
       </table>
     </div>
     <div class="admin-dashboard__empty" v-else>
-      <p class="admin-dashboard__empty--text">No blacklisted channels.</p>
+      <p class="admin-dashboard__empty--text">No whitelisted channels.</p>
     </div>
   </section>
 </template>
 
 <script>
-import { getBlacklistedChannels, removeBlacklistChannel } from '@/api/admin'
+import { getWhitelistedChannels, removeWhitelistChannel } from '@/api/admin'
 import BtnAction from '@/components/BtnAction.vue'
 
 export default {
-  name: 'BlacklistView',
+  name: 'WhitlistView',
   components: { BtnAction },
   data() {
     return {
@@ -54,18 +54,15 @@ export default {
     }
   },
   methods: {
-    async removeBlacklistChannelHandler(channelId, index) {
-      const response = await removeBlacklistChannel(channelId)
+    async removeWhitelistChannelHandler(channelId, index) {
+      const response = await removeWhitelistChannel(channelId)
       if (response) {
         this.channels.splice(index, 1)
       }
-    },
-    navigateTo(path) {
-      this.$router.push(path)
     }
   },
   async mounted() {
-    const response = await getBlacklistedChannels()
+    const response = await getWhitelistedChannels()
     console.log(response)
     this.channels = response
   }

@@ -118,6 +118,11 @@ const router = createRouter({
       path: '/admin/blacklist',
       name: 'admin-blacklist',
       component: () => import('../views/admin/BlacklistView.vue')
+    },
+    {
+      path: '/admin/whitelist',
+      name: 'admin-whitelist',
+      component: () => import('../views/admin/WhitelistView.vue')
     }
   ]
 })

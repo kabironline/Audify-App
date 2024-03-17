@@ -48,6 +48,15 @@ export const blacklistChannel = async (channelId) => {
   return false
 }
 
+export const getBlacklistedChannels = async () => {
+  const response = await get('/admin/data/blacklist', {}, useUserStore().getToken)
+  if (response.status === 200) {
+    const json = await response.json()
+    return json.blacklisted_channels
+  }
+  return []
+}
+
 export const removeBlacklistChannel = async (channelId) => {
   const response = await del(`/admin/channel/${channelId}/blacklist`, {}, useUserStore().getToken)
   if (response.status === 200) {
@@ -71,11 +80,11 @@ export const removeWhitelistChannel = async (channelId) => {
   return response.status === 200
 }
 
-export const getBlacklistedChannels = async () => {
-  const response = await get('/admin/data/blacklist', {}, useUserStore().getToken)
+export const getWhitelistedChannels = async () => {
+  const response = await get('/admin/data/whitelist', {}, useUserStore().getToken)
   if (response.status === 200) {
     const json = await response.json()
-    return json.blacklisted_channels
+    return json.whitelisted_channels
   }
   return []
 }
