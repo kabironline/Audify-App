@@ -1,7 +1,10 @@
 <template>
   <LogoutModal :visible="logoutModalVisible" @toggleVisible="logoutModalVisible = false" />
   <nav class="navbar">
-    <form class="search-container">
+    <form
+      class="search-container"
+      @submit.prevent="navigateTo(`/search?q=${$event.target.q.value}`)"
+    >
       <div class="search">
         <input
           type="text"
@@ -56,7 +59,7 @@ export default {
   components: { LogoutModal },
   data: () => ({
     logoutModalVisible: false,
-    menuItems: [],
+    menuItems: []
   }),
   computed: {
     ...mapState(useUserStore, [

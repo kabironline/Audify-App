@@ -123,6 +123,11 @@ const router = createRouter({
       path: '/admin/whitelist',
       name: 'admin-whitelist',
       component: () => import('../views/admin/WhitelistView.vue')
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('../views/music/SearchView.vue')
     }
   ]
 })
