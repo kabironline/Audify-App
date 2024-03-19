@@ -7,7 +7,6 @@
       />
       <Sidebar v-if="headerFooterShown" />
       <div class="page-content">
-        <!-- Insert Navbar here -->
         <Navbar v-if="headerFooterShown" />
         <div class="container">
           <RouterView v-slot="{ Component, route }">
@@ -56,7 +55,7 @@ export default {
       store.initializeUserAtStart().then(() => {
         const playerStore = usePlayerStore()
         playerStore.initializePlayerAtStart()
-        const modalStore = useModalStore()
+        useModalStore()
 
         storeInitialized.value = true
       })
