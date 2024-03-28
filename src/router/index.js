@@ -48,6 +48,12 @@ const router = createRouter({
       props: { tracks: [], heading: 'Top Tracks' }
     },
     {
+      path: '/top/tracks/ratings',
+      name: 'top-rated-tracks',
+      component: () => import('../views/music/AllTracksView.vue'),
+      props: { tracks: [], heading: 'Top Rated Tracks' }
+    },
+    {
       path: '/dashboard/:userId',
       name: 'dashboard',
       component: () => import('../views/music/DashboardUserView.vue')

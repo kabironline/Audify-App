@@ -12,7 +12,7 @@
     <TileTrack :tracks="topTracks" />
   </section>
   <section class="section section-top-track">
-    <h2 class="heading-2 heading-link">Top Rated Tracks</h2>
+    <h2 class="heading-2 heading-link" @click.prevent="goToTopRatedTracks">Top Rated Tracks</h2>
     <TileTrack :tracks="topRatedTracks" />
   </section>
   <section class="section section-top-channel">
@@ -46,7 +46,8 @@ export default {
     topTracks: [],
     topRatedTracks: [],
     topChannels: [],
-    genres: []
+    genres: [],
+    loading: true
   }),
   methods: {
     goToTopTracks() {
@@ -54,6 +55,9 @@ export default {
     },
     goToNewReleases() {
       this.$router.push('/new-releases')
+    },
+    goToTopRatedTracks() {
+      this.$router.push('/top/tracks/ratings')
     },
     async getExploreData() {
       getGenres().then((genres) => {

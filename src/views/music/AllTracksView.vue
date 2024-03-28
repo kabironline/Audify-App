@@ -23,8 +23,14 @@ export default {
   },
   data: () => ({
     tracks: [],
-    customHeading: ""
+    customHeading: '',
+    loading: true
   }),
+  computed: {
+    isTracksEmpty() {
+      return this.tracks.length
+    }
+  },
   async created() {
     this.customHeading = this.heading
     const route_name = this.$route.name
@@ -34,15 +40,19 @@ export default {
       this.tracks = await getTopTracks(30)
     } else if (route_name === 'genre-tracks') {
       const genre = this.$route.params.genreId
-      const data = await getGenreTracks(genre) 
+      const data = await getGenreTracks(genre)
       this.tracks = data.tracks
       this.customHeading = `${data.genre.name}'s Tracks`
-    }else if (route_name === 'channel-tracks') {
+    } else if (route_name === 'channel-tracks') {
       const channelId = this.$route.params.channelId
       const data = await getChannelTracks(channelId)
       this.customHeading = `Tracks by ${data.channel.name}`
       this.tracks = data.tracks
+    } else if (route_name === 'top-rated-tracks') {
+      this.customHeading = `Top Rated Tracks`
+      this.tracks = await getTopTracks(30)
     }
+    this.loading = false
   }
 }
 </script>
