@@ -12,7 +12,9 @@
             <img ref="image" :src="trackImage" class="player-track-img" />
             <div class="player-track-details">
               <div class="player-track-title">{{ trackName }}</div>
-              <div class="player-track-artist" @click.stop="navigateToChannel()">{{ trackArtist }}</div>
+              <div class="player-track-artist" @click.stop="navigateToChannel()">
+                {{ trackArtist }}
+              </div>
             </div>
           </div>
         </Transition>
@@ -67,7 +69,15 @@
         </div>
         <div class="player-controls-extra">
           <BtnIcon :icon="volumeIcon" @click="toggleVolume()" />
-          <input v-model.lazy="volume" type="range" min="0" max="1" value="1" step="0.01" class="player__volume--bar" />
+          <input
+            v-model.lazy="volume"
+            type="range"
+            min="0"
+            max="1"
+            value="1"
+            step="0.01"
+            class="player__volume--bar"
+          />
           <BtnIcon
             :icon="playerPageOpen ? 'expand_more' : 'expand_less'"
             @click.prevent="togglePlayerPage"
@@ -91,7 +101,10 @@
           }"
         ></div>
         <p class="player-page-track-title">{{ trackName }}</p>
-        <div class="player-page-track-artist d-flex align-center gap-1" @click.stop="navigateToChannel">
+        <div
+          class="player-page-track-artist d-flex align-center gap-1"
+          @click.stop="navigateToChannel"
+        >
           {{ trackArtist }} &CenterDot; {{ formatDateTime }} &CenterDot; {{ track.views }} Views
           &CenterDot; {{ (track.average_rating * 100).toFixed(0) }}% &ThinSpace;
           <div class="rating">
@@ -159,6 +172,7 @@ import { mapActions, mapState } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import { get, post, del } from '@/utils/http'
 import { formatDate, formatDuration } from '@/helper/format'
+import { getTrackRatingForUser } from '@/api/track'
 export default {
   e: 'PlayerBar',
   components: { BtnIcon, ListTrack, CommentComponent },
@@ -348,6 +362,9 @@ export default {
         this.tab =
           this.track.lyrics != '' ? 'Lryics' : this.playlist.length > 0 ? 'Playlist' : 'Comments'
         this.trackComments = []
+        getTrackRatingForUser(this.track.id).then((response) => {
+          this.track.rating = response
+        })
         this.loadComments()
       })
     },
