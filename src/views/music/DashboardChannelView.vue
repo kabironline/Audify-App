@@ -65,6 +65,22 @@
     </section>
     <hr class="hr" />
   </section>
+  <section class="section section-info">
+    <div class="header-tiles">
+      <div class="header-tile">
+        <p class="header-tile--number">{{ info.tracks }}</p>
+        <p class="header-tile--title">Total Tracks</p>
+      </div>
+      <div class="header-tile">
+        <p class="header-tile--number">{{ info.albums }}</p>
+        <p class="header-tile--title">Total Albums</p>
+      </div>
+      <div class="header-tile">
+        <p class="header-tile--number">{{ info.views }}</p>
+        <p class="header-tile--title">Total Views</p>
+      </div>
+    </div>
+  </section>
   <section class="section section-tracks" v-show="trackIsEmpty">
     <h2 class="heading-2 mb-medium">Channel Tracks</h2>
     <CarouselTrack :tracks="tracks" />
@@ -90,6 +106,7 @@ import { getChannel } from '@/helper/getters'
 import { channelAvatar } from '@/utils/http'
 import BtnAction from '@/components/BtnAction.vue'
 import { blacklistChannel, removeWhitelistChannel, whitelistChannel } from '@/api/admin'
+import { toRaw } from 'vue'
 
 export default {
   name: 'ChannelDashboard',
@@ -102,6 +119,11 @@ export default {
         id: '0',
         blacklisted: false,
         whitelisted: false
+      },
+      info: {
+        tracks: 0,
+        albums: 0,
+        views: 0
       },
       tracks: [],
       albums: [],
@@ -161,8 +183,8 @@ export default {
       if (res.channel.blacklisted) {
         this.$router.push('/')
       }
-
       this.channel = res.channel
+      this.info = res.info
       this.tracks = res.tracks.slice(0, 5)
       this.albums = res.albums.slice(0, 5)
       this.moreTracks = res.tracks.length > 5

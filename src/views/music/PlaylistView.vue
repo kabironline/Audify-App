@@ -38,31 +38,39 @@
 
       <div class="playlist-header__buttons" v-if="!isPlaylist">
         <BtnAction icon="play_arrow" text="Play" @click.prevent="play()" />
-        <BtnAction text="Edit Album" color="dark" @click.prevent="navigateToAlbumEdit()"/>
-        <BtnAction text="Delete Album" color="dark" @click.prevent="deleteModalVisible = true" />
-        <AlbumDeleteModal
-          :visible="deleteModalVisible"
-          @toggleVisible="deleteModalVisible = false"
-        />
+        <div class="playlist-header__buttons" v-if="belongsToUser">
+          <BtnAction text="Edit Album" color="dark" @click.prevent="navigateToAlbumEdit()" />
+          <BtnAction text="Delete Album" color="dark" @click.prevent="deleteModalVisible = true" />
+          <AlbumDeleteModal
+            :visible="deleteModalVisible"
+            @toggleVisible="deleteModalVisible = false"
+          />
+        </div>
       </div>
       <div class="playlist-header__buttons" v-else>
         <BtnAction icon="play_arrow" text="Play" color="white" @click.prevent="play()" />
-        <BtnAction
-          text="Edit Playlist"
-          color="dark"
-          @click.prevent="playlistEditModalVisible = true"
-        />
-        <BtnAction text="Delete Playlist" color="dark" @click.prevent="deleteModalVisible = true" />
-        <PlaylistEditModal
-          :visible="playlistEditModalVisible"
-          @toggleVisible="playlistEditModalVisible = false"
-          @updatePlaylist="updatePlaylist"
-          :playlist="playlist"
-        />
-        <PlaylistDeleteModal
-          :visible="deleteModalVisible"
-          @toggleVisible="deleteModalVisible = false"
-        />
+        <div v-if="belongsToUser" class="playlist-header__buttons">
+          <BtnAction
+            text="Edit Playlist"
+            color="dark"
+            @click.prevent="playlistEditModalVisible = true"
+          />
+          <BtnAction
+            text="Delete Playlist"
+            color="dark"
+            @click.prevent="deleteModalVisible = true"
+          />
+          <PlaylistEditModal
+            :visible="playlistEditModalVisible"
+            @toggleVisible="playlistEditModalVisible = false"
+            @updatePlaylist="updatePlaylist"
+            :playlist="playlist"
+          />
+          <PlaylistDeleteModal
+            :visible="deleteModalVisible"
+            @toggleVisible="deleteModalVisible = false"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -93,6 +101,7 @@ import { getPlaylist } from '@/api/playlist'
 import { getAlbum } from '@/helper/getters'
 import { toRaw } from 'vue'
 import { albumImage } from '@/utils/http'
+import { useUserStore } from '@/stores/user'
 
 export default {
   name: 'PlaylistView',
@@ -103,6 +112,7 @@ export default {
       deleteModalVisible: false,
       playlistEditModalVisible: false,
       isPlaylist: true,
+      belongsToUser: false,
       playlist: {
         id: 1,
         name: 'Album Name',
@@ -153,12 +163,19 @@ export default {
     // Fetching the playlist/album data from the server using the id from the route
     const type = this.$route.path.split('/')[1]
     const id = this.$route.params.id
+    const store = useUserStore()
     if (type === 'playlist') {
       this.isPlaylist = true
-      this.playlist = toRaw(await getPlaylist(id))
+      await getPlaylist(id).then((response) => {
+        this.playlist = toRaw(response)
+        this.belongsToUser = response.user.id === store.getUserId
+      })
     } else if (type === 'album') {
       this.playlist = toRaw(await getAlbum(id))
       this.isPlaylist = false
+      if (store.getUserChannel) {
+        this.belongsToUser = this.playlist.created_by.id === store.getUserChannel.id
+      }
     }
     this.isLoading = false
   }
