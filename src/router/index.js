@@ -70,6 +70,12 @@ const router = createRouter({
       props: { tracks: [], heading: 'Channel Tracks' }
     },
     {
+      path: '/channel/:channelId/all_tracks',
+      name: 'channel-all-tracks',
+      component: () => import('../views/music/AllTracksList.vue'),
+      props: { tracks: [], heading: 'Channel Tracks' }
+    },
+    {
       path: '/channel/:channelId/albums',
       name: 'channel-albums',
       component: () => import('../views/music/AllAlbumsView.vue'),

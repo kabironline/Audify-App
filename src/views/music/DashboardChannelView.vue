@@ -66,7 +66,7 @@
     <hr class="hr" />
   </section>
   <section class="section section-info">
-    <div class="header-tiles">
+    <div class="header-tiles" @click.prevent="this.$router.push(`/channel/${channel.id}/all_tracks`)">
       <div class="header-tile">
         <p class="header-tile--number">{{ info.tracks }}</p>
         <p class="header-tile--title">Total Tracks</p>
@@ -106,7 +106,6 @@ import { getChannel } from '@/helper/getters'
 import { channelAvatar } from '@/utils/http'
 import BtnAction from '@/components/BtnAction.vue'
 import { blacklistChannel, removeWhitelistChannel, whitelistChannel } from '@/api/admin'
-import { toRaw } from 'vue'
 
 export default {
   name: 'ChannelDashboard',

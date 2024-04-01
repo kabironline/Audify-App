@@ -35,12 +35,16 @@
               icon="flag"
               :variant="track.flagged ? 'flat' : 'text'"
               :color="track.flagged ? 'primary' : 'white'"
-              @click="track.flagged ? unflagTrackHandler(track.id, index) : flagTrackHandler(track.id, index)"
+              @click="
+                track.flagged
+                  ? unflagTrackHandler(track.id, index)
+                  : flagTrackHandler(track.id, index)
+              "
             />
-            <BtnIcon v-if="edit" icon="pen-to-square" @click="editTrack(track.id)" />
+            <BtnIcon v-if="edit" icon="edit" @click="editTrack(track.id)" />
             <BtnIcon
               v-if="del"
-              icon="trash"
+              icon="delete"
               class="btn btn--secondary"
               @click="deleteTrack(track.id)"
             />
@@ -60,6 +64,8 @@ import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
 import { flagTrack } from '@/api/admin'
 import { toRaw } from 'vue'
+import { getAllChannelTracks } from '@/api/channel'
+import { useUserStore } from '@/stores/user'
 export default {
   name: 'AllTracksList',
   components: {
@@ -92,12 +98,16 @@ export default {
         const index = this.all_tracks.findIndex((track) => track.id === trackId)
         const track = toRaw(this.all_tracks[index])
         track.flagged = false
-        this.all_tracks.splice(index, 1, track) 
+        this.all_tracks.splice(index, 1, track)
       }
     }
   },
   async mounted() {
+    const store = useUserStore()
     if (this.$route.name === 'admin-tracks') {
+      if (!store.isAdmin) {
+        this.$router.push('/')
+      }
       this.title = 'All Tracks'
       this.edit = false
       this.del = false
@@ -113,6 +123,17 @@ export default {
         }
         return a.id - b.id
       })
+      this.all_tracks = response
+    } else if (this.$route.name === 'channel-all-tracks') {
+      if (store.getUserChannel != this.$route.params.channelId) {
+        this.$router.push('/')
+      }
+      this.title = 'All Tracks'
+      this.edit = true
+      this.del = true
+      this.flag = false
+      const channelId = this.$route.params.channelId
+      const response = await getAllChannelTracks(channelId)
       this.all_tracks = response
     }
   }

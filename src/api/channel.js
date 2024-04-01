@@ -1,5 +1,5 @@
 import { useUserStore } from '@/stores/user'
-import { del, post, put } from '@/utils/http'
+import { del, get, post, put } from '@/utils/http'
 
 export const createChannel = async (formData) => {
   const response = await post('/channel', formData, {}, useUserStore().getToken)
@@ -29,4 +29,17 @@ export const deleteChannel = async () => {
   }
   const json = await response.json()
   return json.error
+}
+
+export const getAllChannelTracks = async (channelId) => {
+  const response = await get(
+    `/channel/${channelId}?detail=all_tracks`,
+    {},
+    useUserStore().getToken
+  )
+  if (response.status === 200) {
+    const json = await response.json()
+    return json.tracks
+  }
+  return []
 }
