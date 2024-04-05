@@ -46,7 +46,13 @@
               v-if="del"
               icon="delete"
               class="btn btn--secondary"
-              @click="deleteTrack(track.id)"
+              @click="(trackDeleteModalVisible = true), (selectedTrackId = track.id)"
+            />
+            <TrackDeleteModal
+              :trackId="selectedTrackId"
+              :visible="trackDeleteModalVisible"
+              @deleteTrack="trackDeleted(trackid)"
+              @toggleVisible="trackDeleteModalVisible = $event"
             />
           </td>
         </tr>
@@ -66,17 +72,21 @@ import { flagTrack } from '@/api/admin'
 import { toRaw } from 'vue'
 import { getAllChannelTracks } from '@/api/channel'
 import { useUserStore } from '@/stores/user'
+import TrackDeleteModal from '@/components/Modals/TrackDeleteModal.vue'
 export default {
   name: 'AllTracksList',
   components: {
-    BtnIcon
+    BtnIcon,
+    TrackDeleteModal
   },
   data: () => ({
     title: '',
     all_tracks: [],
     edit: false,
     del: false,
-    flag: false
+    flag: false,
+    selectedTrackId: null,
+    trackDeleteModalVisible: false
   }),
   methods: {
     ...mapActions(usePlayerStore, ['playIndividualTrack']),
@@ -100,6 +110,14 @@ export default {
         track.flagged = false
         this.all_tracks.splice(index, 1, track)
       }
+    },
+    trackDeleted(trackId) {
+      this.trackDeleteModalVisible = true
+      // remove the track from the list
+      this.all_tracks = this.all_tracks.filter((track) => track.id !== trackId)
+    },
+    editTrack(trackId) {
+      this.$router.push(`/track/${trackId}/edit`)
     }
   },
   async mounted() {
@@ -125,7 +143,7 @@ export default {
       })
       this.all_tracks = response
     } else if (this.$route.name === 'channel-all-tracks') {
-      if (store.getUserChannel != this.$route.params.channelId) {
+      if (store.getUserChannel.id != this.$route.params.channelId) {
         this.$router.push('/')
       }
       this.title = 'All Tracks'

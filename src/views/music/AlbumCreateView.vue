@@ -172,7 +172,6 @@ export default {
       this.form_data.description = album.description
       this.selectedTracks = album.tracks.map((track) => track.id)
       let date = new Date(Date.parse(album.release_date)).toISOString().slice(0, 10)
-      console.log(date)
       this.form_data.release_date = date
       this.imageSrc = albumImage(album.id)
     }
