@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { flagTrack } from '@/api/admin'
 import BtnAction from '../BtnAction.vue'
 
 export default {
@@ -45,7 +46,9 @@ export default {
   },
   methods: {
     flagTrack() {
-      console.log('Flagging Track...')
+      flagTrack(this.trackId)
+      this.updateVisible(false)
+      this.$emit('flagTrack', this.trackId)
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)

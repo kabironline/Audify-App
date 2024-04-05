@@ -15,25 +15,26 @@
       <v-card-text>
         <p>Are you sure you want to delete this Track? This action cannot be undone.</p>
       </v-card-text>
-      <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="primary" />
-        <BtnAction text="Delete Track" @click="deleteTrack" color="white" />
+        <BtnAction text="Delete Track" @click="deleteTrackHandler" color="white" />
       </div>
-      <!-- </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
 
 <script>
 import BtnAction from '../BtnAction.vue'
-
+import { deleteTrack } from '@/api/track'
 export default {
   name: 'DeleteTrackModal',
-  emits: ['toggleVisible'],
+  emits: ['toggleVisible', 'deleteTrack'],
   props: {
     visible: {
       type: Boolean
+    },
+    trackId: {
+      type: Number
     }
   },
   computed: {
@@ -42,8 +43,10 @@ export default {
     }
   },
   methods: {
-    deleteTrack() {
-      console.log('Deleting Track...')
+    async deleteTrackHandler() {
+      await deleteTrack(this.trackId)
+      this.$emit('deleteTrack', this.trackId)
+      this.updateVisible(false)
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)

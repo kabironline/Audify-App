@@ -4,6 +4,18 @@
     :trackId="selectedTrack"
     @toggleVisible="toggleAddToPlaylistModal"
   />
+  <TrackDeleteModal
+    :visible="deleteTrackModal"
+    :trackId="selectedTrack"
+    @toggleVisible="toggleDeleteTrackModal"
+    @deleteTrack="removeTrack(selectedTrack)"
+  />
+  <TrackFlagModal
+    :visible="flagTrackModal"
+    :trackId="selectedTrack"
+    @toggleVisible="toggleFlagTrackModal"
+    @flagTrack="removeTrack(selectedTrack)"
+  />
   <div class="track-carousel">
     <v-skeleton-loader
       v-for="track in 5"
@@ -15,7 +27,7 @@
       color="background"
     />
     <v-card
-      v-for="track in this.tracks"
+      v-for="track in tracksData"
       :key="track.id"
       color="background"
       link
@@ -45,10 +57,20 @@
               <v-list-item @click="openAddToPlaylist(track.id)" link class="dropdown-item">
                 <v-list-item-title class="dropdown-item--link"> Add To Playlist </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="track.channel.id == channelId" link class="dropdown-item">
+              <v-list-item
+                @click="openDeleteTrackModal(track.id)"
+                v-if="track.channel.id == channelId"
+                link
+                class="dropdown-item"
+              >
                 <v-list-item-title class="dropdown-item--link"> Delete Track </v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="isAdmin" @click="flagTrack(track.id)" link class="dropdown-item">
+              <v-list-item
+                v-if="isAdmin"
+                @click="openFlagTrackModal(track.id)"
+                link
+                class="dropdown-item"
+              >
                 <v-list-item-title class="dropdown-item--link"> Flag Track </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -71,24 +93,32 @@ import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import PlaylistAddModal from '@/components/Modals/PlaylistAddModal.vue'
+import TrackDeleteModal from '@/components/Modals/TrackDeleteModal.vue'
 import { flagTrack } from '@/api/admin'
+import TrackFlagModal from './Modals/TrackFlagModal.vue'
 export default {
   name: 'CarouselTrack',
   components: {
-    PlaylistAddModal
+    PlaylistAddModal,
+    TrackFlagModal,
+    TrackDeleteModal
   },
   data() {
     return {
       channelId: -1,
       isAdmin: false,
       selectedTrack: -1,
-      addToPlaylistModal: false
+      addToPlaylistModal: false,
+      deleteTrackModal: false,
+      flagTrackModal: false,
+      tracksData: [],
+      firstLoad: true
     }
   },
   props: {
     tracks: {
       type: Array,
-      default: () => [1, 2, 3, 4, 5]
+      required: true
     }
   },
   methods: {
@@ -102,8 +132,25 @@ export default {
       this.selectedTrack = trackId
       this.toggleAddToPlaylistModal(true)
     },
+    openDeleteTrackModal(trackId) {
+      this.selectedTrack = trackId
+      this.toggleDeleteTrackModal(true)
+    },
+    openFlagTrackModal(trackId) {
+      this.selectedTrack = trackId
+      this.toggleFlagTrackModal(true)
+    },
     toggleAddToPlaylistModal(value) {
       this.addToPlaylistModal = value
+    },
+    toggleDeleteTrackModal(value) {
+      this.deleteTrackModal = value
+    },
+    toggleFlagTrackModal(value) {
+      this.flagTrackModal = value
+    },
+    removeTrack(trackId) {
+      this.tracksData = this.tracksData.filter((track) => track.id !== trackId)
     }
   },
   mounted() {
@@ -112,6 +159,12 @@ export default {
     const channel = store.getUserChannel
     if (channel) {
       this.channelId = channel.id
+    }
+  },
+  updated() {
+    if (this.firstLoad) {
+      this.tracksData = this.tracks
+      this.firstLoad = false
     }
   }
 }
