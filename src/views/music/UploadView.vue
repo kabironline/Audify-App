@@ -1,6 +1,6 @@
 <template>
   <section class="section section-upload">
-    <h2 class="heading-2">Upload a track</h2>
+    <h2 class="heading-2">{{ heading }}</h2>
     <form
       class="form__container form__container--track"
       @submit.prevent="handleUpload"
@@ -66,9 +66,9 @@
           type="file"
           accept=".mp3"
           name="track"
+          :required="!editMode"
           id="track"
           ref="track"
-          required
         />
         <img src="" alt="" class="form__input--img" />
       </div>
@@ -81,14 +81,13 @@
             accept=".png"
             name="cover"
             id="cover"
+            required="!editMode"
             ref="coverLarge"
             @change="handleCoverImage"
-            required
           />
           <img
             :src="imageSrc"
             ref="coverImage"
-            alt=""
             class="form__input--img"
             :style="{ display: imageSrc != '' ? 'block' : 'none' }"
           />
@@ -105,8 +104,10 @@
 </template>
 
 <script>
-import { uploadTrack } from '@/api/track'
+import { getTrack, uploadTrack, editTrack } from '@/api/track'
 import { getGenres } from '@/helper/getters'
+import { useUserStore } from '@/stores/user'
+import { trackImage } from '@/utils/http'
 
 export default {
   name: 'UploadView',
@@ -119,7 +120,9 @@ export default {
       release_date: '',
       lyrics: ''
     },
-    error: ''
+    error: '',
+    heading: 'Upload Track',
+    editMode: false
   }),
   methods: {
     handleCoverImage(event) {
@@ -131,6 +134,7 @@ export default {
       this.imageSrc = src
     },
     async handleUpload() {
+      let response
       const formData = new FormData()
       formData.append('track_name', this.form_data.name)
       formData.append('track_genre', this.form_data.genre)
@@ -138,12 +142,17 @@ export default {
       formData.append('track_lyrics', this.form_data.lyrics)
       formData.append('track_media', this.$refs.track.files[0])
       formData.append('track_cover', this.$refs.coverLarge.files[0])
-
-      const response = await uploadTrack(formData)
-      if (response) {
-        this.$router.push('/')
+      if (this.editMode) {
+        const trackId = this.$route.params.trackId
+        formData.append('track_id', trackId)
+        response = await editTrack(trackId, formData)
       } else {
-        this.error = "Error uploading track. Please try again."
+        response = await uploadTrack(formData)
+      }
+      if (response) {
+        this.$router.go(-1)
+      } else {
+        this.error = 'Error uploading track. Please try again.'
       }
     }
   },
@@ -151,8 +160,24 @@ export default {
     getGenres().then((response) => {
       this.genres = response
     })
+    if (this.$route.name === 'track-edit') {
+      const trackId = this.$route.params.trackId
+      this.heading = 'Edit Track'
+      getTrack(trackId).then((response) => {
+        const store = useUserStore()
+        if (store.getUserChannel.id !== response.track.channel_id) {
+          this.$router.go(-1)
+        }
+        this.form_data.name = response.track.name
+        this.form_data.genre = response.track.genre_id
+        this.form_data.release_date = new Date(Date.parse(response.track.release_date))
+          .toISOString()
+          .slice(0, 10)
+        this.form_data.lyrics = response.track.lyrics
+        this.imageSrc = trackImage(response.track.id)
+        this.editMode = true
+      })
+    }
   }
 }
 </script>
-
-<style></style>
