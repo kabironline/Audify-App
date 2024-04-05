@@ -37,33 +37,33 @@ export async function getLatestTracks(number = 5) {
   const token = useUserStore().token
   const response = await get(`/tracks/latest?n=${number}`, {}, token)
   const data = await response.json()
-  return data.latest
+  return data.tracks
 }
 
 export async function getLatestAlbums() {
   const response = await get('/albums/latest')
   const data = await response.json()
-  return data.latest
+  return data.albums
 }
 
 export async function getTopTracks(number = 10) {
   const token = useUserStore().token
   const response = await get(`/tracks/top/views?n=${number}`, {}, token)
   const data = await response.json()
-  return data.top
+  return data.tracks
 }
 
 export async function getTopRatedTracks(number = 10) {
   const token = useUserStore().token
   const response = await get(`/tracks/top/ratings?n=${number}`, {}, token)
   const data = await response.json()
-  return data.top
+  return data.tracks
 }
 
 export async function getTopChannels(number = 10) {
   const response = await get(`/channels/top?n=${number}`)
   const data = await response.json()
-  return data.top
+  return data.channels
 }
 
 export async function getGenres() {

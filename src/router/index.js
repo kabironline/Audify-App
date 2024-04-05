@@ -97,6 +97,11 @@ const router = createRouter({
       component: () => import('../views/music/UploadView.vue')
     },
     {
+      path: '/track/:trackId/edit',
+      name: 'track-edit',
+      component: () => import('../views/music/UploadView.vue')
+    },
+    {
       path: '/album/create',
       name: 'album-create',
       component: () => import('../views/music/AlbumCreateView.vue')
