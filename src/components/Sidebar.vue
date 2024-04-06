@@ -1,22 +1,15 @@
 <template>
   <div class="sidebar">
-    <a href="/home">
-      <div class="sidebar__top">
-        <div class="sidebar-logo">&nbsp;</div>
-      </div>
-    </a>
+    <div class="sidebar__top" @click="navigateTo('/')">
+      <div class="sidebar-logo">&nbsp;</div>
+    </div>
     <hr class="sidebar__hr" />
     <div class="side-nav">
       <SidebarListItem v-for="item in menuItems" :key="item.title" :item="item" />
     </div>
 
     <hr class="sidebar__hr" />
-    <BtnAction
-      icon="add"
-      text="Create Playlist"
-      color="white"
-      @click="openPlaylistModal"
-    />
+    <BtnAction icon="add" text="Create Playlist" color="white" @click="openPlaylistModal" />
     <br />
     <ul class="side-nav" v-if="showPlaylist">
       <TilePlaylist :playlists="playlists" />
@@ -56,6 +49,9 @@ export default {
   },
   methods: {
     ...mapActions(useModalStore, ['openPlaylistModal']),
+    navigateTo(route) {
+      this.$router.push(route)
+    },
     updateMenuItems() {
       const menuItems = [
         { title: 'Home', icon: 'home', link: '/', route_name: 'home' },
@@ -135,11 +131,11 @@ export default {
 .sidebar-logo {
   width: 15rem;
   height: 11rem;
-  mask-image: url(../images/logo.svg);
+  mask-image: url(@/assets/images/logo.svg);
   mask-size: contain;
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
-  -webkit-mask-image: url(../images/logo.svg);
+  -webkit-mask-image: url(@/assets/images/logo.svg);
   -webkit-mask-repeat: no-repeat;
   background-color: var(--color-primary);
 }

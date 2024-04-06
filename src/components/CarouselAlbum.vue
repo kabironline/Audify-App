@@ -4,6 +4,8 @@
       class="track-carousel__item"
       :border-radius="5"
       type="image, text"
+      v-for="n in 5"
+      :key="n"
       v-show="!this.albums.length"
       color="transparent"
     />
