@@ -32,7 +32,7 @@ const router = createRouter({
     {
       path: '/genre/:genreId/tracks',
       name: 'genre-tracks',
-      props: { heading: 'Rock Tracks' },
+      props: { heading: "Genre's Tracks" },
       component: () => import('../views/music/AllTracksView.vue')
     },
     {

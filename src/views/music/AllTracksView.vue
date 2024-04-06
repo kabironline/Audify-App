@@ -3,7 +3,10 @@
     <h2 class="heading-2">
       {{ customHeading }}
     </h2>
-    <CarouselTrack :tracks="tracks" />
+    <CarouselTrack :tracks="tracks" v-if="!isTracksEmpty" />
+    <div v-else class="empty">
+      <p>No tracks found</p>
+    </div>
   </section>
 </template>
 
@@ -28,7 +31,7 @@ export default {
   }),
   computed: {
     isTracksEmpty() {
-      return this.tracks.length
+      return this.loading ? false : this.tracks.length === 0
     }
   },
   async created() {
