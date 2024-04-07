@@ -18,33 +18,38 @@
           <i class="fas fa-search"></i>
         </button>
       </div>
+      <div class="profile-icon-container">
+        <v-menu location="start" activator="#main-menu-activator">
+          <v-list>
+            <v-list-item
+              link
+              v-for="item in menuItems"
+              :key="item.title"
+              class="dropdown-item"
+              @click.prevent="navigateTo(item.link)"
+            >
+              <v-list-item-title class="dropdown-item--link">{{ item.title }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              link
+              class="dropdown-item"
+              id="logout-activator"
+              @click.prevent="logoutModalVisible = true"
+            >
+              <v-list-item-title class="dropdown-item--link">Logout</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-btn icon transparent id="main-menu-activator" for="profile" class="navbar__profile">
+          <v-img
+            cover
+            :src="this.getUserAvatar"
+            alt="Profile Image"
+            class="navbar__profile--image"
+          />
+        </v-btn>
+      </div>
     </form>
-    <div class="profile-icon-container">
-      <v-menu location="start" activator="#main-menu-activator">
-        <v-list>
-          <v-list-item
-            link
-            v-for="item in menuItems"
-            :key="item.title"
-            class="dropdown-item"
-            @click.prevent="navigateTo(item.link)"
-          >
-            <v-list-item-title class="dropdown-item--link">{{ item.title }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            link
-            class="dropdown-item"
-            id="logout-activator"
-            @click.prevent="logoutModalVisible = true"
-          >
-            <v-list-item-title class="dropdown-item--link">Logout</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-btn icon transparent id="main-menu-activator" for="profile" class="navbar__profile">
-        <v-img cover :src="this.getUserAvatar" alt="Profile Image" class="navbar__profile--image" />
-      </v-btn>
-    </div>
     <a class="navbar__profile" href="/dashboard"> </a>
   </nav>
 </template>
@@ -117,7 +122,7 @@ export default {
 
 .navbar {
   display: grid;
-  grid-template-columns: 1fr 7rem;
+  grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   align-items: center;
   grid-column: 2;
@@ -170,7 +175,9 @@ export default {
 }
 
 .profile-icon-container {
-  background-color: var(--color-background);
+  background-color: transparent;
+  position: absolute;
+  right: 4rem;
 }
 
 .search--button {

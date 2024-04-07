@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <div class="sidebar__top" @click="navigateTo('/')">
+    <div class="sidebar__top" @click="navigateToHome">
       <div class="sidebar-logo">&nbsp;</div>
     </div>
     <hr class="sidebar__hr" />
@@ -49,8 +49,8 @@ export default {
   },
   methods: {
     ...mapActions(useModalStore, ['openPlaylistModal']),
-    navigateTo(route) {
-      this.$router.push(route)
+    navigateToHome() {
+      this.$router.push('/')
     },
     updateMenuItems() {
       const menuItems = [

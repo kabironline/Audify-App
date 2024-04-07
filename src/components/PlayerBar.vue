@@ -121,7 +121,11 @@
           <v-tab value="Playlist" v-show="this.isPlaylist">Playlist</v-tab>
         </v-tabs>
         <v-window v-model="tab">
-          <v-window-item value="Lryics" class="page-tab-window">{{ track.lyrics }}</v-window-item>
+          <v-window-item value="Lryics" class="page-tab-window">
+            <p class="lyrics">
+              {{ track.lyrics }}
+            </p>
+          </v-window-item>
           <v-window-item value="Comments" class="page-tab-window">
             <div class="comment-tab-container">
               <div class="comments">
@@ -683,7 +687,7 @@ export default {
   backdrop-filter: blur(20px) brightness(0.5); */
   display: grid;
   gap: 4rem;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.3fr 1fr;
   grid-template-rows: 1fr;
   align-items: center;
   align-content: center;
@@ -751,6 +755,7 @@ export default {
   overflow-y: scroll;
   padding: 2rem;
   height: 100%;
+  white-space: pre-wrap;
 }
 
 .comment-tab-container {

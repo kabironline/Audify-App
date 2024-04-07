@@ -28,7 +28,7 @@
       <hr />
       <br />
       <div class="modal-form-group">
-        <div class="modal-form__btn-extra" @click="openCreatePlaylistModal" >
+        <div class="modal-form__btn-extra" @click="openCreatePlaylistModal">
           <label for="newPlaylist" class="modal-form__label"
             ><span class="material-symbols-rounded pa-2">add</span> Create New Playlist</label
           >
@@ -89,6 +89,7 @@ export default {
   },
   mounted() {
     const store = useUserStore()
+    this.playlists = store.getUserPlaylist
     store.$onAction((mutation) => {
       mutation.after(() => {
         this.playlists = store.getUserPlaylist

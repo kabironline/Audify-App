@@ -91,13 +91,13 @@ export default {
 }
 
 .playlist__heading {
-  font-size: 1.6rem;
+  font-size: 1.6rem !important;
   font-weight: 500;
   /* margin-bottom: 1rem; */
 }
 
 .playlist__subheading {
-  font-size: 1.2rem;
+  font-size: 1.2rem !important;
   font-weight: light;
   color: var(--text-label-color);
 
