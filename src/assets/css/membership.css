@@ -1,7 +1,7 @@
 .membership {
   display: grid;
-  grid-template-columns: 100vw;
-  /* grid-template-rows: 90vh; */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 90vh;
   padding: 5vh 0;
 }
 
@@ -14,8 +14,8 @@
 }
 
 .side-banner__logo {
-  width: 50vw;
-  height: 30vw;
+  width: 25vw;
+  height: 18vw;
   margin: 2rem;
   mask-image: url(/src/assets/images/logo.svg);
   mask-size: contain;
