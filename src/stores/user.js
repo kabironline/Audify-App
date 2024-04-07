@@ -78,6 +78,7 @@ export const useUserStore = defineStore('user', {
     },
     getUserChannel() {
       if (!this.user) return null
+      if (!this.user.channels) return null
       return this.user.channels.length ? toRaw(this.user.channels[0]) : null
     },
     getUserAvatar() {
