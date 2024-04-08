@@ -4,17 +4,16 @@
       <h2 class="form__heading">Sign Up</h2>
       <div class="form__group">
         <input
-          type="text"
-          minlength="6"
-          maxlength="20"
+          type="email"
+          minlength="4"
           name="username"
           id="username"
-          placeholder="Username"
+          placeholder="Email"
           class="form__input"
           v-model="form.username"
           required
         />
-        <label for="username" class="form__label">Username</label>
+        <label for="username" class="form__label">Email</label>
       </div>
       <br />
       <div class="form__group">

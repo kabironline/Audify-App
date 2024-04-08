@@ -10,7 +10,6 @@
             <h2 class="heading-2 hero__details--title">
               {{ user.nickname }}
             </h2>
-            <p class="hero__details--subtitle">@{{ user.username }}</p>
           </div>
         </div>
         <p class="hero__details--bio">

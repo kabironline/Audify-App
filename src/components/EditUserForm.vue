@@ -18,7 +18,20 @@
           ><i class="fas fa-pen"></i> Edit Avatar</span
         >
       </div>
-
+      <div class="form__group">
+        <input
+          type="text"
+          minlength="2"
+          maxlength="20"
+          name="nickname"
+          id="nickname"
+          v-model="current_user.username"
+          placeholder="Email"
+          class="form__input"
+        />
+        <label for="nickname" class="form__label">Email</label>
+      </div>
+      <br />
       <div class="form__group">
         <input
           type="text"
@@ -91,7 +104,7 @@ export default {
     user: {
       type: Object,
       required: true
-    },
+    }
   },
   data: () => ({
     current_user: {
@@ -99,7 +112,7 @@ export default {
       username: 'johndoe',
       bio: 'I am a music lover',
       password: 'password',
-      new_password: '',
+      new_password: ''
     },
     selectedAvatar: null,
     error: ''
@@ -107,6 +120,7 @@ export default {
   methods: {
     async submit() {
       const formData = new FormData()
+      formData.append('username', this.current_user.username)
       formData.append('nickname', this.current_user.nickname)
       formData.append('bio', this.current_user.bio)
       formData.append('password', this.current_user.password)
