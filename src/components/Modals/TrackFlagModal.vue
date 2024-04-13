@@ -17,12 +17,10 @@
           Are you sure you want to flag this Track? (This can be undone from the admin dashboard)
         </p>
       </v-card-text>
-      <!-- <v-card-actions> -->
       <div class="d-flex justify-end">
         <BtnAction text="Cancel" @click="updateVisible(false)" color="primary" />
         <BtnAction text="Flag Track" @click="flagTrack" color="white" />
       </div>
-      <!-- </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
@@ -37,6 +35,9 @@ export default {
   props: {
     visible: {
       type: Boolean
+    },
+    trackId: {
+      type: Number
     }
   },
   computed: {
@@ -45,10 +46,12 @@ export default {
     }
   },
   methods: {
-    flagTrack() {
-      flagTrack(this.trackId)
+    async flagTrack() {
+      const reponse = await flagTrack(this.trackId)
+      if (reponse) {
+        this.$emit('flagTrack', this.trackId)
+      }
       this.updateVisible(false)
-      this.$emit('flagTrack', this.trackId)
     },
     updateVisible(value) {
       this.$emit('toggleVisible', value)

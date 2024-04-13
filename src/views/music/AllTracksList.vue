@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(track, index) in all_tracks" :key="track.id">
+        <tr v-for="(track, index) in all_tracks" :key="track">
           <td>
             <p @click="playIndividualTrack(track)">{{ track.name }}</p>
           </td>
@@ -69,7 +69,6 @@ import { formatDuration } from '@/helper/format'
 import { usePlayerStore } from '@/stores/player'
 import { mapActions } from 'pinia'
 import { flagTrack } from '@/api/admin'
-import { toRaw } from 'vue'
 import { getAllChannelTracks } from '@/api/channel'
 import { useUserStore } from '@/stores/user'
 import TrackDeleteModal from '@/components/Modals/TrackDeleteModal.vue'
@@ -97,18 +96,13 @@ export default {
     async flagTrackHandler(trackId, index) {
       const response = await flagTrack(trackId)
       if (response) {
-        const track = toRaw(this.all_tracks[index])
-        track.flagged = true
-        this.all_tracks.splice(index, 1, track)
+        this.all_tracks[index].flagged = true
       }
     },
-    async unflagTrackHandler(trackId) {
+    async unflagTrackHandler(trackId, index) {
       const response = await unflagTrack(trackId)
       if (response) {
-        const index = this.all_tracks.findIndex((track) => track.id === trackId)
-        const track = toRaw(this.all_tracks[index])
-        track.flagged = false
-        this.all_tracks.splice(index, 1, track)
+        this.all_tracks[index].flagged = false
       }
     },
     trackDeleted(trackId) {

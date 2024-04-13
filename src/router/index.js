@@ -145,6 +145,11 @@ const router = createRouter({
       path: '/search',
       name: 'search',
       component: () => import('../views/music/SearchView.vue')
+    },
+    {
+      path: '/:notFound',
+      name: 'not-found',
+      component: () => import('../views/NotFoundView.vue')
     }
   ]
 })
