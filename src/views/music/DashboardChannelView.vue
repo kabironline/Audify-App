@@ -66,7 +66,7 @@
     <hr class="hr" />
   </section>
   <section class="section section-info">
-    <div class="header-tiles" @click.prevent="">
+    <div class="header-tiles" @click.prevent="navigateToAllTracksList">
       <div class="header-tile">
         <p class="header-tile--number">{{ info.tracks }}</p>
         <p class="header-tile--title">Total Tracks</p>
@@ -156,6 +156,10 @@ export default {
     navigateToAllTracks() {
       if (!this.isUserChannel) return
       this.$router.push(`/channel/${this.channel.id}/tracks`)
+    },
+    navigateToAllTracksList() {
+      if (!this.isUserChannel) return
+      this.$router.push(`/channel/${this.channel.id}/all_tracks`)
     }
   },
   computed: {
