@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { isProxy, toRaw } from 'vue'
 import { get, userAvatar } from '@/utils/http'
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null,

@@ -103,7 +103,8 @@
       <input
         class="form__button form__button--track btn btn-primary"
         type="submit"
-        value="Upload"
+        :value="editingMode ? 'Edit Album' : 'Create Album'"
+        :disabled="buttonDisabled"
       />
     </form>
   </section>
@@ -126,6 +127,7 @@ export default {
       release_date: '',
       description: ''
     },
+    buttonDisabled: false,
     editingMode: false
   }),
   methods: {
@@ -139,6 +141,7 @@ export default {
       this.imageSrc = src
     },
     async submit() {
+      this.buttonDisabled = true
       const formData = new FormData()
       formData.append('album_name', this.form_data.album_name)
       formData.append('release_date', this.form_data.release_date)
@@ -153,9 +156,16 @@ export default {
           this.error = response
         }
       } else {
-        this.error = await createAlbum(formData)
-        
+        const res = await createAlbum(formData)
+
+        const id = Number(res)
+        if (id) {
+          this.$router.push(`/album/${id}`)
+        } else {
+          this.error = res
+        }
       }
+      this.buttonDisabled = false
     }
   },
   async mounted() {

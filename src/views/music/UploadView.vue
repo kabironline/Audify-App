@@ -81,7 +81,7 @@
             accept=".png"
             name="cover"
             id="cover"
-            required="!editMode"
+            :required="!editMode"
             ref="coverLarge"
             @change="handleCoverImage"
           />
@@ -96,7 +96,7 @@
       <input
         class="form__button form__button--track btn btn-primary"
         type="submit"
-        value="Upload"
+        :value="editMode ? 'Edit Track' : 'Upload Track'"
       />
       <p>{{ this.error }}</p>
     </form>
