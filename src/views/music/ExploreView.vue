@@ -7,6 +7,10 @@
     <h2 class="heading-2 heading-link" @click.prevent="goToNewReleases">New Releases</h2>
     <CarouselTrack :tracks="latestTracks" />
   </section>
+  <section class="section section-latest-album">
+    <h2 class="heading-2 heading-link" @click.prevent="goToNewAlbumReleases">Latest Albums</h2>
+    <CarouselAlbum :albums="latestAlbums" />
+  </section>
   <section class="section section-top-track">
     <h2 class="heading-2 heading-link" @click.prevent="goToTopTracks">Top Tracks</h2>
     <TileTrack :tracks="topTracks" />
@@ -26,12 +30,14 @@ import TileGenre from '@/components/TileGenre.vue'
 import TileTrack from '@/components/TileTrack.vue'
 import TileChannel from '@/components/TileChannel.vue'
 import CarouselTrack from '@/components/CarouselTrack.vue'
+import CarouselAlbum from '@/components/CarouselAlbum.vue'
 import {
   getTopChannels,
   getTopTracks,
   getLatestTracks,
   getGenres,
-  getTopRatedTracks
+  getTopRatedTracks,
+  getLatestAlbums
 } from '@/helper/getters'
 export default {
   name: 'ExploreView',
@@ -39,10 +45,12 @@ export default {
     TileGenre,
     TileTrack,
     TileChannel,
-    CarouselTrack
+    CarouselTrack,
+    CarouselAlbum
   },
   data: () => ({
     latestTracks: [],
+    latestAlbums: [],
     topTracks: [],
     topRatedTracks: [],
     topChannels: [],
@@ -55,6 +63,9 @@ export default {
     },
     goToNewReleases() {
       this.$router.push('/new-releases')
+    },
+    goToNewAlbumReleases() {
+      this.$router.push('/new-album-releases')
     },
     goToTopRatedTracks() {
       this.$router.push('/top/tracks/ratings')
@@ -74,6 +85,9 @@ export default {
       })
       getTopChannels(16).then((topChannels) => {
         this.topChannels = topChannels
+      })
+      getLatestAlbums().then((latestAlbums) => {
+        this.latestAlbums = latestAlbums
       })
     }
   },
