@@ -192,6 +192,10 @@ export default {
       const audio = this.$refs.audio
       audio.volume = this.volume
       localStorage.setItem('volume', this.volume)
+    },
+    // watch for changes in route and close the player page
+    $route() {
+      this.playerPageOpen = false
     }
   },
   data() {

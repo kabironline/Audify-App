@@ -58,7 +58,7 @@
         <BtnAction
           text="Remove Whitelist"
           color="dark"
-          v-if="!showWhitelist"
+          v-if="isUserAdmin && !showWhitelist"
           @click="removeWhitelistChannelHandler()"
         />
       </div>

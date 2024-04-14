@@ -113,6 +113,9 @@ export default {
       formData.append('new_password', this.new_password)
       if (this.selectedAvatar) formData.append('avatar', this.selectedAvatar)
       this.error = await updateUser(formData)
+      if (!this.error) {
+        this.$router.go(-1)
+      }
     },
     openFileSelector() {
       document.getElementById('fileInput').click() // Trigger click on the hidden file input
