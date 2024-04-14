@@ -40,8 +40,8 @@ export async function getLatestTracks(number = 5) {
   return data.tracks
 }
 
-export async function getLatestAlbums() {
-  const response = await get('/albums/latest')
+export async function getLatestAlbums(number = 5) {
+  const response = await get(`/albums/latest?n=${number}`)
   const data = await response.json()
   return data.albums
 }

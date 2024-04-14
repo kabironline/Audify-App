@@ -45,7 +45,7 @@ export default {
       const result = await deleteAlbum(this.$route.params.id)
       if (result) {
         this.updateVisible(false)
-        this.$router.push('/')
+        this.$router.go(-1)
       }
     },
     updateVisible(value) {

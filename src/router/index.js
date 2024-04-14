@@ -42,6 +42,12 @@ const router = createRouter({
       props: { tracks: [], heading: 'New Releases' }
     },
     {
+      path: '/new-album-releases',
+      name: 'new-album-releases',
+      component: () => import('../views/music/AllAlbumsView.vue'),
+      props: { tracks: [], heading: 'New Releases' }
+    },
+    {
       path: '/top/tracks',
       name: 'top-tracks',
       component: () => import('../views/music/AllTracksView.vue'),
