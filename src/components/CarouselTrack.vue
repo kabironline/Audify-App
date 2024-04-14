@@ -28,7 +28,7 @@
     />
     <v-card
       v-for="track in tracksData"
-      :key="track.id"
+      :key="track"
       color="background"
       link
       @click.prevent="playIndividualTrack(track)"

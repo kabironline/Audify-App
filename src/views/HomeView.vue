@@ -29,11 +29,7 @@ import { useUserStore } from '@/stores/user'
 import { usePlayerStore } from '@/stores/player'
 import { mapState } from 'pinia'
 import { getLatestPlaylists } from '@/api/playlist'
-import {
-  getLatestTracks,
-  getLatestAlbums,
-  getUserRecents
-} from '@/helper/getters'
+import { getLatestTracks, getLatestAlbums, getUserRecents } from '@/helper/getters'
 export default {
   name: 'HomeView',
   components: {
@@ -53,7 +49,7 @@ export default {
   methods: {
     async updateHomeData(recentsOnly = false) {
       getUserRecents(this.getUserId).then((recents) => {
-        this.recents = recents
+        this.recents.splice(0, this.recents.length, ...recents)
       })
 
       if (recentsOnly) return
@@ -74,6 +70,7 @@ export default {
 
     const playerStore = usePlayerStore()
     playerStore.$onAction((mutation) => {
+      console.log(mutation.name)
       if (mutation.name !== 'playTrack') return
       mutation.after(() => {
         this.updateHomeData(true)
@@ -82,4 +79,3 @@ export default {
   }
 }
 </script>
-@/helper/getters
