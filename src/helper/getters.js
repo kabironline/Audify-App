@@ -7,7 +7,7 @@ export async function getUser(userId) {
     return null
   }
   const data = await response.json()
-  return data.user
+  return data
 }
 
 export async function getChannel(channelId, full = false) {

@@ -8,7 +8,7 @@
       <Sidebar v-if="headerFooterShown" />
       <div class="page-content">
         <Navbar v-if="headerFooterShown" />
-        <div class="container">
+        <div :class="{ container: headerFooterShown }">
           <RouterView v-slot="{ Component, route }">
             <component :is="Component" :key="route.path" />
           </RouterView>

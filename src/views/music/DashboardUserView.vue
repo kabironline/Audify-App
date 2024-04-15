@@ -85,15 +85,13 @@ export default {
   components: { BtnNavigation, ListTracks, TilePlaylist },
   async beforeMount() {
     const userId = this.$route.params.userId
-
     if (userId == this.getUser.id) {
       this.user = this.getUser
     } else {
       this.user = await getUser(userId)
-    }
-
-    if (!this.user) {
-      this.$router.push('/404')
+      if (!this.user) {
+        this.$router.push('/404')
+      }
     }
 
     // Fetch user recents
