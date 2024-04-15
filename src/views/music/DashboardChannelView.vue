@@ -187,8 +187,11 @@ export default {
     const channelId = this.$route.params.channelId
     this.isUserAdmin = useUserStore().isAdmin
     getChannel(channelId, true).then((res) => {
+      if (res === null) {
+        this.$router.push('/404')
+      }
       if (res.channel.blacklisted) {
-        this.$router.push('/')
+        this.$router.push('/404')
       }
       this.channel = res.channel
       this.info = res.info

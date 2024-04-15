@@ -46,7 +46,7 @@ export default {
       if (response) {
         const store = useUserStore()
         store.removePlaylist(this.$route.params.id)
-        this.$router.push('/')
+        this.$router.go(-1)
         this.updateVisible(false)
       }
     },

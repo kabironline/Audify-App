@@ -66,7 +66,6 @@ export default {
   },
   async mounted() {
     const response = await getBlacklistedChannels()
-    console.log(response)
     this.channels = response
   }
 }

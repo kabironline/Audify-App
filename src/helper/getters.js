@@ -3,8 +3,11 @@ import { useUserStore } from '@/stores/user'
 
 export async function getUser(userId) {
   const response = await get(`/user/${userId}`)
+  if (!response.ok) {
+    return null
+  }
   const data = await response.json()
-  return data
+  return data.user
 }
 
 export async function getChannel(channelId, full = false) {
@@ -13,6 +16,9 @@ export async function getChannel(channelId, full = false) {
     {},
     useUserStore().token
   )
+  if (!response.ok) {
+    return null
+  }
   const data = await response.json()
   if (full) {
     return data
@@ -80,6 +86,9 @@ export async function getGenreTracks(genreId) {
 
 export async function getAlbum(albumId) {
   const response = await get(`/album/${albumId}`, {}, useUserStore().token)
+  if (!response.ok) {
+    return null
+  }
   const data = await response.json()
   return data.album
 }

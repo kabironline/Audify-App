@@ -36,10 +36,10 @@
           <p class="header-tile--title">Blacklisted Channels</p>
         </div>
       </div>
-        <div class="header-tile"  @click.prevent="navigateTo('/admin/whitelist')">
-          <p class="header-tile--number">{{ whitelisted_channels }}</p>
-          <p class="header-tile--title">Whitelisted Channels</p>
-        </div>
+      <div class="header-tile" @click.prevent="navigateTo('/admin/whitelist')">
+        <p class="header-tile--number">{{ whitelisted_channels }}</p>
+        <p class="header-tile--title">Whitelisted Channels</p>
+      </div>
     </div>
     <h3 class="heading-3">Graphical Overview</h3>
     <div class="graph-container">
@@ -113,7 +113,6 @@ export default {
       Plotly.newPlot('genre_listener_graph', data, layout)
 
       data = [toRaw(response.viewership_graph)]
-      console.log(data)
       layout = { title: 'Viewership Graph' }
       Plotly.newPlot('viewership_graph', data, layout)
     })

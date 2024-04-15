@@ -166,13 +166,21 @@ export default {
     const store = useUserStore()
     if (type === 'playlist') {
       this.isPlaylist = true
-      await getPlaylist(id).then((response) => {
+      getPlaylist(id).then((response) => {
+        if (response === null) {
+          this.$router.push('/404')
+        }
         this.playlist = toRaw(response)
         this.belongsToUser = response.user.id === store.getUserId
       })
     } else if (type === 'album') {
-      this.playlist = toRaw(await getAlbum(id))
-      this.isPlaylist = false
+      getAlbum(id).then((response) => {
+        if (response === null) {
+          this.$router.push('/404')
+        }
+        this.playlist = response
+        this.isPlaylist = false
+      })
       if (store.getUserChannel) {
         this.belongsToUser = this.playlist.created_by.id === store.getUserChannel.id
       }

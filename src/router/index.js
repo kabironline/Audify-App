@@ -169,6 +169,25 @@ router.beforeEach(async (to) => {
   }
   if (!userStore.isLoggedIn && !(to.name === 'login' || to.name === 'register')) {
     return '/login'
+  } else if (
+    (!userStore.isAdmin && to.name === 'admin-dashboard') ||
+    to.name === 'admin-tracks' ||
+    to.name === 'admin-blacklist' ||
+    to.name === 'admin-whitelist'
+  ) {
+    return '/404'
+  } else if (userStore.getUserChannel && to.name === 'channel-create') {
+    return '/404'
+  } else if (
+    !userStore.getUserChannel &&
+    (to.name === 'channel-all-tracks' ||
+      to.name === 'channel-edit-profile' ||
+      to.name === 'track-upload' ||
+      to.name === 'track-edit' ||
+      to.name === 'album-create' ||
+      to.name === 'album-edit')
+  ) {
+    return '/404'
   }
 })
 

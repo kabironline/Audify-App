@@ -92,6 +92,10 @@ export default {
       this.user = await getUser(userId)
     }
 
+    if (!this.user) {
+      this.$router.push('/404')
+    }
+
     // Fetch user recents
     getUserRecents(userId, 10).then((recents) => {
       this.userRecents = recents
