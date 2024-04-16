@@ -1,6 +1,6 @@
 <template>
   <main>
-    <section class="section section-latest-track">
+    <section class="section section-latest-track" v-show="showRecents">
       <h2 class="heading-2">Recents Tracks</h2>
       <!-- Track Carousel -->
       <CarouselTrack :tracks="recents" />
@@ -41,15 +41,20 @@ export default {
     recents: [],
     latestTracks: [],
     latestAlbums: [],
-    latestPlaylist: []
+    latestPlaylist: [],
+    loading: true
   }),
   computed: {
-    ...mapState(useUserStore, ['getUserId'])
+    ...mapState(useUserStore, ['getUserId']),
+    showRecents() {
+      return this.loading ? true : this.recents.length
+    }
   },
   methods: {
     async updateHomeData(recentsOnly = false) {
       getUserRecents(this.getUserId).then((recents) => {
         this.recents.splice(0, this.recents.length, ...recents)
+        this.loading = false
       })
 
       if (recentsOnly) return

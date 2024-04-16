@@ -180,10 +180,10 @@ export default {
         }
         this.playlist = response
         this.isPlaylist = false
+        if (store.getUserChannel) {
+          this.belongsToUser = this.playlist.created_by.id === store.getUserChannel.id
+        }
       })
-      if (store.getUserChannel) {
-        this.belongsToUser = this.playlist.created_by.id === store.getUserChannel.id
-      }
     }
     this.isLoading = false
   }
