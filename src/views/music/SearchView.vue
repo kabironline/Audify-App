@@ -20,8 +20,11 @@
   <div class="error-container" v-else>
     <h2 class="heading-2">No results found</h2>
     <br />
-    <p class="error-message">
+    <p class="error-message" v-if="search">
       Try adjusting your search or browse for some of our trending content.
+    </p>
+    <p class="error-message" v-else>
+      Start by searching for your favorite tracks, albums, artists, or playlists.
     </p>
     <br />
     <BtnNavigation text="Explore" to="/explore" />
@@ -88,6 +91,11 @@ export default {
   },
   async mounted() {
     this.search = this.$route.query.q
+
+    if (!this.search) {
+      this.loading = false
+      return
+    }
 
     await this.updateSearch()
 
