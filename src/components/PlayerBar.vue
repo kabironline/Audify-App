@@ -420,9 +420,10 @@ export default {
     audio.addEventListener('timeupdate', this.timeUpdate)
     audio.addEventListener('ended', () => {
       this.playButton = 'play_circle'
+      console.log(this.isLooping, !this.isPlaylist)
+      this.progress = 0
       if (this.isLooping) {
         if (!this.isPlaylist) {
-          this.progress = 0
           this.playTrack()
         } else {
           if (this.playlistIndex === this.playlist.length - 1) {
@@ -431,13 +432,13 @@ export default {
             this.playTrackAtIndex(this.playlistIndex + 1)
           }
         }
-      }
-
-      if (this.isPlaylist && this.playlistIndex !== this.playlist.length - 1) {
-        this.playTrackAtIndex(this.playlistIndex + 1)
       } else {
-        this.pauseTrack()
-        this.playerProgress = 0
+        if (this.isPlaylist && this.playlistIndex !== this.playlist.length - 1) {
+          this.playTrackAtIndex(this.playlistIndex + 1)
+        } else {
+          this.pauseTrack()
+          this.playerProgress = 0
+        }
       }
     })
 
