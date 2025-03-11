@@ -25,7 +25,7 @@ The Audify allows users to stream music, manage playlists, and discover new trac
 - **Vue Router**: For routing and navigation.
 - **Pinia**: State management pattern + library.
 
-Backend Repository: [kabironline-flask](https://github.com/kabironline-flask)
+Backend Repository: [Audify-Server](https://github.com/kabironline/Audify-Server)
 
 ## Getting Started
 
